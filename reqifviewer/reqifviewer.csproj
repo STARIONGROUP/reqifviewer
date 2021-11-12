@@ -2,6 +2,13 @@
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
+    <Company>RHEA System S.A.</Company>
+    <Title>reqifviewer</Title>
+    <Version>0.0.1</Version>
+    <Description>Web Application to inspect ReqIF files</Description>
+    <Copyright>Copyright © RHEA System S.A.</Copyright>
+    <Authors>Sam Gerené</Authors>
+    <Confi1gurations>Debug;Release</Confi1gurations>
   </PropertyGroup>
 
   <ItemGroup>
