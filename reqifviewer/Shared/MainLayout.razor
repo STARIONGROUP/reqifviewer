@@ -1,17 +1,68 @@
-﻿@inherits LayoutComponentBase
+﻿<!--
+<copyright file="MainLayout.razor" company="RHEA System S.A.">
+    Copyright (c) 2021-2021 RHEA System S.A.
+
+    Author: Sam Gerené
+
+    This file is part of reqifviewer. The reqifviewer is a web application that can be used
+    to load and inspect ReqIF files.
+
+    The reqifviewer is free software; you can redistribute it and/or
+    modify it under the terms of the GNU Affero General Public
+    License as published by the Free Software Foundation; either
+    version 3 of the License, or any later version.
+
+    The reqifviewer is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+    GNU Affero General Public License for more details.
+
+    You should have received a copy of the GNU Affero General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+</copyright>
+-->
+
+@using System.Reflection;
+
+@using Radzen.Blazor
+
+@inherits LayoutComponentBase
+@inject NavigationManager NavigationManager
+@inject IJSRuntime JSRuntime
 
 <div class="page">
-    <div class="sidebar">
-        <NavMenu />
+    <RadzenHeader>
+        <ChildContent>
+            <div class="row justify-content-start align-items-center">
+                <div class="col-6 d-flex align-items-center">
+                    <RadzenSidebarToggle Click="@(args => { sidebarExpanded = !sidebarExpanded; bodyExpanded = !bodyExpanded; })" />
+                    <RadzenLabel Text="ReqIF Viewer" />
+                </div>
+            </div>
+        </ChildContent>
+    </RadzenHeader>
+
+    <div style="width:100%">
+        <RadzenBody @bind-Expanded="@bodyExpanded">
+            <ChildContent>
+                <RadzenContentContainer Name="main">
+                    @Body
+                </RadzenContentContainer>
+            </ChildContent>
+        </RadzenBody>
     </div>
 
-    <div class="main">
-        <div class="top-row px-4">
-            <a href="http://blazor.net" target="_blank" class="ml-md-auto">About</a>
-        </div>
+    <SideMenu @bind-Expanded="@sidebarExpanded"></SideMenu>
 
-        <div class="content px-4">
-            @Body
-        </div>
-    </div>
+    <RadzenFooter>
+        <ChildContent>
+            <RadzenLabel Text=@($"Copyright © RHEA System S.A. 2021") />
+        </ChildContent>
+    </RadzenFooter>
 </div>
+
+@code {
+
+    bool sidebarExpanded = false;
+    bool bodyExpanded = true;
+}
