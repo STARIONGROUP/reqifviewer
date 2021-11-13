@@ -23,7 +23,11 @@
 -->
 
 @page "/"
+
+@using System.Globalization
 @using System.IO
+@using System.Threading
+@using ReqIFSharp
 
 <div class="row mt-5 pt-5 text-center">
     <div class="col-md-12">
@@ -34,29 +38,151 @@
 
 <div class="row">
     <div class="col align-self-center">
-        <div class="col-md-6"/>
-            <div class="input-group mb-3">
-                <div class="input-group-prepend">
-                    <span class="input-group-text">Open</span>
-                </div>
-                <div class="custom-file">
-                    <InputFile OnChange="HandleSelection" class="custom-file-input" accept=".reqif,.reqifz"></InputFile>
-                    <label class="custom-file-label">@fileSelectionText</label>
-                </div>
+        <div class="col-md-6" />
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+                <span class="input-group-text">Open</span>
+            </div>
+            <div class="custom-file">
+                <InputFile OnChange="HandleSelection" class="custom-file-input" accept=".reqif,.reqifz"></InputFile>
+                <label class="custom-file-label">@fileSelectionText</label>
             </div>
         </div>
     </div>
+</div>
 
-    @code
+<RadzenButton style="margin: 0 1rem 1rem 0; width: 200px" Icon="update" Disabled="@(!reqifisAvailable)" BusyText="Loading ..." IsBusy=@isLoading Click=@OnLoadReqIF Text="Load" />
+<RadzenButton Click="@OnCancel" Text="Cancel" Disabled="@(!isLoading)" />
+
+@if (@isLoading)
 {
-        private string fileSelectionText = "Select a file";
+    <RadzenProgressBar Value="100" ShowValue="false" Mode="ProgressBarMode.Indeterminate" Style="margin-bottom: 20px" />
+}
+else
+{
+    if (reqIfs != null)
+    {
+        <RadzenGrid Data="@reqIfs" TItem="ReqIF">
+            <Columns>
+                <RadzenGridColumn Sortable="true" TItem="ReqIF" Title="Title">
+                    <Template Context="data">
+                        @data?.TheHeader?.Title
+                    </Template>
+                </RadzenGridColumn>
+                <RadzenGridColumn Sortable="true" TItem="ReqIF" Title="ReqIF Version">
+                    <Template Context="data">
+                        @data?.TheHeader?.ReqIFVersion
+                    </Template>
+                </RadzenGridColumn>
+                <RadzenGridColumn Sortable="true" TItem="ReqIF" Title="Creation Date">
+                    <Template Context="data">
+                        <div>@data?.TheHeader?.CreationTime.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture)</div>
+                    </Template>
+                </RadzenGridColumn>
+                <RadzenGridColumn Sortable="true" TItem="ReqIF" Title="Comment">
+                    <Template Context="data">
+                        <div>@data?.TheHeader?.Comment</div>
+                    </Template>
+                </RadzenGridColumn>
+                <RadzenGridColumn Sortable="true" TItem="ReqIF" Title="Tool">
+                    <Template Context="data">
+                        <div>@data?.TheHeader?.ReqIFToolId</div>
+                    </Template>
+                </RadzenGridColumn>
+            </Columns>
+        </RadzenGrid>
+    }
+}
 
-        private async Task HandleSelection(InputFileChangeEventArgs e)
+@code
+{
+    private string fileSelectionText = "Select a file";
+
+    private MemoryStream reqifStream;
+
+    private bool reqifisAvailable = false;
+
+    private bool isLoading = false;
+
+    private IEnumerable<ReqIF> reqIfs;
+
+    private CancellationTokenSource cancellationTokenSource;
+
+    /// <summary>
+    /// handles file selection
+    /// </summary>
+    /// <param name="e">
+    /// The <see cref="InputFileChangeEventArgs"/> to be used to handle the selected file
+    /// </param>
+    /// <returns>
+    /// an awaitable <see cref="Task"/>
+    /// </returns>
+    private async Task HandleSelection(InputFileChangeEventArgs e)
+    {
+        this.reqifisAvailable = false;
+
+        reqifStream = new MemoryStream();
+
+        await e.File.OpenReadStream(long.MaxValue).CopyToAsync(reqifStream);
+
+        this.fileSelectionText = e.File.Name;
+
+        this.reqifisAvailable = true;
+    }
+
+    /// <summary>
+    /// Loads the <see cref="ReqIF"/> from the selected file
+    /// </summary>
+    /// <returns>
+    /// an awaitable <see cref="Task"/>
+    /// </returns>
+    private async Task OnLoadReqIF()
+    {
+        IEnumerable<ReqIF> reqIfs = null;
+
+        try
         {
-            var memoryStream = new MemoryStream();
+            isLoading = true;
 
-            await e.File.OpenReadStream(long.MaxValue).CopyToAsync(memoryStream);
+            this.StateHasChanged();
 
-            this.fileSelectionText = e.File.Name;
+            this.cancellationTokenSource = new CancellationTokenSource();
+
+            this.reqIfs = null;
+            IEnumerable<ReqIF> result = null;
+
+            await Task.Run(() =>
+            {
+                var reqIfDeserializer = new ReqIFDeserializer();
+                result = reqIfDeserializer.Deserialize(reqifStream);
+            }, cancellationTokenSource.Token);
+
+            if (this.cancellationTokenSource?.IsCancellationRequested == false)
+            {
+                this.reqIfs = result;
+                Console.WriteLine($"amount of reqif docs: {this.reqIfs.Count()}");
+            }
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+        }
+        finally
+        {
+            isLoading = false;
+
+            this.StateHasChanged();
         }
     }
+
+    /// <summary>
+    /// Cancel loading the reqif file
+    /// </summary>
+    private void OnCancel()
+    {
+        if (this.cancellationTokenSource != null)
+        {
+            this.cancellationTokenSource.Cancel();
+        }
+    }
+}
