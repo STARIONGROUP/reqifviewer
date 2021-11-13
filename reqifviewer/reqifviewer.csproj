@@ -9,6 +9,7 @@
     <Copyright>Copyright © RHEA System S.A.</Copyright>
     <Authors>Sam Gerené</Authors>
     <Confi1gurations>Debug;Release</Confi1gurations>
+    <PublishTrimmed>false</PublishTrimmed>
   </PropertyGroup>
 
   <ItemGroup>
@@ -30,6 +31,13 @@
   <ItemGroup>
     <PackageReference Include="ReqIFSharp" Version="5.0.0-rc1" />
   </ItemGroup>
+
+  <ItemGroup>
+    <!--
+    <TrimmerRootAssembly Include="System.Private.DataContractSerialization" />
+    -->
+  </ItemGroup>
+
 
   <ItemGroup>
     <Folder Include="wwwroot\images\" />

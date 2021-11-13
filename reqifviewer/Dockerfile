@@ -1,6 +1,7 @@
 FROM mcr.microsoft.com/dotnet/sdk:5.0-buster-slim AS build
 WORKDIR /src
 
+COPY Nuget.Config .
 COPY reqifviewer reqifviewer
 RUN dotnet restore --configfile Nuget.Config reqifviewer
 RUN dotnet build reqifviewer -c Release -o /app/build
