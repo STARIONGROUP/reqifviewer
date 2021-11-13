@@ -33,13 +33,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <!--
-    <TrimmerRootAssembly Include="System.Private.DataContractSerialization" />
-    -->
-  </ItemGroup>
-
-
-  <ItemGroup>
     <Folder Include="wwwroot\images\" />
   </ItemGroup>
 
