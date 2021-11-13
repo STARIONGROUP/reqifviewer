@@ -23,7 +23,40 @@
 -->
 
 @page "/"
+@using System.IO
 
-<h1>Hello, world!</h1>
+<div class="row mt-5 pt-5 text-center">
+    <div class="col-md-12">
+        <h1>ReqIF Viewer</h1>
+        <h2>Open a ReqIF file and inspect its contents</h2>
+    </div>
+</div>
 
-Welcome to your new app.
+<div class="row">
+    <div class="col align-self-center">
+        <div class="col-md-6"/>
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">Open</span>
+                </div>
+                <div class="custom-file">
+                    <InputFile OnChange="HandleSelection" class="custom-file-input" accept=".reqif,.reqifz"></InputFile>
+                    <label class="custom-file-label">@fileSelectionText</label>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @code
+{
+        private string fileSelectionText = "Select a file";
+
+        private async Task HandleSelection(InputFileChangeEventArgs e)
+        {
+            var memoryStream = new MemoryStream();
+
+            await e.File.OpenReadStream(long.MaxValue).CopyToAsync(memoryStream);
+
+            this.fileSelectionText = e.File.Name;
+        }
+    }

@@ -24,8 +24,12 @@
 
 namespace reqifviewer
 {
-    using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
     using System.Threading.Tasks;
+
+    using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
+    using Microsoft.Extensions.DependencyInjection;
+
+    using Radzen;
 
     /// <summary>
     /// The purpose of the <see cref="Program"/> class is to provide the
@@ -44,6 +48,11 @@ namespace reqifviewer
         {
             var builder = WebAssemblyHostBuilder.CreateDefault(args);
             builder.RootComponents.Add<App>("#app");
+
+            builder.Services.AddScoped<DialogService>();
+            builder.Services.AddScoped<NotificationService>();
+            builder.Services.AddScoped<TooltipService>();
+            builder.Services.AddScoped<ContextMenuService>();
 
             await builder.Build().RunAsync();
         }
