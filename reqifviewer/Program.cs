@@ -26,6 +26,9 @@ namespace reqifviewer
     using Microsoft.Extensions.DependencyInjection;
 
     using Radzen;
+    
+    using ReqifViewer.Infrastructure.Services;
+    using reqifviewer.Pages.Index;
 
     /// <summary>
     /// The purpose of the <see cref="Program"/> class is to provide the
@@ -49,6 +52,8 @@ namespace reqifviewer
             builder.Services.AddScoped<NotificationService>();
             builder.Services.AddScoped<TooltipService>();
             builder.Services.AddScoped<ContextMenuService>();
+            
+            builder.Services.AddSingleton<IReqIFLoaderService, ReqIFLoaderService>();
 
             await builder.Build().RunAsync();
         }

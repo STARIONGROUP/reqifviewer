@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.31829.152
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "reqifviewer", "reqifviewer\reqifviewer.csproj", "{93C0D16C-C5C6-4905-924B-0967592EB6B5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "reqifviewer.Tests", "reqifviewer.Tests\reqifviewer.Tests.csproj", "{C2B1FD5D-48D2-489B-A8F8-22C345AD8CF9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "reqifviewer.Tests", "reqifviewer.Tests\reqifviewer.Tests.csproj", "{C2B1FD5D-48D2-489B-A8F8-22C345AD8CF9}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{432140E8-3F7F-4BB7-8391-86EE9536A13A}"
 	ProjectSection(SolutionItems) = preProject
@@ -14,6 +14,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		Nuget.Config = Nuget.Config
 		README.md = README.md
 	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReqifViewer.Infrastructure", "ReqifViewer.Services\ReqifViewer.Infrastructure.csproj", "{E00177E6-5833-4673-991B-3B5C3C59E1CA}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReqifViewer.Infrastructure.Tests", "ReqifViewer.Infrastructure.Tests\ReqifViewer.Infrastructure.Tests.csproj", "{742184F1-EE75-4F19-8F66-4575CDA3B29D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -29,6 +33,14 @@ Global
 		{C2B1FD5D-48D2-489B-A8F8-22C345AD8CF9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C2B1FD5D-48D2-489B-A8F8-22C345AD8CF9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C2B1FD5D-48D2-489B-A8F8-22C345AD8CF9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E00177E6-5833-4673-991B-3B5C3C59E1CA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E00177E6-5833-4673-991B-3B5C3C59E1CA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E00177E6-5833-4673-991B-3B5C3C59E1CA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E00177E6-5833-4673-991B-3B5C3C59E1CA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{742184F1-EE75-4F19-8F66-4575CDA3B29D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{742184F1-EE75-4F19-8F66-4575CDA3B29D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{742184F1-EE75-4F19-8F66-4575CDA3B29D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{742184F1-EE75-4F19-8F66-4575CDA3B29D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

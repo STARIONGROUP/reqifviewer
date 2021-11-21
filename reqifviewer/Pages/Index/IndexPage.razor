@@ -1,17 +1,17 @@
 ﻿<!------------------------------------------------------------------------------
-  Copyright 2021 RHEA System S.A.
+Copyright 2021 RHEA System S.A.
 
-  Licensed under the Apache License, Version 2.0 (the "License");
-  you may not use this file except in compliance with the License.
-  You may obtain a copy of the License at
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
 
-  http://www.apache.org/licenses/LICENSE-2.0
+http://www.apache.org/licenses/LICENSE-2.0
 
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
 ------------------------------------------------------------------------------->
 
 @page "/"
@@ -20,6 +20,9 @@
 @using System.IO
 @using System.Threading
 @using ReqIFSharp
+@using ReqifViewer.Infrastructure.Services
+
+@inject IReqIFLoaderService reqIfLoaderService
 
 <div class="row mt-5 pt-5 text-center">
     <div class="col-md-12">
@@ -47,47 +50,47 @@
 <RadzenButton Click="@OnCancel" Text="Cancel" Disabled="@(!isLoading)" />
 
 @if (@isLoading)
-{
-    <RadzenProgressBar Value="100" ShowValue="false" Mode="ProgressBarMode.Indeterminate" Style="margin-bottom: 20px" />
-}
-else
-{
-    if (reqIfs != null)
     {
-        <RadzenGrid Data="@reqIfs" TItem="ReqIF">
-            <Columns>
-                <RadzenGridColumn Sortable="true" TItem="ReqIF" Title="Title">
-                    <Template Context="data">
-                        @data?.TheHeader?.Title
-                    </Template>
-                </RadzenGridColumn>
-                <RadzenGridColumn Sortable="true" TItem="ReqIF" Title="ReqIF Version">
-                    <Template Context="data">
-                        @data?.TheHeader?.ReqIFVersion
-                    </Template>
-                </RadzenGridColumn>
-                <RadzenGridColumn Sortable="true" TItem="ReqIF" Title="Creation Date">
-                    <Template Context="data">
-                        <div>@data?.TheHeader?.CreationTime.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture)</div>
-                    </Template>
-                </RadzenGridColumn>
-                <RadzenGridColumn Sortable="true" TItem="ReqIF" Title="Comment">
-                    <Template Context="data">
-                        <div>@data?.TheHeader?.Comment</div>
-                    </Template>
-                </RadzenGridColumn>
-                <RadzenGridColumn Sortable="true" TItem="ReqIF" Title="Tool">
-                    <Template Context="data">
-                        <div>@data?.TheHeader?.ReqIFToolId</div>
-                    </Template>
-                </RadzenGridColumn>
-            </Columns>
-        </RadzenGrid>
+<RadzenProgressBar Value="100" ShowValue="false" Mode="ProgressBarMode.Indeterminate" Style="margin-bottom: 20px" />
     }
-}
+    else
+    {
+        if (reqIfs != null)
+        {
+<RadzenGrid Data="@reqIfs" TItem="ReqIF">
+    <Columns>
+        <RadzenGridColumn Sortable="true" TItem="ReqIF" Title="Title">
+            <Template Context="data">
+                @data?.TheHeader?.Title
+            </Template>
+        </RadzenGridColumn>
+        <RadzenGridColumn Sortable="true" TItem="ReqIF" Title="ReqIF Version">
+            <Template Context="data">
+                @data?.TheHeader?.ReqIFVersion
+            </Template>
+        </RadzenGridColumn>
+        <RadzenGridColumn Sortable="true" TItem="ReqIF" Title="Creation Date">
+            <Template Context="data">
+                <div>@data?.TheHeader?.CreationTime.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture)</div>
+            </Template>
+        </RadzenGridColumn>
+        <RadzenGridColumn Sortable="true" TItem="ReqIF" Title="Comment">
+            <Template Context="data">
+                <div>@data?.TheHeader?.Comment</div>
+            </Template>
+        </RadzenGridColumn>
+        <RadzenGridColumn Sortable="true" TItem="ReqIF" Title="Tool">
+            <Template Context="data">
+                <div>@data?.TheHeader?.ReqIFToolId</div>
+            </Template>
+        </RadzenGridColumn>
+    </Columns>
+</RadzenGrid>
+        }
+    }
 
-@code
-{
+@code {
+
     private string fileSelectionText = "Select a file";
 
     private MemoryStream reqifStream;
@@ -113,9 +116,9 @@ else
     {
         this.reqifisAvailable = false;
 
-        reqifStream = new MemoryStream();
+        this.reqifStream = new MemoryStream();
 
-        await e.File.OpenReadStream(long.MaxValue).CopyToAsync(reqifStream);
+        await e.File.OpenReadStream(long.MaxValue).CopyToAsync(this.reqifStream);
 
         this.fileSelectionText = e.File.Name;
 
@@ -130,12 +133,9 @@ else
     /// </returns>
     private async Task OnLoadReqIF()
     {
-        IEnumerable<ReqIF> reqIfs = null;
-
         try
         {
-            isLoading = true;
-
+            this.isLoading = true;
             this.StateHasChanged();
 
             this.cancellationTokenSource = new CancellationTokenSource();
@@ -143,17 +143,17 @@ else
             this.reqIfs = null;
             IEnumerable<ReqIF> result = null;
 
-            await Task.Run(() =>
+            if (this.reqifStream.Position != 0)
             {
-                var reqIfDeserializer = new ReqIFDeserializer();
-                result = reqIfDeserializer.Deserialize(reqifStream);
-            }, cancellationTokenSource.Token);
-
-            if (this.cancellationTokenSource?.IsCancellationRequested == false)
-            {
-                this.reqIfs = result;
-                Console.WriteLine($"amount of reqif docs: {this.reqIfs.Count()}");
+                this.reqifStream.Seek(0, SeekOrigin.Begin);
             }
+
+            await this.reqIfLoaderService.Load(this.reqifStream);
+            this.reqIfs = this.reqIfLoaderService.ReqIFData;
+        }
+        catch (TaskCanceledException)
+        {
+            Console.WriteLine("Load was cancelled");
         }
         catch (Exception e)
         {
@@ -162,7 +162,6 @@ else
         finally
         {
             isLoading = false;
-
             this.StateHasChanged();
         }
     }
@@ -175,6 +174,8 @@ else
         if (this.cancellationTokenSource != null)
         {
             this.cancellationTokenSource.Cancel();
+            isLoading = false;
+            this.StateHasChanged();
         }
     }
 }
