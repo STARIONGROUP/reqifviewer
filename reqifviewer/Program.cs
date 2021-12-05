@@ -22,6 +22,8 @@ namespace reqifviewer
 {
     using System.Threading.Tasks;
 
+    using Blazor.Analytics;
+
     using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
     using Microsoft.Extensions.DependencyInjection;
 
@@ -52,7 +54,9 @@ namespace reqifviewer
             builder.Services.AddScoped<NotificationService>();
             builder.Services.AddScoped<TooltipService>();
             builder.Services.AddScoped<ContextMenuService>();
-            
+
+            builder.Services.AddGoogleAnalytics("295704041");
+
             builder.Services.AddSingleton<IReqIFLoaderService, ReqIFLoaderService>();
 
             await builder.Build().RunAsync();
