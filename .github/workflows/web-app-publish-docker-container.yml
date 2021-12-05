@@ -1,0 +1,24 @@
+name: Publish WebApp Docker Container
+
+on:
+  push:
+    tags:
+      - 'web-app-*'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: checkout branch
+      uses: actions/checkout@v2
+    - name: Login to DockerHub Registry
+      run: echo ${{ secrets.DOCKERHUB_PASSWORD }} | docker login -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
+    - name: Get the version
+      id: vars
+      run: echo ::set-output name=tag::${GITHUB_REF#refs/*/}
+    - name: Build the Docker image and tag
+      run: docker build -f reqifviewer/Dockerfile -t rheagroup/reqifviewer:latest -t rheagroup/reqifviewer:${{ steps.vars.outputs.tag }} .
+    - name: push $RELEASE_VERSION tag
+      run: docker push rheagroup/reqifviewer:${{ steps.vars.outputs.tag }}
+    - name: push latest tag
+      run: docker push rheagroup/reqifviewer:latest
