@@ -65,7 +65,7 @@
     <div class="text-center">
         <RadzenFooter>
             <ChildContent>
-                <RadzenLabel Text=@($"Copyright © RHEA System S.A. 2021") />
+                <RadzenLabel Text=@($"Copyright © RHEA System S.A. 2021 - version {version}") />
             </ChildContent>
         </RadzenFooter>
     </div>
@@ -75,4 +75,18 @@
 
         bool sidebarExpanded = false;
         bool bodyExpanded = true;
+        string version = string.Empty;
+
+        /// <summary>
+        /// Method invoked when the component is ready to start, having received its
+        /// initial parameters from its parent in the render tree.
+        /// Override this method if you will perform an asynchronous operation and
+        /// want the component to refresh when that operation is completed.
+        /// </summary>
+        protected override void OnInitialized()
+        {
+            this.version = Assembly.GetExecutingAssembly().
+                GetCustomAttribute<AssemblyInformationalVersionAttribute>().
+                InformationalVersion;
+            }
     }
