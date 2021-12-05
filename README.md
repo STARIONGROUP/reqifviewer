@@ -19,4 +19,4 @@ $ ./solutionfolder# docker run -p 8080:80 --name reqifviewer rheagroup/reqifview
 Push to docker hub
 
 ```
-$ ./solutionfolder# docker push rheagroup/rheagroup:latest
+$ ./solutionfolder# docker push rheagroup/reqifviewer:latest

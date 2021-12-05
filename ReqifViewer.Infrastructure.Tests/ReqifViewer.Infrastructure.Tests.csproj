@@ -2,7 +2,6 @@
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
-
     <IsPackable>false</IsPackable>
   </PropertyGroup>
 
@@ -18,11 +17,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ReqifViewer.Services\ReqifViewer.Infrastructure.csproj" />
+    <Folder Include="TestData\" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="TestData\" />
+    <ProjectReference Include="..\ReqifViewer.Infrastructure\ReqifViewer.Infrastructure.csproj" />
   </ItemGroup>
 
   <ItemGroup>

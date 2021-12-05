@@ -23,7 +23,7 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="5.0.12" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="5.0.12" PrivateAssets="all" />
-    <PackageReference Include="Radzen.Blazor" Version="3.12.0" />
+    <PackageReference Include="Radzen.Blazor" Version="3.13.3" />
     <PackageReference Include="ReqIFSharp" Version="5.0.0-rc1" />
     <PackageReference Include="System.Net.Http.Json" Version="5.0.0" />
   </ItemGroup>
@@ -37,7 +37,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ReqifViewer.Services\ReqifViewer.Infrastructure.csproj" />
+    <ProjectReference Include="..\ReqifViewer.Infrastructure\ReqifViewer.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>
