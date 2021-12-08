@@ -16,6 +16,7 @@
 
 @using ReqifViewer.Infrastructure.Services
 @using ReqIFSharp
+@using System.Collections.Generic
 
 @inject IReqIFLoaderService reqIfLoaderService
 
@@ -29,22 +30,25 @@
                 {
                     @foreach (var reqif in this.reqIfLoaderService.ReqIFData)
                     {
-                        <RadzenPanelMenuItem Text=@($"ReqIF {reqif.TheHeader.Title}")>
+                        <RadzenPanelMenuItem Text=@($"ReqIF: {reqif?.TheHeader.Title}")>
+                            <RadzenPanelMenuItem Text="Stats" Icon="dashboard" Path="@($"/reqifstatistics/{reqif?.TheHeader.Identifier}")"></RadzenPanelMenuItem>
                             <RadzenPanelMenuItem Text="Specifications">
 
+                            @if (reqif != null)
+                            {
                                 @foreach (var specification in reqif.CoreContent.Specifications)
                                 {
-                                    <RadzenPanelMenuItem Text="@specification.LongName" Path=@($"/specification/{specification.Identifier}")></RadzenPanelMenuItem>
+                                    <RadzenPanelMenuItem Text="@specification.LongName" Icon="flare" Path=@($"/specification/{specification.Identifier}")></RadzenPanelMenuItem>
                                 }
+                            }
+
                             </RadzenPanelMenuItem>
 
-                            <RadzenPanelMenuItem Text="Spec Objects" Path="/specobjects"></RadzenPanelMenuItem>
-                            <RadzenPanelMenuItem Text="Data Types" Path="/datatypes"></RadzenPanelMenuItem>
-                            <RadzenPanelMenuItem Text="Specification Types">
-                                <RadzenPanelMenuItem Text="Spec Object Types" Path="/specobjecttypes"></RadzenPanelMenuItem>
-                                <RadzenPanelMenuItem Text="Specification Types" Path="/specificationtypes"></RadzenPanelMenuItem>
-                                <RadzenPanelMenuItem Text="Spec Relation Types" Path="/specerlationtypes"></RadzenPanelMenuItem>
-                            </RadzenPanelMenuItem>
+                            <RadzenPanelMenuItem Text="Spec Objects" Icon="nature" Path="@($"/specobjects/{reqif.TheHeader.Identifier}")"></RadzenPanelMenuItem>
+                            <RadzenPanelMenuItem Text="Data Types" Icon="grain" Path="@($"/datatypes/{reqif.TheHeader.Identifier}")"></RadzenPanelMenuItem>
+                            <RadzenPanelMenuItem Text="Spec Object Types" Icon="filter_hdr" Path="@($"/specobjecttypes/{reqif.TheHeader.Identifier}")"></RadzenPanelMenuItem>
+                            <RadzenPanelMenuItem Text="Specification Types" Icon="panorama_photosphere_select" Path="@($"/specificationtypes/{reqif.TheHeader.Identifier}")"></RadzenPanelMenuItem>
+                            <RadzenPanelMenuItem Text="Spec Relation Types" Icon="nat" Path="@($"/specrelationtypes/{reqif.TheHeader.Identifier}")"></RadzenPanelMenuItem>
 
                         </RadzenPanelMenuItem>
                     }
@@ -69,13 +73,35 @@
     [Parameter]
     public EventCallback<bool> ExpandedChanged { get; set; }
 
+    /// <summary>
+    /// a value indicating whether a ReqIF file is loaded or not
+    /// </summary>
     private bool reqifLoaded = false;
 
+    /// <summary>
+    /// Invoked when the component is initialized after having received its initial parameters
+    /// </summary>
     protected override void OnInitialized()
     {
+        if (this.reqIfLoaderService.ReqIFData == null || !this.reqIfLoaderService.ReqIFData.Any())
+        {
+            this.reqifLoaded = false;
+        }
+        else
+        {
+            this.reqifLoaded = true;
+        }
+
         this.reqIfLoaderService.ReqIfChanged += ReqIfLoaderServiceOnReqIfChanged;
     }
 
+    /// <summary>
+    /// Handler for the <see cref="IReqIFLoaderService.ReqIfChanged"/> event
+    /// </summary>
+    /// <param name="sender">an instance of <see cref="IReqIFLoaderService"/></param>
+    /// <param name="reqIfs">
+    /// The <see cref="IEnumerable{ReqIF}"/> that has been loaded
+    /// </param>
     private void ReqIfLoaderServiceOnReqIfChanged(object sender, IEnumerable<ReqIF> reqIfs)
     {
         if (reqIfs == null || !reqIfs.Any())

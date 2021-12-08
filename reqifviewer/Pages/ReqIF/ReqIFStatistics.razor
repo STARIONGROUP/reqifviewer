@@ -1,0 +1,226 @@
+﻿<!------------------------------------------------------------------------------
+Copyright 2021 RHEA System S.A.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+------------------------------------------------------------------------------->
+
+@page "/reqifstatistics/{Identifier}"
+
+@using System.Globalization
+@using ReqIFSharp
+@using ReqifViewer.Infrastructure.Services
+
+@inject IReqIFLoaderService reqIfLoaderService
+
+@if (@isLoading)
+{
+    <RadzenProgressBar Value="100" ShowValue="false" Mode="ProgressBarMode.Indeterminate" Style="margin-bottom: 10px" />
+}
+else
+{
+    <RadzenContent Container="main">
+        <ChildContent>
+            <RadzenHeading Size="H2" Text="Statistics"></RadzenHeading>
+            <div class="row">
+                <RadzenCard Style="margin-bottom: 10px;">
+                    <ChildContent>
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div><b>Title:</b></div>
+                                <div>@this.reqIfHeader?.Title</div>
+
+                                <div><b>Comment:</b></div>
+                                <div>@this.reqIfHeader?.Comment</div>
+
+                                <div style="margin-top: 10px"><b>ReqIF Version:</b></div>
+                                <div>@this.reqIfHeader?.ReqIFVersion</div>
+
+                                <div style="margin-top: 10px"><b>Creation Time:</b></div>
+                                <div>@this.reqIfHeader?.CreationTime.ToString("MMMM dd, yyyy HH:mm", CultureInfo.InvariantCulture)</div>
+                            </div>
+
+                            <div class="col-lg-6">
+                                <div><b>Identifier:</b></div>
+                                <div>@this.reqIfHeader?.Identifier</div>
+
+                                <div style="margin-top: 10px"><b>Repository Id:</b></div>
+                                <div>@this.reqIfHeader?.RepositoryId</div>
+
+                                <div style="margin-top: 10px"><b>ReqIF Tool Id:</b></div>
+                                <div>@this.reqIfHeader?.ReqIFToolId</div>
+
+                                <div style="margin-top: 10px"><b>Source Tool Id:</b></div>
+                                <div>@this.reqIfHeader?.SourceToolId</div>
+                            </div>
+                        </div>
+                    </ChildContent>
+                </RadzenCard>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12 col-xl-2 col-lg-6">
+                    <a href="@($"/specifications/{reqIfHeader.Identifier}")">
+                        <RadzenCard style="margin-bottom: 16px">
+                            <ChildContent>
+                                <div class="row">
+                                    <div class="col-md-12 col-4">
+                                        <RadzenIcon Icon="flare" style="color: #68d5c8; font-size: 48px; height: 64px; width: 100%"></RadzenIcon>
+                                    </div>
+                                    <div class="col-md-12 col-8">
+                                        <RadzenHeading Size="H4" style="margin-bottom: 0px; text-align: right" Text="Specifications"></RadzenHeading>
+                                        <RadzenHeading Size="H4" style="color: #88989b; font-size: 12px; margin-bottom: 0px; text-align: right" Text="Number of Specifications"></RadzenHeading>
+                                        <RadzenHeading Size="H4" style="color: #68d5c8; font-size: 24px; margin-bottom: 0px; margin-top: 13px; text-align: right" Text="@reqIfContent?.Specifications.Count.ToString()"></RadzenHeading>
+                                    </div>
+                                </div>
+                            </ChildContent>
+                        </RadzenCard>
+                    </a>
+                </div>
+
+                <div class="col-md-12 col-xl-2 col-lg-6">
+                    <a href="@($"/specobjects/{reqIfHeader.Identifier}")">
+                        <RadzenCard style="margin-bottom: 16px">
+                            <ChildContent>
+                                <div class="row">
+                                    <div class="col-md-12 col-4">
+                                        <RadzenIcon Icon="nature" style="color: #f9777f; font-size: 48px; height: 64px; width: 100%"></RadzenIcon>
+                                    </div>
+                                    <div class="col-md-12 col-8">
+                                        <RadzenHeading Size="H4" style="margin-bottom: 0px; text-align: right" Text="Spec Objects"></RadzenHeading>
+                                        <RadzenHeading Size="H4" style="color: #88989b; font-size: 12px; margin-bottom: 0px; text-align: right " Text="Number of Spec Objects"></RadzenHeading>
+                                        <RadzenHeading Size="H4" style="color: #f9777f; font-size: 24px; margin-bottom: 0px; margin-top: 13px; text-align: right" Text="@reqIfContent?.SpecObjects.Count.ToString()"></RadzenHeading>
+                                    </div>
+                                </div>
+                            </ChildContent>
+                        </RadzenCard>
+                    </a>
+                </div>
+
+                <div class="col-md-12 col-xl-2 col-lg-6">
+                    <a href="@($"/datatypes/{reqIfHeader.Identifier}")">
+                        <RadzenCard style="margin-bottom: 16px">
+                            <ChildContent>
+                                <div class="row">
+                                    <div class="col-md-12 col-4">
+                                        <RadzenIcon Icon="grain" style="color: #d5d068; font-size: 48px; height: 64px; width: 100%"></RadzenIcon>
+                                    </div>
+                                    <div class="col-md-12 col-8">
+                                        <RadzenHeading Size="H4" style="margin-bottom: 0px; text-align: right" Text="Data Types"></RadzenHeading>
+                                        <RadzenHeading Size="H4" style="color: #88989b; font-size: 12px; margin-bottom: 0px; text-align: right " Text="Number of Data Types"></RadzenHeading>
+                                        <RadzenHeading Size="H4" style="color: #d5d068; font-size: 24px; margin-bottom: 0px; margin-top: 13px; text-align: right" Text="@reqIfContent?.DataTypes.Count.ToString()"></RadzenHeading>
+                                    </div>
+                                </div>
+                            </ChildContent>
+                        </RadzenCard>
+                    </a>
+                </div>
+
+                <div class="col-md-12 col-xl-2 col-lg-6">
+                    <a href="@($"/specobjecttypes/{reqIfHeader.Identifier}")">
+                        <RadzenCard style="margin-bottom: 16px">
+                            <ChildContent>
+                                <div class="row">
+                                    <div class="col-md-12 col-4">
+                                        <RadzenIcon Icon="filter_hdr" style="color: #68d5c8; font-size: 48px; height: 64px; width: 100%"></RadzenIcon>
+                                    </div>
+                                    <div class="col-md-12 col-8">
+                                        <RadzenHeading Size="H4" style="margin-bottom: 0px; text-align: right" Text="Spec Object Types"></RadzenHeading>
+                                        <RadzenHeading Size="H4" style="color: #88989b; font-size: 12px; margin-bottom: 0px; text-align: right" Text="Number of Spec Object Types"></RadzenHeading>
+                                        <RadzenHeading Size="H4" style="color: #68d5c8; font-size: 24px; margin-bottom: 0px; margin-top: 13px; text-align: right" Text="@(reqIfContent?.SpecTypes.OfType<SpecObjectType>().Count().ToString())"></RadzenHeading>
+                                    </div>
+                                </div>
+                            </ChildContent>
+                        </RadzenCard>
+                    </a>
+                </div>
+
+                <div class="col-md-12 col-xl-2 col-lg-6">
+                    <a href="@($"/specificationtypes/{reqIfHeader.Identifier}")">
+                        <RadzenCard style="margin-bottom: 16px">
+                            <ChildContent>
+                                <div class="row">
+                                    <div class="col-md-12 col-4">
+                                        <RadzenIcon Icon="panorama_photosphere_select" style="color: #479cc8; font-size: 48px; height: 64px; width: 100%"></RadzenIcon>
+                                    </div>
+                                    <div class="col-md-12 col-8">
+                                        <RadzenHeading Size="H4" style="margin-bottom: 0px; text-align: right" Text="Specification Types"></RadzenHeading>
+                                        <RadzenHeading Size="H4" style="color: #88989b; font-size: 12px; margin-bottom: 0px; text-align: right" Text="Number of Specification Types"></RadzenHeading>
+                                        <RadzenHeading Size="H4" style="color: #479cc8; font-size: 24px; margin-bottom: 0px; margin-top: 13px; text-align: right" Text="@(reqIfContent?.SpecTypes.OfType<SpecificationType>().Count().ToString())"></RadzenHeading>
+                                    </div>
+                                </div>
+                            </ChildContent>
+                        </RadzenCard>
+                    </a>
+                </div>
+
+                <div class="col-md-12 col-xl-2 col-lg-6">
+                    <a href="@($"/specrelationtypes/{reqIfHeader.Identifier}")">
+                        <RadzenCard style="margin-bottom: 16px">
+                            <ChildContent>
+                                <div class="row">
+                                    <div class="col-md-12 col-4">
+                                        <RadzenIcon Icon="nat" style="color: #479cc8; font-size: 48px; height: 64px; width: 100%"></RadzenIcon>
+                                    </div>
+                                    <div class="col-md-12 col-8">
+                                        <RadzenHeading Size="H4" style="margin-bottom: 0px; text-align: right" Text="Spec Relation Types"></RadzenHeading>
+                                        <RadzenHeading Size="H4" style="color: #88989b; font-size: 12px; margin-bottom: 0px; text-align: right" Text="Number of Spec Relation Types"></RadzenHeading>
+                                        <RadzenHeading Size="H4" style="color: #479cc8; font-size: 24px; margin-bottom: 0px; margin-top: 13px; text-align: right" Text="@(reqIfContent?.SpecTypes.OfType<SpecRelationType>().Count().ToString())"></RadzenHeading>
+                                    </div>
+                                </div>
+                            </ChildContent>
+                        </RadzenCard>
+                    </a>
+                </div>
+            </div>
+        </ChildContent>
+    </RadzenContent>
+}
+
+@code {
+
+    [Parameter]
+    public string Identifier { get; set; }
+
+    private ReqIFHeader reqIfHeader;
+
+    private ReqIFContent reqIfContent;
+
+    private bool isLoading = true;
+
+    /// <summary>
+    /// Asynchronous Component initialization
+    /// </summary>
+    /// <returns>
+    /// an awaitable <see cref="Task"/>
+    /// </returns>
+    protected override void OnParametersSet()
+    {
+        try
+        {
+            var reqIf = this.reqIfLoaderService.ReqIFData.SingleOrDefault(x => x.TheHeader.Identifier == this.Identifier);
+            if (reqIf != null)
+            {
+                this.reqIfHeader = reqIf.TheHeader;
+                this.reqIfContent = reqIf.CoreContent;
+            }
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+        }
+        finally
+        {
+            this.isLoading = false;
+        }
+    }
+}

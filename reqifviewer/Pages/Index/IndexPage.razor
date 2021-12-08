@@ -104,6 +104,21 @@ limitations under the License.
     private CancellationTokenSource cancellationTokenSource;
 
     /// <summary>
+    /// Invoked when the component is initialized after having received its initial parameters
+    /// </summary>
+    protected override void OnInitialized()
+    {
+        if (this.reqIfLoaderService.ReqIFData == null || !this.reqIfLoaderService.ReqIFData.Any())
+        {
+            this.reqIfs = null;
+        }
+        else
+        {
+            this.reqIfs = this.reqIfLoaderService.ReqIFData;
+        }
+    }
+
+    /// <summary>
     /// handles file selection
     /// </summary>
     /// <param name="e">
