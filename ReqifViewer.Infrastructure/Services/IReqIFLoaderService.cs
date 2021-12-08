@@ -20,9 +20,9 @@
 
 namespace ReqifViewer.Infrastructure.Services
 {
+    using System;
     using System.IO;
     using System.Collections.Generic;
-    using System.Threading;
     using System.Threading.Tasks;
 
     using ReqIFSharp;
@@ -60,5 +60,10 @@ namespace ReqifViewer.Infrastructure.Services
         /// <see cref="SourceStream"/>
         /// </summary>
         void Reset();
+
+        /// <summary>
+        /// Event Handler that is invoked when the <see cref="ReqIFLoaderService"/> has either loaded data or has been reset
+        /// </summary>
+        event EventHandler<IEnumerable<ReqIF>> ReqIfChanged;
     }
 }

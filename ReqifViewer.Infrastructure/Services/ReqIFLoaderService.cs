@@ -20,9 +20,9 @@
 
 namespace ReqifViewer.Infrastructure.Services
 {
+    using System;
     using System.Collections.Generic;
     using System.IO;
-    using System.Threading;
     using System.Threading.Tasks;
     using ReqIFSharp;
 
@@ -66,8 +66,10 @@ namespace ReqifViewer.Infrastructure.Services
             
             var reqIfDeserializer = new ReqIFDeserializer();
             result = reqIfDeserializer.Deserialize(this.SourceStream);
-            
+
             this.ReqIFData = result;
+
+            ReqIfChanged?.Invoke(this, this.ReqIFData);
         }
 
         /// <summary>
@@ -78,6 +80,13 @@ namespace ReqifViewer.Infrastructure.Services
         {
             this.SourceStream = null;
             this.ReqIFData = null;
+
+            ReqIfChanged?.Invoke(this, null);
         }
+
+        /// <summary>
+        /// Event Handler that is invoked when the <see cref="ReqIFLoaderService"/> has either loaded data or has been reset
+        /// </summary>
+        public event EventHandler<IEnumerable<ReqIF>> ReqIfChanged;
     }
 }

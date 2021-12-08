@@ -14,12 +14,42 @@
   limitations under the License.
 ------------------------------------------------------------------------------->
 
+@using ReqifViewer.Infrastructure.Services
+@using ReqIFSharp
+
+@inject IReqIFLoaderService reqIfLoaderService
+
 <RadzenSidebar @bind-Expanded="@Expanded">
     <ChildContent>
-        <div style="padding: 1rem">
-        </div>
+        <div style="padding: 1rem"></div>
         <RadzenPanelMenu>
             <RadzenPanelMenuItem Text="Home" Icon="home" Path="/"></RadzenPanelMenuItem>
+
+                @if (this.reqifLoaded)
+                {
+                    @foreach (var reqif in this.reqIfLoaderService.ReqIFData)
+                    {
+                        <RadzenPanelMenuItem Text=@($"ReqIF {reqif.TheHeader.Title}")>
+                            <RadzenPanelMenuItem Text="Specifications">
+
+                                @foreach (var specification in reqif.CoreContent.Specifications)
+                                {
+                                    <RadzenPanelMenuItem Text="@specification.LongName" Path=@($"/specification/{specification.Identifier}")></RadzenPanelMenuItem>
+                                }
+                            </RadzenPanelMenuItem>
+
+                            <RadzenPanelMenuItem Text="Spec Objects" Path="/specobjects"></RadzenPanelMenuItem>
+                            <RadzenPanelMenuItem Text="Data Types" Path="/datatypes"></RadzenPanelMenuItem>
+                            <RadzenPanelMenuItem Text="Specification Types">
+                                <RadzenPanelMenuItem Text="Spec Object Types" Path="/specobjecttypes"></RadzenPanelMenuItem>
+                                <RadzenPanelMenuItem Text="Specification Types" Path="/specificationtypes"></RadzenPanelMenuItem>
+                                <RadzenPanelMenuItem Text="Spec Relation Types" Path="/specerlationtypes"></RadzenPanelMenuItem>
+                            </RadzenPanelMenuItem>
+
+                        </RadzenPanelMenuItem>
+                    }
+                }
+
             <RadzenPanelMenuItem Text="About" Icon="search" Path="about"></RadzenPanelMenuItem>
         </RadzenPanelMenu>
     </ChildContent>
@@ -38,4 +68,26 @@
     /// </summary>
     [Parameter]
     public EventCallback<bool> ExpandedChanged { get; set; }
+
+    private bool reqifLoaded = false;
+
+    protected override void OnInitialized()
+    {
+        this.reqIfLoaderService.ReqIfChanged += ReqIfLoaderServiceOnReqIfChanged;
+    }
+
+    private void ReqIfLoaderServiceOnReqIfChanged(object sender, IEnumerable<ReqIF> reqIfs)
+    {
+        if (reqIfs == null || !reqIfs.Any())
+        {
+            this.reqifLoaded = false;
+        }
+        else
+        {
+            this.reqifLoaded = true;
+        }
+
+        this.StateHasChanged();
+    }
+
 }
