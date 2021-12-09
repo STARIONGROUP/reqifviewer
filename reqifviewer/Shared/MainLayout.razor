@@ -32,7 +32,7 @@
             <div class="row justify-content-start align-items-center">
                 <div class="col-5 d-flex align-items-center">
                     <RadzenSidebarToggle Click="@(args => { sidebarExpanded = !sidebarExpanded; bodyExpanded = !bodyExpanded; })" />
-                    <RadzenImage Path="images/reqifsharp-logo-small.png" Style="width:32px" />
+                    <a href="/"><RadzenImage Path="images/reqifsharp-logo-small.png" Style="width:32px" /></a>
                     <RadzenLabel Text="ReqIF Viewer" />
                 </div>
                 <div class="col-7 d-flex align-items-center justify-content-end">
@@ -73,10 +73,19 @@
 
     @code {
 
+        /// <summary>
+        /// A value indicating that the side-bar is expanded
+        /// </summary>
         private bool sidebarExpanded = false;
 
+        /// <summary>
+        /// A value indicating that the body is expanded
+        /// </summary>
         private bool bodyExpanded = true;
 
+        /// <summary>
+        /// The version of the application
+        /// </summary>
         private string version = string.Empty;
 
         /// <summary>
@@ -90,5 +99,5 @@
             this.version = Assembly.GetExecutingAssembly().
                 GetCustomAttribute<AssemblyInformationalVersionAttribute>().
                 InformationalVersion;
-            }
+        }
     }
