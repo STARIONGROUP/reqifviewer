@@ -4,7 +4,7 @@
     <TargetFramework>net5.0</TargetFramework>
     <Company>RHEA System S.A.</Company>
     <Title>reqifviewer</Title>
-    <Version>0.2.0</Version>
+    <Version>0.3.0</Version>
     <Description>Web Application to inspect ReqIF files</Description>
     <Copyright>Copyright © RHEA System S.A.</Copyright>
     <Authors>Sam Gerené</Authors>
@@ -24,7 +24,7 @@
     <PackageReference Include="Blazor-Analytics" Version="3.9.0" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="5.0.12" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="5.0.12" PrivateAssets="all" />
-    <PackageReference Include="Radzen.Blazor" Version="3.13.3" />
+    <PackageReference Include="Radzen.Blazor" Version="3.13.6" />
     <PackageReference Include="System.Net.Http.Json" Version="5.0.0" />
   </ItemGroup>
 

@@ -15,8 +15,6 @@
 ------------------------------------------------------------------------------->
 
 @using System.Reflection;
-@using System.Threading.Tasks
-
 @using Pages.Index;
 
 @inherits LayoutComponentBase
@@ -68,11 +66,10 @@
 <div class="text-center">
     <RadzenFooter>
         <ChildContent>
-            <RadzenLabel Text=@($"Copyright © RHEA System S.A. 2021 - version {version}") />
+            <p>Copyright &copy; <a href="https://www.rheagroup.com/" title="RHEA" target="_blank" class="mx-3">RHEA System S.A.</a> 2021 - version @version</p>
         </ChildContent>
     </RadzenFooter>
 </div>
-
 
 @code {
 
