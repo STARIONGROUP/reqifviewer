@@ -18,6 +18,8 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
+using System.Net.Http;
+
 namespace reqifviewer
 {
     using System.Threading.Tasks;
@@ -49,6 +51,8 @@ namespace reqifviewer
         {
             var builder = WebAssemblyHostBuilder.CreateDefault(args);
             builder.RootComponents.Add<App>("#app");
+
+            builder.Services.AddScoped(sp => new HttpClient());
 
             builder.Services.AddScoped<DialogService>();
             builder.Services.AddScoped<NotificationService>();
