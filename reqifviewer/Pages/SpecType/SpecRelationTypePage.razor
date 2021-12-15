@@ -31,7 +31,7 @@ else
 {
     <RadzenHeading Size="H1" style="display: inline-block" Text="@($"{reqIf?.TheHeader.Title} - Spec Relation Types")"></RadzenHeading>
 
-    <RadzenGrid Count="@count" PageSize="10" AllowPaging="true" LoadData="@LoadData" Data="@this.specRelationTypes" TItem="SpecRelationType">
+    <RadzenGrid Count="@count" PageSize="10" AllowPaging="true" AllowSorting="true" AllowFiltering="true" Data="@this.specRelationTypes" TItem="SpecRelationType">
         <Columns>
             <RadzenGridColumn TItem="SpecRelationType" Property="Identifier" Title="Identifier">
                 <Template Context="specRelationType">
@@ -83,12 +83,14 @@ else
     protected override void OnInitialized()
     {
         isLoading = false;
+
+        this.LoadData();
     }
 
     /// <summary>
     ///     Load the data into view-models
     /// </summary>
-    protected void LoadData(LoadDataArgs args)
+    protected void LoadData()
     {
         try
         {

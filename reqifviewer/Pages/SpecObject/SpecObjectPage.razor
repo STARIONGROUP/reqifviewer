@@ -14,7 +14,7 @@
     limitations under the License.
 ------------------------------------------------------------------------------->
 
-@page "/specificationtypes/{Identifier}"
+@page "/specobjects/{Identifier}"
 
 @using ReqIFSharp
 @using ReqifViewer.Infrastructure.Services
@@ -23,25 +23,29 @@
 
 @if (isLoading)
 {
-    <RadzenHeading Size="H1" style="display: inline-block" Text="Spec Types"></RadzenHeading>
+    <RadzenHeading Size="H1" style="display: inline-block" Text="Spec Objects"></RadzenHeading>
 
     <RadzenProgressBar Value="100" ShowValue="false" Mode="ProgressBarMode.Indeterminate" Style="margin-bottom: 20px" />
 }
 else
 {
-    <RadzenHeading Size="H1" style="display: inline-block" Text="@($"{reqIf?.TheHeader.Title} - Specification Types")"></RadzenHeading>
+    <RadzenHeading Size="H1" style="display: inline-block" Text="@($"{reqIf?.TheHeader.Title} - Spec Objects")"></RadzenHeading>
 
-    <RadzenGrid Count="@count" PageSize="10" AllowPaging="true" AllowSorting="true" AllowFiltering="true" Data="@this.specificationTypes" TItem="SpecificationType">
+    <RadzenGrid Count="@count" PageSize="10" AllowPaging="true" AllowSorting="true" AllowFiltering="true" Data="@this.specObjects" TItem="SpecObject">
         <Columns>
-            <RadzenGridColumn TItem="SpecificationType" Property="Identifier" Title="Identifier">
-                <Template Context="specType">
-                    <a href="/spectype/@specType?.Identifier">@specType?.LongName</a>
+            <RadzenGridColumn TItem="SpecObject" Property="Identifier" Title="Identifier">
+                <Template Context="specObject">
+                    <a href="/specObjectType/@specObject?.Identifier">@specObject?.Identifier</a>
                 </Template>
             </RadzenGridColumn>
-            <RadzenGridColumn TItem="SpecificationType" Property="Description" Title="Description" />
-            <RadzenGridColumn TItem="SpecificationType" Property="LastChange" Title="Last Change" />
-            <RadzenGridColumn TItem="SpecificationType" Property="Identifier" Title="Identifier" />
-            <RadzenGridColumn TItem="SpecificationType" Property="AlternativeId" Title="Alternative Id" />
+            <RadzenGridColumn TItem="SpecObject" Title="Spec Object Type">
+                <Template Context="specObject">
+                    <a href="/specObjectType/@specObject?.SpecType?.Identifier">@specObject?.SpecType?.LongName</a>
+                </Template>
+            </RadzenGridColumn>
+            <RadzenGridColumn TItem="SpecObject" Property="Description" Title="Description" />
+            <RadzenGridColumn TItem="SpecObject" Property="LastChange" Title="Last Change" />
+            <RadzenGridColumn TItem="SpecObject" Property="AlternativeId" Title="Alternative Id" />
         </Columns>
     </RadzenGrid>
 }
@@ -60,14 +64,14 @@ else
     private bool isLoading = true;
 
     /// <summary>
-    /// a value that states the total amount of <see cref="SpecType"/>s in the reqif file
+    /// a value that states the total amount of <see cref="SpecObject"/>s in the reqif file
     /// </summary>
     private int count;
 
     /// <summary>
-    /// The <see cref="SpecificationType"/>s that are contained in the <see cref="ReqIF"/>
+    /// The <see cref="SpecObject"/>s that are contained in the <see cref="ReqIF"/>
     /// </summary>
-    private IEnumerable<SpecificationType> specificationTypes;
+    private IEnumerable<SpecObject> specObjects;
 
     /// <summary>
     /// The <see cref="ReqIF"/> object that is loaded on the page
@@ -88,7 +92,7 @@ else
     }
 
     /// <summary>
-    ///     Load the data into view-models
+    /// Load the data
     /// </summary>
     protected void LoadData()
     {
@@ -98,9 +102,9 @@ else
 
             this.reqIf = this.reqIfLoaderService.ReqIFData.SingleOrDefault(x => x.TheHeader.Identifier == this.Identifier);
 
-            this.specificationTypes = reqIf.CoreContent.SpecTypes.OfType<SpecificationType>();
+            this.specObjects = reqIf.CoreContent.SpecObjects;
 
-            this.count = this.specificationTypes.Count();
+            this.count = this.specObjects.Count();
         }
         catch (Exception e)
         {
