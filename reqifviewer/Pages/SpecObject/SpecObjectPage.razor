@@ -35,12 +35,12 @@ else
         <Columns>
             <RadzenGridColumn TItem="SpecObject" Property="Identifier" Title="Identifier">
                 <Template Context="specObject">
-                    <a href="/specObjectType/@specObject?.Identifier">@specObject?.Identifier</a>
+                    <a href="/specobject/@specObject?.Identifier">@specObject?.Identifier</a>
                 </Template>
             </RadzenGridColumn>
             <RadzenGridColumn TItem="SpecObject" Title="Spec Object Type">
                 <Template Context="specObject">
-                    <a href="/specObjectType/@specObject?.SpecType?.Identifier">@specObject?.SpecType?.LongName</a>
+                    <a href="/specobjecttype/@specObject?.SpecType?.Identifier">@specObject?.SpecType?.LongName</a>
                 </Template>
             </RadzenGridColumn>
             <RadzenGridColumn TItem="SpecObject" Property="Description" Title="Description" />
