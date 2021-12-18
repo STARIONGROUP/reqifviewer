@@ -38,17 +38,17 @@
                             {
                                 @foreach (var specification in reqif.CoreContent.Specifications)
                                 {
-                                    <RadzenPanelMenuItem Text="@specification.LongName" Icon="flare" Path=@($"/specification/{specification.Identifier}")></RadzenPanelMenuItem>
+                                    <RadzenPanelMenuItem Text="@specification.LongName" Icon="flare" Path=@($"/reqif/{reqif.TheHeader.Identifier}/specification/{specification.Identifier}")></RadzenPanelMenuItem>
                                 }
                             }
 
                             </RadzenPanelMenuItem>
 
-                            <RadzenPanelMenuItem Text="Spec Objects" Icon="nature" Path="@($"/specobjects/{reqif.TheHeader.Identifier}")"></RadzenPanelMenuItem>
-                            <RadzenPanelMenuItem Text="Data Types" Icon="grain" Path="@($"/datatypes/{reqif.TheHeader.Identifier}")"></RadzenPanelMenuItem>
-                            <RadzenPanelMenuItem Text="Spec Object Types" Icon="filter_hdr" Path="@($"/specobjecttypes/{reqif.TheHeader.Identifier}")"></RadzenPanelMenuItem>
-                            <RadzenPanelMenuItem Text="Specification Types" Icon="panorama_photosphere_select" Path="@($"/specificationtypes/{reqif.TheHeader.Identifier}")"></RadzenPanelMenuItem>
-                            <RadzenPanelMenuItem Text="Spec Relation Types" Icon="nat" Path="@($"/specrelationtypes/{reqif.TheHeader.Identifier}")"></RadzenPanelMenuItem>
+                            <RadzenPanelMenuItem Text="Spec Objects" Icon="nature" Path="@($"/reqif/{reqif.TheHeader.Identifier}/specobjects")"></RadzenPanelMenuItem>
+                            <RadzenPanelMenuItem Text="Data Types" Icon="grain" Path="@($"/reqif/{reqif.TheHeader.Identifier}/datatypes")"></RadzenPanelMenuItem>
+                            <RadzenPanelMenuItem Text="Spec Object Types" Icon="filter_hdr" Path="@($"/reqif/{reqif.TheHeader.Identifier}/specobjecttypes")"></RadzenPanelMenuItem>
+                            <RadzenPanelMenuItem Text="Specification Types" Icon="panorama_photosphere_select" Path="@($"/reqif/{reqif.TheHeader.Identifier}/specificationtypes")"></RadzenPanelMenuItem>
+                            <RadzenPanelMenuItem Text="Spec Relation Types" Icon="nat" Path="@($"/reqif/{reqif.TheHeader.Identifier}/specrelationtypes")"></RadzenPanelMenuItem>
 
                         </RadzenPanelMenuItem>
                     }

@@ -1,0 +1,172 @@
+﻿<!------------------------------------------------------------------------------
+    Copyright 2021 RHEA System S.A.
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+------------------------------------------------------------------------------->
+
+@page "/reqif/{ReqIF}/specification/{Specification}"
+
+@using ReqIFSharp
+@using ReqifViewer.Infrastructure.ReqIFExtensions
+@using ReqifViewer.Infrastructure.Services
+@using reqifviewer.Components
+
+@inject IReqIFLoaderService reqIfLoaderService
+
+@if (isLoading)
+{
+    <RadzenHeading Size="H1" style="display: inline-block" Text="Loading Specification"></RadzenHeading>
+
+    <RadzenProgressBar Value="100" ShowValue="false" Mode="ProgressBarMode.Indeterminate" Style="margin-bottom: 20px" />
+}
+else
+{
+    <RadzenCard Style="margin-bottom: 20px">
+        <ChildContent>
+            @(new MarkupString(this.specification?.ExtractDisplayName().ToString()))
+        </ChildContent>
+    </RadzenCard>
+
+    <div class="row">
+        <div class="col-md-12 col-lg-6 col-xl-4">
+            <RadzenCard Style="margin-bottom: 20px">
+
+                <RadzenHeading Text="Specification Tree" Size="H6"></RadzenHeading>
+
+                <RadzenTree Data=@specification?.Children Expand=@LoadChildSpecHierarchies @bind-Value=@selectedSpecHierarchy Style="width: 100%; height: 300px">
+                    <RadzenTreeLevel Text=@(e => "") Template=@SpecObjectTemplate/>
+                </RadzenTree>
+            </RadzenCard>
+        </div>
+
+        <div class="col-md-12 col-lg-6 col-xl-8">
+            <RadzenCard Style="margin-bottom: 20px">
+                <RadzenHeading Text="Specification Attributes" Size="H6"></RadzenHeading>
+
+                <AttributeValuesComponent AttributeValues="this.specification?.Values" />
+            </RadzenCard>
+        </div>
+    </div>
+
+    <RadzenCard Visible="@(this.selectedSpecHierarchy != null)">
+
+        <RadzenHeading Text="Selected Spec Object Attributes" Size="H6"></RadzenHeading>
+
+        <AttributeValuesComponent AttributeValues="((SpecHierarchy)this.selectedSpecHierarchy)?.Object?.Values" />
+    </RadzenCard>
+}
+
+@code {
+
+    /// <summary>
+    /// Gets or sets the unique identifier of the <see cref="ReqIF.TheHeader"/>
+    /// </summary>
+    [Parameter]
+    public string ReqIF { get; set; }
+
+    /// <summary>
+    /// Gets or sets the unique identifier of the <see cref="ReqIF.Specification"/>
+    /// </summary>
+    [Parameter]
+    public string Specification { get; set; }
+
+    /// <summary>
+    /// a value indicating whether the page is loading or not
+    /// </summary>
+    private bool isLoading = true;
+
+    /// <summary>
+    /// The <see cref="Specification"/> object that is loaded on the page
+    /// </summary>
+    private Specification specification;
+
+    /// <summary>
+    /// The selected <see cref="SpecHierarchy"/> object
+    /// </summary>
+    private object selectedSpecHierarchy = null;
+
+    /// <summary>
+    /// Asynchronous Component initialization
+    /// </summary>
+    /// <returns>
+    /// an awaitable <see cref="Task" />
+    /// </returns>
+    protected override void OnInitialized()
+    {
+        isLoading = false;
+
+        this.LoadData();
+    }
+
+    /// <summary>
+    /// Load the data into view-models
+    /// </summary>
+    protected void LoadData()
+    {
+        try
+        {
+            isLoading = true;
+
+            var reqIf = this.reqIfLoaderService.ReqIFData.SingleOrDefault(x => x.TheHeader.Identifier == this.ReqIF);
+
+            this.specification = reqIf.CoreContent.Specifications.SingleOrDefault(x => x.Identifier == Specification);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+        }
+        finally
+        {
+            isLoading = false;
+            StateHasChanged();
+        }
+    }
+
+    private void LoadChildSpecHierarchies(TreeExpandEventArgs args)
+    {
+        if (args.Value is SpecHierarchy specHierarchy)
+        {
+            args.Children.Data = specHierarchy.Children;
+            args.Children.Text = o => "";
+            args.Children.HasChildren = (specHierarchy) => ((SpecHierarchy)specHierarchy).Children.Any();
+            args.Children.Template = SpecObjectTemplate;
+        }
+    }
+
+    private RenderFragment<RadzenTreeItem> SpecObjectTemplate = (context) => builder =>
+    {
+        builder.OpenComponent<RadzenIcon>(0);
+        builder.AddAttribute(1, nameof(RadzenIcon.Icon), "nature");
+        builder.CloseComponent();
+
+        var specHierarchy = context.Value as SpecHierarchy;
+        if (specHierarchy != null)
+        {
+            var displayObject = specHierarchy.Object.ExtractDisplayName();
+
+            if (displayObject is MarkupString)
+            {
+                var markupString = (MarkupString)displayObject;
+                builder.AddMarkupContent(2, markupString.Value);
+            }
+            else
+            {
+                builder.AddContent(2, displayObject);
+            }
+        }
+        else
+        {
+            builder.AddContent(2, "Unknown SpecHierarchy object");
+        }
+    };
+}

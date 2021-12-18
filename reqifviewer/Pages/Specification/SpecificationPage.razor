@@ -14,52 +14,42 @@
     limitations under the License.
 ------------------------------------------------------------------------------->
 
-@page "/reqif/{Identifier}/specificationtypes"
+@page "/reqif/{Identifier}/specifications"
 
 @using ReqIFSharp
+@using ReqifViewer.Infrastructure.ReqIFExtensions
 @using ReqifViewer.Infrastructure.Services
 
 @inject IReqIFLoaderService reqIfLoaderService
 
 @if (isLoading)
 {
-    <RadzenHeading Size="H1" style="display: inline-block" Text="Spec Types"></RadzenHeading>
+    <RadzenHeading Size="H1" style="display: inline-block" Text="Specifications"></RadzenHeading>
 
     <RadzenProgressBar Value="100" ShowValue="false" Mode="ProgressBarMode.Indeterminate" Style="margin-bottom: 20px" />
 }
 else
 {
-    <RadzenHeading Size="H1" style="display: inline-block" Text="@($"{reqIf?.TheHeader.Title} - Specification Types")"></RadzenHeading>
+    <RadzenHeading Size="H1" style="display: inline-block" Text="@($"{reqIf?.TheHeader.Title} - Specifications")"></RadzenHeading>
 
-    <RadzenDataGrid Count="@count" PageSize="10" AllowPaging="true" AllowSorting="true" AllowFiltering="true" Data="@this.specificationTypes" TItem="SpecificationType">
-
-        <Template Context="specificationType">
-
-            <RadzenCard Style="margin-bottom: 20px">Attribute Definitions:</RadzenCard>
-
-            <RadzenDataGrid Data="@specificationType.SpecAttributes" TItem="AttributeDefinition">
-                <Columns>
-                    <RadzenDataGridColumn TItem="AttributeDefinition" Property="LongName" Title="Long Name"/>
-                    <RadzenDataGridColumn TItem="AttributeDefinition" Property="Description" Title="Description"/>
-                    <RadzenDataGridColumn TItem="AttributeDefinition" Property="IsEditable" Title="Is Editable"/>
-                    <RadzenDataGridColumn TItem="AttributeDefinition" Property="Identifier" Title="Identifier">
-                        <Template Context="attributeDefinition">
-                            <a href="/attributedefinition/@attributeDefinition.Identifier">@attributeDefinition.Identifier</a>
-                        </Template>
-                    </RadzenDataGridColumn>
-                </Columns>
-            </RadzenDataGrid>
-        </Template>
+    <RadzenDataGrid Count="@count" PageSize="10" AllowPaging="true" AllowSorting="true" AllowFiltering="true" Data="@this.specifications" TItem="Specification">
 
         <Columns>
-            <RadzenDataGridColumn TItem="SpecificationType" Property="Identifier" Title="Identifier">
-                <Template Context="specType">
-                    <a href="/spectype/@specType?.Identifier">@specType?.LongName</a>
+            <RadzenDataGridColumn TItem="Specification" Title="Long Name">
+                <Template Context="specification">
+                    <a href="/reqif/@Identifier/specification/@specification?.Identifier">
+                        @(new MarkupString(@specification?.ExtractDisplayName().ToString()))
+                    </a>
                 </Template>
             </RadzenDataGridColumn>
-            <RadzenDataGridColumn TItem="SpecificationType" Property="Description" Title="Description"/>
-            <RadzenDataGridColumn TItem="SpecificationType" Property="LastChange" Title="Last Change"/>
-            <RadzenDataGridColumn TItem="SpecificationType" Property="AlternativeId" Title="Alternative Id"/>
+            <RadzenDataGridColumn TItem="Specification" Property="Description" Title="Description" />
+            <RadzenDataGridColumn TItem="Specification" Property="LastChange" Title="Last Change" />
+            <RadzenDataGridColumn TItem="Specification" Property="Identifier" Title="Identifier">
+                <Template Context="specification">
+                    <a href="/reqif/@Identifier/specification/@specification?.Identifier">@specification?.Identifier</a>
+                </Template>
+            </RadzenDataGridColumn>
+            <RadzenDataGridColumn TItem="Specification" Property="AlternativeId" Title="Alternative Id" />
         </Columns>
     </RadzenDataGrid>
 }
@@ -78,14 +68,14 @@ else
     private bool isLoading = true;
 
     /// <summary>
-    /// a value that states the total amount of <see cref="SpecType"/>s in the reqif file
+    /// a value that states the total amount of <see cref="Specification"/>s in the <see cref="ReqIF"/> file
     /// </summary>
     private int count;
 
     /// <summary>
-    /// The <see cref="SpecificationType"/>s that are contained in the <see cref="ReqIF"/>
+    /// The <see cref="Specification"/>s that are contained in the <see cref="ReqIF"/>
     /// </summary>
-    private IEnumerable<SpecificationType> specificationTypes;
+    private IEnumerable<Specification> specifications;
 
     /// <summary>
     /// The <see cref="ReqIF"/> object that is loaded on the page
@@ -116,9 +106,9 @@ else
 
             this.reqIf = this.reqIfLoaderService.ReqIFData.SingleOrDefault(x => x.TheHeader.Identifier == this.Identifier);
 
-            this.specificationTypes = reqIf.CoreContent.SpecTypes.OfType<SpecificationType>();
+            this.specifications = reqIf.CoreContent.Specifications;
 
-            this.count = this.specificationTypes.Count();
+            this.count = this.specifications.Count();
         }
         catch (Exception e)
         {
