@@ -31,19 +31,38 @@ else
 {
     <RadzenHeading Size="H1" style="display: inline-block" Text="@($"{reqIf?.TheHeader.Title} - Spec Relation Types")"></RadzenHeading>
 
-    <RadzenGrid Count="@count" PageSize="10" AllowPaging="true" AllowSorting="true" AllowFiltering="true" Data="@this.specRelationTypes" TItem="SpecRelationType">
+    <RadzenDataGrid Count="@count" PageSize="10" AllowPaging="true" AllowSorting="true" AllowFiltering="true" Data="@this.specRelationTypes" TItem="SpecRelationType">
+
+        <Template Context="specRelationType">
+
+            <RadzenCard Style="margin-bottom: 20px">Attribute Definitions:</RadzenCard>
+
+            <RadzenDataGrid Data="@specRelationType.SpecAttributes" TItem="AttributeDefinition">
+                <Columns>
+                    <RadzenDataGridColumn TItem="AttributeDefinition" Property="LongName" Title="Long Name" />
+                    <RadzenDataGridColumn TItem="AttributeDefinition" Property="Description" Title="Description" />
+                    <RadzenDataGridColumn TItem="AttributeDefinition" Property="IsEditable" Title="Is Editable" />
+                    <RadzenDataGridColumn TItem="AttributeDefinition" Property="Identifier" Title="Identifier">
+                        <Template Context="attributeDefinition">
+                            <a href="/attributedefinition/@attributeDefinition.Identifier">@attributeDefinition.Identifier</a>
+                        </Template>
+                    </RadzenDataGridColumn>
+                </Columns>
+            </RadzenDataGrid>
+        </Template>
+
         <Columns>
-            <RadzenGridColumn TItem="SpecRelationType" Property="Identifier" Title="Identifier">
+            <RadzenDataGridColumn TItem="SpecRelationType" Property="Identifier" Title="Identifier">
                 <Template Context="specRelationType">
                     <a href="/specRelationType/@specRelationType?.Identifier">@specRelationType?.LongName</a>
                 </Template>
-            </RadzenGridColumn>
-            <RadzenGridColumn TItem="SpecRelationType" Property="Description" Title="Description" />
-            <RadzenGridColumn TItem="SpecRelationType" Property="LastChange" Title="Last Change" />
-            <RadzenGridColumn TItem="SpecRelationType" Property="Identifier" Title="Identifier" />
-            <RadzenGridColumn TItem="SpecRelationType" Property="AlternativeId" Title="Alternative Id" />
+            </RadzenDataGridColumn>
+            <RadzenDataGridColumn TItem="SpecRelationType" Property="Description" Title="Description" />
+            <RadzenDataGridColumn TItem="SpecRelationType" Property="LastChange" Title="Last Change" />
+            <RadzenDataGridColumn TItem="SpecRelationType" Property="Identifier" Title="Identifier" />
+            <RadzenDataGridColumn TItem="SpecRelationType" Property="AlternativeId" Title="Alternative Id" />
         </Columns>
-    </RadzenGrid>
+    </RadzenDataGrid>
 }
 
 @code {

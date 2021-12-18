@@ -31,19 +31,37 @@ else
 {
     <RadzenHeading Size="H1" style="display: inline-block" Text="@($"{reqIf?.TheHeader.Title} - Spec Object Types")"></RadzenHeading>
 
-    <RadzenGrid Count="@count" PageSize="10" AllowPaging="true" AllowSorting="true" AllowFiltering="true" Data="@this.specObjectTypes" TItem="SpecObjectType">
+    <RadzenDataGrid Count="@count" PageSize="10" AllowPaging="true" AllowSorting="true" AllowFiltering="true" ExpandMode="DataGridExpandMode.Multiple" Data="@this.specObjectTypes" TItem="SpecObjectType">
+
+        <Template Context="specObjectType">
+
+            <RadzenCard>Attribute Definitions:</RadzenCard>
+
+            <RadzenDataGrid Data="@specObjectType.SpecAttributes" TItem="AttributeDefinition">
+                <Columns>
+                    <RadzenDataGridColumn TItem="AttributeDefinition" Property="LongName" Title="Long Name" />
+                    <RadzenDataGridColumn TItem="AttributeDefinition" Property="Description" Title="Description" />
+                    <RadzenDataGridColumn TItem="AttributeDefinition" Property="IsEditable" Title="Is Editable" />
+                    <RadzenDataGridColumn TItem="AttributeDefinition" Property="Identifier" Title="Identifier">
+                        <Template Context="attributeDefinition">
+                            <a href="/attributedefinition/@attributeDefinition.Identifier">@attributeDefinition.Identifier</a>
+                        </Template>
+                    </RadzenDataGridColumn>
+                    </Columns>
+            </RadzenDataGrid>
+        </Template>
+
         <Columns>
-            <RadzenGridColumn TItem="SpecObjectType" Property="Identifier" Title="Identifier">
+            <RadzenDataGridColumn TItem="SpecObjectType" Property="Identifier" Title="Identifier">
                 <Template Context="specObjectType">
-                    <a href="/specObjectType/@specObjectType?.Identifier">@specObjectType?.LongName</a>
+                    <a href="/specobjecttype/@specObjectType?.Identifier">@specObjectType?.LongName</a>
                 </Template>
-            </RadzenGridColumn>
-            <RadzenGridColumn TItem="SpecObjectType" Property="Description" Title="Description" />
-            <RadzenGridColumn TItem="SpecObjectType" Property="LastChange" Title="Last Change" />
-            <RadzenGridColumn TItem="SpecObjectType" Property="Identifier" Title="Identifier" />
-            <RadzenGridColumn TItem="SpecObjectType" Property="AlternativeId" Title="Alternative Id" />
+            </RadzenDataGridColumn>
+            <RadzenDataGridColumn TItem="SpecObjectType" Property="Description" Title="Description"/>
+            <RadzenDataGridColumn TItem="SpecObjectType" Property="AlternativeId" Title="Alternative Id"/>
         </Columns>
-    </RadzenGrid>
+
+    </RadzenDataGrid>
 }
 
 @code {
