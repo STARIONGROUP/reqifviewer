@@ -1,0 +1,66 @@
+﻿<!------------------------------------------------------------------------------
+    Copyright 2021 RHEA System S.A.
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+------------------------------------------------------------------------------->
+
+@using ReqifViewer.Infrastructure.ReqIFExtensions
+@using ReqIFSharp
+
+<RadzenDataGrid PageSize="10" AllowPaging="true" AllowSorting="true" AllowFiltering="true" Data="@this.Specifications" TItem="Specification">
+    <Columns>
+        <RadzenDataGridColumn TItem="Specification" Title="Long Name">
+            <Template Context="specification">
+                <a href="/reqif/@this.reqifIdentifier/specification/@specification?.Identifier">
+                    @(new MarkupString(@specification?.ExtractDisplayName().ToString()))
+                </a>
+            </Template>
+        </RadzenDataGridColumn>
+        <RadzenDataGridColumn TItem="Specification" Property="Description" Title="Description" />
+        <RadzenDataGridColumn TItem="Specification" Property="LastChange" Title="Last Change" />
+        <RadzenDataGridColumn TItem="Specification" Property="Identifier" Title="Identifier">
+            <Template Context="specification">
+                <a href="/reqif/@this.reqifIdentifier/specification/@specification?.Identifier">@specification?.Identifier</a>
+            </Template>
+        </RadzenDataGridColumn>
+        <RadzenDataGridColumn TItem="Specification" Property="AlternativeId" Title="Alternative Id" />
+    </Columns>
+</RadzenDataGrid>
+
+@code {
+
+    /// <summary>
+    /// Gets or sets the <see cref="IEnumerable{AttributeValue}"/>
+    /// </summary>
+    [Parameter]
+    public IEnumerable<Specification> Specifications { get; set; }
+
+    /// <summary>
+    /// The unique identifier of the container reqif document
+    /// </summary>
+    private string reqifIdentifier;
+
+    protected override void OnParametersSet()
+    {
+        var specification = this.Specifications.FirstOrDefault();
+
+        try
+        {
+            this.reqifIdentifier = specification.ReqIFContent.DocumentRoot.TheHeader.Identifier;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+        }
+    }
+}
