@@ -4,7 +4,7 @@
     <TargetFramework>net5.0</TargetFramework>
     <Company>RHEA System S.A.</Company>
     <Title>ReqifViewer.Infrastructure</Title>
-    <Version>0.3.0</Version>
+    <Version>0.4.0</Version>
     <Description>Shared Infrastructure</Description>
     <Copyright>Copyright © RHEA System S.A.</Copyright>
     <Authors>Sam Gerené</Authors>
