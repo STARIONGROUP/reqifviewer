@@ -44,7 +44,7 @@ else
                     <RadzenDataGridColumn TItem="AttributeDefinition" Property="IsEditable" Title="Is Editable" />
                     <RadzenDataGridColumn TItem="AttributeDefinition" Property="Identifier" Title="Identifier">
                         <Template Context="attributeDefinition">
-                            <a href="/attributedefinition/@attributeDefinition.Identifier">@attributeDefinition.Identifier</a>
+                            <a href="/reqif/@this.Identifier//attributedefinition/@attributeDefinition.Identifier">@attributeDefinition.Identifier</a>
                         </Template>
                     </RadzenDataGridColumn>
                     </Columns>
@@ -54,7 +54,7 @@ else
         <Columns>
             <RadzenDataGridColumn TItem="SpecObjectType" Property="Identifier" Title="Identifier">
                 <Template Context="specObjectType">
-                    <a href="/specobjecttype/@specObjectType?.Identifier">@specObjectType?.LongName</a>
+                    <a href="/reqif/@this.Identifier//specobjecttype/@specObjectType?.Identifier">@specObjectType?.LongName</a>
                 </Template>
             </RadzenDataGridColumn>
             <RadzenDataGridColumn TItem="SpecObjectType" Property="Description" Title="Description"/>

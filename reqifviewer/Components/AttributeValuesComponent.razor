@@ -16,7 +16,7 @@
 
 @using ReqIFSharp;
 
-<RadzenDataGrid PageSize="10" AllowPaging="true" Data="@this.AttributeValues" AllowFiltering="true" TItem="AttributeValue">
+<RadzenDataGrid Data="@this.AttributeValues" AllowFiltering="true" TItem="AttributeValue">
     <Columns>
         <RadzenDataGridColumn TItem="AttributeValue" Title="Long Name">
             <Template Context="attributeValue">

@@ -1,0 +1,209 @@
+﻿<!------------------------------------------------------------------------------
+    Copyright 2021 RHEA System S.A.
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+------------------------------------------------------------------------------->
+
+@page "/reqif/{ReqIF}/datatypedefinition/{DatatypeDefinition}"
+
+@using ReqIFSharp
+@using ReqifViewer.Infrastructure.ReqIFExtensions
+@using ReqifViewer.Infrastructure.Services
+
+@inject IReqIFLoaderService reqIfLoaderService
+
+@if (isLoading)
+{
+    <RadzenHeading Size="H1" style="display: inline-block" Text="Loading Datatype Definition"></RadzenHeading>
+
+    <RadzenProgressBar Value="100" ShowValue="false" Mode="ProgressBarMode.Indeterminate" Style="margin-bottom: 20px" />
+}
+else
+{
+    <RadzenCard Style="margin-bottom: 20px">
+        <ChildContent>
+            @this.datatypeDefinition?.LongName
+        </ChildContent>
+    </RadzenCard>
+
+    <div class="row">
+
+        @switch (datatypeDefinition)
+        {
+            case DatatypeDefinitionEnumeration datatypeDefinitionEnumeration:
+                <div class="col-md-12 col-lg-4 col-xl-4">
+
+                    <RadzenCard Style="margin-bottom: 20px">
+                        <h3 class="h5">Properties:</h3>
+                    </RadzenCard>
+                </div>
+                break;
+
+            case DatatypeDefinitionInteger datatypeDefinitionInteger:
+
+                <div class="col-md-12 col-lg-4 col-xl-4">
+                    <RadzenCard Style="margin-bottom: 20px">
+                        <h3 class="h5">Properties:</h3>
+
+                        <div>
+                            <div>Min:</div>
+                            <b>@(datatypeDefinitionInteger.Min)</b>
+                            <div class="mt-3">Max:</div>
+                            <b>@(datatypeDefinitionInteger.Max)</b>
+                        </div>
+                    </RadzenCard>
+                </div>
+                break;
+            case DatatypeDefinitionReal datatypeDefinitionReal:
+
+                <div class="col-md-12 col-lg-4 col-xl-4">
+                    <RadzenCard Style="margin-bottom: 20px">
+                        <h3 class="h5">Properties:</h3>
+
+                        <div>
+                            <div>Accuracy:</div>
+                            <b>@(datatypeDefinitionReal.Accuracy)</b>
+                            <div>Min:</div>
+                            <b>@(datatypeDefinitionReal.Min)</b>
+                            <div class="mt-3">Max:</div>
+                            <b>@(datatypeDefinitionReal.Max)</b>
+                        </div>
+                    </RadzenCard>
+                </div>
+                break;
+
+            case DatatypeDefinitionString datatypeDefinitionString:
+
+                <div class="col-md-12 col-lg-4 col-xl-4">
+                    <RadzenCard Style="margin-bottom: 20px">
+                        <h3 class="h5">Properties:</h3>
+
+                        <div>
+                            <div>Max Length:</div>
+                            <b>@(datatypeDefinitionString.MaxLength)</b>
+                        </div>
+                    </RadzenCard>
+                </div>
+                break;
+        }
+
+        <div class="col-md-6 col-lg-8 col-xl-8">
+            <RadzenCard Style="margin-bottom: 20px">
+
+                <h3 class="h5">Referencing AttributeDefinitions:</h3>
+
+                <RadzenDataGrid Data="@this.datatypeDefinition.QueryReferencingAttributeDefinitions()" TItem="AttributeDefinition">
+                    <Columns>
+                        <RadzenDataGridColumn TItem="AttributeDefinition" Title="Long Name">
+                            <Template Context="attributeDefinition">
+                                <a href="/reqif/@this.ReqIF/attributedefinition/@attributeDefinition?.Identifier">@attributeDefinition.LongName</a>
+                            </Template>
+                        </RadzenDataGridColumn>
+                        <RadzenDataGridColumn TItem="AttributeDefinition" Title="Containing SpecType">
+                            <Template Context="attributeDefinition">
+
+                                @switch (attributeDefinition?.SpecType)
+                                {
+                                    case SpecObjectType specObjectType:
+                                        <a href="/reqif/@this.ReqIF/specobjecttype/@attributeDefinition?.SpecType?.Identifier">@attributeDefinition?.SpecType?.LongName [SpecObject Type]</a>
+                                        break;
+                                    case SpecificationType specificationType:
+                                        <a href="/reqif/@this.ReqIF/specificationtype/@attributeDefinition?.SpecType?.Identifier">@attributeDefinition?.SpecType?.LongName [Specification Type]</a>
+                                        break;
+                                    case SpecRelationType specRelationType:
+                                        <a href="/reqif/@this.ReqIF/specrelationtype/@attributeDefinition?.SpecType?.Identifier">@attributeDefinition?.SpecType?.LongName [SpecRelation Type] </a>
+                                        break;
+                                }
+
+                            </Template>
+
+                        </RadzenDataGridColumn>
+                        <RadzenDataGridColumn TItem="AttributeDefinition" Property="Description" Title="Description" />
+                        <RadzenDataGridColumn TItem="AttributeDefinition" Property="LastChange" Title="Last Change" />
+                        <RadzenDataGridColumn TItem="AttributeDefinition" Title="Identifier">
+                            <Template Context="attributeDefinition">
+                                <a href="/reqif/@this.ReqIF/attributedefinition/@attributeDefinition?.Identifier">@datatypeDefinition?.Identifier</a>
+                            </Template>
+                        </RadzenDataGridColumn>
+                        <RadzenDataGridColumn TItem="DatatypeDefinition" Property="AlternativeId" Title="Alternative Id" />
+                    </Columns>
+
+                </RadzenDataGrid>
+
+            </RadzenCard>
+
+        </div>
+    </div>
+}
+
+@code {
+
+    /// <summary>
+    /// Gets or sets the unique identifier of the <see cref="ReqIF.TheHeader"/>
+    /// </summary>
+    [Parameter]
+    public string ReqIF { get; set; }
+
+    /// <summary>
+    /// Gets or sets the unique identifier of the <see cref="ReqIF.Specification"/>
+    /// </summary>
+    [Parameter]
+    public string DatatypeDefinition { get; set; }
+
+    /// <summary>
+    /// The <see cref="DatatypeDefinition"/> object that is loaded on the page
+    /// </summary>
+    private DatatypeDefinition datatypeDefinition;
+
+    /// <summary>
+    /// a value indicating whether the page is loading or not
+    /// </summary>
+    private bool isLoading = true;
+
+    /// <summary>
+    /// Asynchronous Component initialization
+    /// </summary>
+    /// <returns>
+    /// an awaitable <see cref="Task" />
+    /// </returns>
+    protected override void OnInitialized()
+    {
+        isLoading = false;
+
+        this.LoadData();
+    }
+
+    /// <summary>
+    /// Load the data into view-models
+    /// </summary>
+    protected void LoadData()
+    {
+        try
+        {
+            isLoading = true;
+
+            var reqIf = this.reqIfLoaderService.ReqIFData.SingleOrDefault(x => x.TheHeader.Identifier == this.ReqIF);
+
+            this.datatypeDefinition = reqIf.CoreContent.DataTypes.SingleOrDefault(x => x.Identifier == DatatypeDefinition);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+        }
+        finally
+        {
+            isLoading = false;
+            StateHasChanged();
+        }
+    }
+}

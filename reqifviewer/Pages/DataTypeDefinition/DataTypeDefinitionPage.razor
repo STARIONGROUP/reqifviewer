@@ -14,9 +14,10 @@
     limitations under the License.
 ------------------------------------------------------------------------------->
 
-@page "/reqif/{Identifier}/datatypes"
+@page "/reqif/{Identifier}/datatypedefinitions"
 
 @using ReqIFSharp
+@using ReqifViewer.Infrastructure.ReqIFExtensions
 @using ReqifViewer.Infrastructure.Services
 
 @inject IReqIFLoaderService reqIfLoaderService
@@ -31,19 +32,28 @@ else
 {
     <RadzenHeading Size="H1" style="display: inline-block" Text="@($"{reqIf?.TheHeader.Title} - Data Types")"></RadzenHeading>
 
-    <RadzenGrid  Count="@count" PageSize="10" AllowPaging="true" AllowSorting="true" AllowFiltering="true" Data="@this.datatypeDefinitions" TItem="DatatypeDefinition">
+    <RadzenDataGrid  Count="@count" PageSize="10" AllowPaging="true" Data="@this.datatypeDefinitions" TItem="DatatypeDefinition">
         <Columns>
-            <RadzenGridColumn TItem="DatatypeDefinition" Property="Identifier" Title="Identifier">
+            <RadzenDataGridColumn TItem="DatatypeDefinition" Title="Long Name">
                 <Template Context="datatypeDefinition">
-                    <a href="/datatypedefinition/@datatypeDefinition?.Identifier">@datatypeDefinition?.LongName</a>
+                    <a href="/reqif/@this.Identifier/datatypedefinition/@datatypeDefinition?.Identifier">@datatypeDefinition?.LongName</a>
                 </Template>
-            </RadzenGridColumn>
-            <RadzenGridColumn TItem="DatatypeDefinition" Property="Description" Title="Description" />
-            <RadzenGridColumn TItem="DatatypeDefinition" Property="LastChange" Title="Last Change" />
-            <RadzenGridColumn TItem="DatatypeDefinition" Property="Identifier" Title="Identifier" />
-            <RadzenGridColumn TItem="DatatypeDefinition" Property="AlternativeId" Title="Alternative Id" />
+            </RadzenDataGridColumn>
+            <RadzenDataGridColumn TItem="DatatypeDefinition" Title="Type">
+                <Template Context="datatypeDefinition">
+                    @datatypeDefinition?.QueryDatatypeName()
+                </Template>
+            </RadzenDataGridColumn>
+            <RadzenDataGridColumn TItem="DatatypeDefinition" Property="Description" Title="Description" />
+            <RadzenDataGridColumn TItem="DatatypeDefinition" Property="LastChange" Title="Last Change" />
+            <RadzenDataGridColumn TItem="DatatypeDefinition" Title="Identifier">
+                <Template Context="datatypeDefinition">
+                    <a href="/reqif/@this.Identifier/datatypedefinition/@datatypeDefinition?.Identifier">@datatypeDefinition?.Identifier</a>
+                </Template>
+            </RadzenDataGridColumn>
+            <RadzenDataGridColumn TItem="DatatypeDefinition" Property="AlternativeId" Title="Alternative Id" />
         </Columns>
-    </RadzenGrid>
+    </RadzenDataGrid>
 }
 
 @code {

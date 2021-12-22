@@ -32,39 +32,41 @@ else
         <ChildContent>
             <RadzenHeading Size="H2" Text="Statistics"></RadzenHeading>
             <div class="row">
-                <RadzenCard Style="margin-bottom: 10px;">
-                    <ChildContent>
-                        <div class="row">
-                            <div class="col-lg-6">
-                                <div><b>Title:</b></div>
-                                <div>@this.reqIfHeader?.Title</div>
+                <div class="col-md-6 col-xl-6 col-lg-6">
+                    <RadzenCard Style="margin-bottom: 10px;">
+                        <ChildContent>
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <div><b>Title:</b></div>
+                                    <div>@this.reqIfHeader?.Title</div>
 
-                                <div><b>Comment:</b></div>
-                                <div>@this.reqIfHeader?.Comment</div>
+                                    <div><b>Comment:</b></div>
+                                    <div>@this.reqIfHeader?.Comment</div>
 
-                                <div style="margin-top: 10px"><b>ReqIF Version:</b></div>
-                                <div>@this.reqIfHeader?.ReqIFVersion</div>
+                                    <div style="margin-top: 10px"><b>ReqIF Version:</b></div>
+                                    <div>@this.reqIfHeader?.ReqIFVersion</div>
 
-                                <div style="margin-top: 10px"><b>Creation Time:</b></div>
-                                <div>@this.reqIfHeader?.CreationTime.ToString("MMMM dd, yyyy HH:mm", CultureInfo.InvariantCulture)</div>
+                                    <div style="margin-top: 10px"><b>Creation Time:</b></div>
+                                    <div>@this.reqIfHeader?.CreationTime.ToString("MMMM dd, yyyy HH:mm", CultureInfo.InvariantCulture)</div>
+                                </div>
+
+                                <div class="col-lg-6">
+                                    <div><b>Identifier:</b></div>
+                                    <div>@this.reqIfHeader?.Identifier</div>
+
+                                    <div style="margin-top: 10px"><b>Repository Id:</b></div>
+                                    <div>@this.reqIfHeader?.RepositoryId</div>
+
+                                    <div style="margin-top: 10px"><b>ReqIF Tool Id:</b></div>
+                                    <div>@this.reqIfHeader?.ReqIFToolId</div>
+
+                                    <div style="margin-top: 10px"><b>Source Tool Id:</b></div>
+                                    <div>@this.reqIfHeader?.SourceToolId</div>
+                                </div>
                             </div>
-
-                            <div class="col-lg-6">
-                                <div><b>Identifier:</b></div>
-                                <div>@this.reqIfHeader?.Identifier</div>
-
-                                <div style="margin-top: 10px"><b>Repository Id:</b></div>
-                                <div>@this.reqIfHeader?.RepositoryId</div>
-
-                                <div style="margin-top: 10px"><b>ReqIF Tool Id:</b></div>
-                                <div>@this.reqIfHeader?.ReqIFToolId</div>
-
-                                <div style="margin-top: 10px"><b>Source Tool Id:</b></div>
-                                <div>@this.reqIfHeader?.SourceToolId</div>
-                            </div>
-                        </div>
-                    </ChildContent>
-                </RadzenCard>
+                        </ChildContent>
+                    </RadzenCard>
+                </div>
             </div>
 
             <div class="row">
@@ -107,7 +109,7 @@ else
                 </div>
 
                 <div class="col-md-12 col-xl-2 col-lg-6">
-                    <a href="@($"/reqif/{reqIfHeader.Identifier}/datatypes")">
+                    <a href="@($"/reqif/{reqIfHeader.Identifier}/datatypedefinitions")">
                         <RadzenCard style="margin-bottom: 16px">
                             <ChildContent>
                                 <div class="row">
