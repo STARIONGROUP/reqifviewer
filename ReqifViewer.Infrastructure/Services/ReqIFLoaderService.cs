@@ -22,6 +22,7 @@ namespace ReqifViewer.Infrastructure.Services
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.IO;
     using System.Threading.Tasks;
     using ReqIFSharp;
@@ -54,6 +55,8 @@ namespace ReqifViewer.Infrastructure.Services
         /// </returns>
         public async Task Load(Stream reqIFStream)
         {
+            var sw = Stopwatch.StartNew();
+
             this.SourceStream = new MemoryStream();
             await reqIFStream.CopyToAsync(this.SourceStream);
             
@@ -63,9 +66,9 @@ namespace ReqifViewer.Infrastructure.Services
             }
 
             IEnumerable<ReqIF> result = null;
-            
+
             var reqIfDeserializer = new ReqIFDeserializer();
-            result = reqIfDeserializer.Deserialize(this.SourceStream);
+            result = await reqIfDeserializer.DeserializeAsync(this.SourceStream);
 
             this.ReqIFData = result;
 

@@ -21,10 +21,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Blazor-Analytics" Version="3.9.0" />
+    <PackageReference Include="Blazor-Analytics" Version="3.10.0" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="5.0.13" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="5.0.13" PrivateAssets="all" />
-    <PackageReference Include="Radzen.Blazor" Version="3.13.8" />
+    <PackageReference Include="Radzen.Blazor" Version="3.13.10" />
     <PackageReference Include="System.Net.Http.Json" Version="5.0.0" />
   </ItemGroup>
 

@@ -16,6 +16,7 @@
 
 @page "/"
 
+@using System.Diagnostics
 @using System.Globalization
 @using System.IO
 @using System.Threading
@@ -46,49 +47,49 @@
     </div>
 </div>
 
-<RadzenButton style="margin: 0 1rem 1rem 0; width: 200px" Icon="update" Disabled="@(!reqifisAvailable)" BusyText="Loading ..." IsBusy=@isLoading Click=@OnLoadReqIF Text="Load" />
-<RadzenButton style="margin: 0 1rem 1rem 0; width: 200px" Click="@OnCancel" Text="Cancel" Disabled="@(!isLoading)" />
-<RadzenButton style="margin: 0 1rem 1rem 0; width: 200px" Click="@OnClear" Text="Clear" Disabled="@(reqIfs == null)" />
+<RadzenButton style="margin: 0 1rem 1rem 0; width: 200px" Icon="update" Disabled="@(!reqifisAvailable)" BusyText="Loading ..." IsBusy=@this.isLoading Click=@OnLoadReqIF Text="Load" />
+<RadzenButton style="margin: 0 1rem 1rem 0; width: 200px" Click="@OnCancel" Text="Cancel" Disabled="@(!this.isLoading)" />
+<RadzenButton style="margin: 0 1rem 1rem 0; width: 200px" Click="@OnClear" Text="Clear" Disabled="@(this.reqIfs == null)" />
 
-@if (@isLoading)
+@if (this.isLoading)
+{
+    <RadzenProgressBar Value="100" ShowValue="false" Mode="ProgressBarMode.Indeterminate" Style="margin-bottom: 20px" />
+}
+else
+{
+    if (this.reqIfs != null)
     {
-<RadzenProgressBar Value="100" ShowValue="false" Mode="ProgressBarMode.Indeterminate" Style="margin-bottom: 20px" />
+        <RadzenGrid Data="@reqIfs" TItem="ReqIF">
+            <Columns>
+                <RadzenGridColumn Sortable="true" TItem="ReqIF" Title="Title">
+                    <Template Context="data">
+                        <a href="/reqifstatistics/@data?.TheHeader.Identifier">@data?.TheHeader?.Title</a>
+                    </Template>
+                </RadzenGridColumn>
+                <RadzenGridColumn Sortable="true" TItem="ReqIF" Title="ReqIF Version">
+                    <Template Context="data">
+                        @data?.TheHeader?.ReqIFVersion
+                    </Template>
+                </RadzenGridColumn>
+                <RadzenGridColumn Sortable="true" TItem="ReqIF" Title="Creation Date">
+                    <Template Context="data">
+                        <div>@data?.TheHeader?.CreationTime.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture)</div>
+                    </Template>
+                </RadzenGridColumn>
+                <RadzenGridColumn Sortable="true" TItem="ReqIF" Title="Comment">
+                    <Template Context="data">
+                        <div>@data?.TheHeader?.Comment</div>
+                    </Template>
+                </RadzenGridColumn>
+                <RadzenGridColumn Sortable="true" TItem="ReqIF" Title="Tool">
+                    <Template Context="data">
+                        <div>@data?.TheHeader?.ReqIFToolId</div>
+                    </Template>
+                </RadzenGridColumn>
+            </Columns>
+        </RadzenGrid>
     }
-    else
-    {
-        if (reqIfs != null)
-        {
-<RadzenGrid Data="@reqIfs" TItem="ReqIF">
-    <Columns>
-        <RadzenGridColumn Sortable="true" TItem="ReqIF" Title="Title">
-            <Template Context="data">
-                <a href="/reqifstatistics/@data?.TheHeader.Identifier">@data?.TheHeader?.Title</a>
-            </Template>
-        </RadzenGridColumn>
-        <RadzenGridColumn Sortable="true" TItem="ReqIF" Title="ReqIF Version">
-            <Template Context="data">
-                @data?.TheHeader?.ReqIFVersion
-            </Template>
-        </RadzenGridColumn>
-        <RadzenGridColumn Sortable="true" TItem="ReqIF" Title="Creation Date">
-            <Template Context="data">
-                <div>@data?.TheHeader?.CreationTime.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture)</div>
-            </Template>
-        </RadzenGridColumn>
-        <RadzenGridColumn Sortable="true" TItem="ReqIF" Title="Comment">
-            <Template Context="data">
-                <div>@data?.TheHeader?.Comment</div>
-            </Template>
-        </RadzenGridColumn>
-        <RadzenGridColumn Sortable="true" TItem="ReqIF" Title="Tool">
-            <Template Context="data">
-                <div>@data?.TheHeader?.ReqIFToolId</div>
-            </Template>
-        </RadzenGridColumn>
-    </Columns>
-</RadzenGrid>
-        }
-    }
+}
 
 @code {
 
@@ -130,6 +131,8 @@
     /// </returns>
     private async Task HandleSelection(InputFileChangeEventArgs e)
     {
+        var sw = Stopwatch.StartNew();
+
         this.reqifisAvailable = false;
 
         this.reqifStream = new MemoryStream();
@@ -139,6 +142,8 @@
         this.fileSelectionText = e.File.Name;
 
         this.reqifisAvailable = true;
+
+        Console.WriteLine($"IndexPage: file read into stream in {sw.ElapsedMilliseconds} [ms]");
     }
 
     /// <summary>
@@ -151,8 +156,13 @@
     {
         try
         {
+            var sw = Stopwatch.StartNew();
+
             this.isLoading = true;
+
             this.StateHasChanged();
+
+            await Task.Delay(500);
 
             this.cancellationTokenSource = new CancellationTokenSource();
 
@@ -165,14 +175,16 @@
 
             await this.reqIfLoaderService.Load(this.reqifStream);
             this.reqIfs = this.reqIfLoaderService.ReqIFData;
+
+            Console.WriteLine($"IndexPage: a total  of {this.reqIfs.Count()} ReqIF objects deserialized in {sw.ElapsedMilliseconds} [ms]");
         }
         catch (TaskCanceledException)
         {
-            Console.WriteLine("Load was cancelled");
+            Console.WriteLine("IndexPage: Load was cancelled");
         }
         catch (Exception e)
         {
-            Console.WriteLine(e);
+            Console.WriteLine($"IndexPage: {e}");
         }
         finally
         {
