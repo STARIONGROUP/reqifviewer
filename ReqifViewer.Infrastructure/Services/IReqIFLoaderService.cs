@@ -23,6 +23,7 @@ namespace ReqifViewer.Infrastructure.Services
     using System;
     using System.IO;
     using System.Collections.Generic;
+    using System.Threading;
     using System.Threading.Tasks;
 
     using ReqIFSharp;
@@ -50,10 +51,13 @@ namespace ReqifViewer.Infrastructure.Services
         /// <param name="reqifStream">
         /// a <see cref="Stream"/> that contains <see cref="ReqIF"/> content
         /// </param>
+        /// <param name="token">
+        /// A cancellation token that can be used by other objects or threads to receive notice of cancellation.
+        /// </param>
         /// <returns>
         /// an awaitable <see cref="Task"/>
         /// </returns>
-        Task Load(Stream reqifStream);
+        Task Load(Stream reqifStream, CancellationToken token);
 
         /// <summary>
         /// Resets the <see cref="IReqIFLoaderService"/> by clearing <see cref="ReqIFData"/> and

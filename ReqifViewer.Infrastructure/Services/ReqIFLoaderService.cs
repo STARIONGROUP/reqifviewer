@@ -24,6 +24,7 @@ namespace ReqifViewer.Infrastructure.Services
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.IO;
+    using System.Threading;
     using System.Threading.Tasks;
     using ReqIFSharp;
 
@@ -50,15 +51,18 @@ namespace ReqifViewer.Infrastructure.Services
         /// <param name="reqIFStream">
         /// a <see cref="Stream"/> that contains <see cref="ReqIF"/> content
         /// </param>
+        /// <param name="token">
+        /// A cancellation token that can be used by other objects or threads to receive notice of cancellation.
+        /// </param>
         /// <returns>
         /// an awaitable <see cref="Task"/>
         /// </returns>
-        public async Task Load(Stream reqIFStream)
+        public async Task Load(Stream reqIFStream, CancellationToken token)
         {
             var sw = Stopwatch.StartNew();
 
             this.SourceStream = new MemoryStream();
-            await reqIFStream.CopyToAsync(this.SourceStream);
+            await reqIFStream.CopyToAsync(this.SourceStream, token);
             
             if (this.SourceStream.Position != 0)
             {
@@ -68,7 +72,7 @@ namespace ReqifViewer.Infrastructure.Services
             IEnumerable<ReqIF> result = null;
 
             var reqIfDeserializer = new ReqIFDeserializer();
-            result = await reqIfDeserializer.DeserializeAsync(this.SourceStream);
+            result = await reqIfDeserializer.DeserializeAsync(this.SourceStream, token);
 
             this.ReqIFData = result;
 

@@ -173,7 +173,7 @@ else
                 this.reqifStream.Seek(0, SeekOrigin.Begin);
             }
 
-            await this.reqIfLoaderService.Load(this.reqifStream);
+            await this.reqIfLoaderService.Load(this.reqifStream, this.cancellationTokenSource.Token);
             this.reqIfs = this.reqIfLoaderService.ReqIFData;
 
             Console.WriteLine($"IndexPage: a total  of {this.reqIfs.Count()} ReqIF objects deserialized in {sw.ElapsedMilliseconds} [ms]");
