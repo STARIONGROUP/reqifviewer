@@ -45,12 +45,12 @@ namespace ReqifViewer.Infrastructure.Tests.Services
         [Test]
         public async Task Verify_that_ReqIF_data_is_loaded_and_set_to_ReqIFData()
         {
-            var cancellationTokenSource = new CancellationTokenSource();
+            var cts = new CancellationTokenSource();
 
             var reqifPath = Path.Combine(TestContext.CurrentContext.TestDirectory, "TestData", "ProR_Traceability-Template-v1.0.reqif");
 
             using var fileStream = new FileStream(reqifPath, FileMode.Open);
-            await this.reqIfLoaderService.Load(fileStream);
+            await this.reqIfLoaderService.Load(fileStream, cts.Token);
 
             Assert.That(this.reqIfLoaderService.ReqIFData, Is.Not.Empty);
 
@@ -62,12 +62,12 @@ namespace ReqifViewer.Infrastructure.Tests.Services
         [Test]
         public async Task Verify_that_ReqIF_data_with_objects_is_loaded_and_set_to_ReqIFData()
         {
-            var cancellationTokenSource = new CancellationTokenSource();
+            var cts = new CancellationTokenSource();
 
             var reqifPath = Path.Combine(TestContext.CurrentContext.TestDirectory, "TestData", "requirements-and-objects.reqifz");
 
             using var fileStream = new FileStream(reqifPath, FileMode.Open);
-            await this.reqIfLoaderService.Load(fileStream);
+            await this.reqIfLoaderService.Load(fileStream, cts.Token);
 
             Assert.That(this.reqIfLoaderService.ReqIFData, Is.Not.Empty);
 

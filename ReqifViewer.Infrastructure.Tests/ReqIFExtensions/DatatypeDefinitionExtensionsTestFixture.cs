@@ -18,6 +18,10 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
+using System.Threading;
+using System.Threading.Tasks;
+using System.Xml;
+
 namespace ReqifViewer.Infrastructure.Tests.ReqIFExtensions
 {
     using System;
@@ -63,6 +67,10 @@ namespace ReqifViewer.Infrastructure.Tests.ReqIFExtensions
 
         private class TestDataTypeDefinition : DatatypeDefinition
         {
+            public override Task ReadXmlAsync(XmlReader reader, CancellationToken token)
+            {
+                throw new NotImplementedException();
+            }
         }
     }
 }

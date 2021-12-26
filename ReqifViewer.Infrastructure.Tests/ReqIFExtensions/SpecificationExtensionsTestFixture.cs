@@ -22,6 +22,7 @@ namespace ReqifViewer.Infrastructure.Tests.ReqIFExtensions
 {
     using System.IO;
     using System.Linq;
+    using System.Threading;
     using System.Threading.Tasks;
 
     using NUnit.Framework;
@@ -42,11 +43,13 @@ namespace ReqifViewer.Infrastructure.Tests.ReqIFExtensions
         [SetUp]
         public async Task SetUp()
         {
+            var cts = new CancellationTokenSource();
+
             var reqifPath = Path.Combine(TestContext.CurrentContext.TestDirectory, "TestData", "ProR_Traceability-Template-v1.0.reqif");
 
             await using var fileStream = new FileStream(reqifPath, FileMode.Open);
             var reqIfLoaderService = new ReqIFLoaderService();
-            await reqIfLoaderService.Load(fileStream);
+            await reqIfLoaderService.Load(fileStream, cts.Token);
 
             this.reqIf = reqIfLoaderService.ReqIFData.Single();
         }
