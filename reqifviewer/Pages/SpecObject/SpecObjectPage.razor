@@ -43,7 +43,7 @@ else
             </RadzenGridColumn>
             <RadzenGridColumn TItem="SpecObject" Title="Spec Object Type">
                 <Template Context="specObject">
-                    <a href="reqif/@this.Identifier/specobjecttype/@specObject?.SpecType?.Identifier">@specObject?.SpecType?.LongName</a>
+                    <a href="reqif/@this.Identifier/spectype/@specObject?.SpecType?.Identifier">@specObject?.SpecType?.LongName</a>
                 </Template>
             </RadzenGridColumn>
             <RadzenGridColumn TItem="SpecObject" Property="Identifier" Title="Identifier">
