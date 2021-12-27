@@ -106,7 +106,7 @@ else
                     <Columns>
                         <RadzenDataGridColumn TItem="AttributeDefinition" Title="Long Name">
                             <Template Context="attributeDefinition">
-                                <a href="/reqif/@this.ReqIF/attributedefinition/@attributeDefinition?.Identifier">@attributeDefinition.LongName</a>
+                                <a href="/reqif/@this.ReqIF/spectype/@attributeDefinition?.SpecType?.Identifier/attributedefinition/@attributeDefinition?.Identifier">@attributeDefinition.LongName</a>
                             </Template>
                         </RadzenDataGridColumn>
                         <RadzenDataGridColumn TItem="AttributeDefinition" Title="Containing SpecType">
@@ -115,13 +115,13 @@ else
                                 @switch (attributeDefinition?.SpecType)
                                 {
                                     case SpecObjectType specObjectType:
-                                        <a href="/reqif/@this.ReqIF/specobjecttype/@attributeDefinition?.SpecType?.Identifier">@attributeDefinition?.SpecType?.LongName [SpecObject Type]</a>
+                                        <a href="/reqif/@this.ReqIF/spectype/@attributeDefinition?.SpecType?.Identifier">@attributeDefinition?.SpecType?.LongName [SpecObject Type]</a>
                                         break;
                                     case SpecificationType specificationType:
-                                        <a href="/reqif/@this.ReqIF/specificationtype/@attributeDefinition?.SpecType?.Identifier">@attributeDefinition?.SpecType?.LongName [Specification Type]</a>
+                                        <a href="/reqif/@this.ReqIF/spectype/@attributeDefinition?.SpecType?.Identifier">@attributeDefinition?.SpecType?.LongName [Specification Type]</a>
                                         break;
                                     case SpecRelationType specRelationType:
-                                        <a href="/reqif/@this.ReqIF/specrelationtype/@attributeDefinition?.SpecType?.Identifier">@attributeDefinition?.SpecType?.LongName [SpecRelation Type] </a>
+                                        <a href="/reqif/@this.ReqIF/spectype/@attributeDefinition?.SpecType?.Identifier">@attributeDefinition?.SpecType?.LongName [SpecRelation Type] </a>
                                         break;
                                 }
 
@@ -132,7 +132,7 @@ else
                         <RadzenDataGridColumn TItem="AttributeDefinition" Property="LastChange" Title="Last Change" />
                         <RadzenDataGridColumn TItem="AttributeDefinition" Title="Identifier">
                             <Template Context="attributeDefinition">
-                                <a href="/reqif/@this.ReqIF/attributedefinition/@attributeDefinition?.Identifier">@datatypeDefinition?.Identifier</a>
+                                <a href="/reqif/@this.ReqIF/spectype/@attributeDefinition?.SpecType?.Identifier/attributedefinition/@attributeDefinition?.Identifier">@attributeDefinition?.Identifier</a>
                             </Template>
                         </RadzenDataGridColumn>
                         <RadzenDataGridColumn TItem="DatatypeDefinition" Property="AlternativeId" Title="Alternative Id" />
