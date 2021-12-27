@@ -14,17 +14,18 @@
     limitations under the License.
 ------------------------------------------------------------------------------->
 
-@page "/reqif/{ReqIF}/specobjecttype/{Identifier}"
+@page "/reqif/{ReqIF}/spectype/{Identifier}"
 
 @using ReqIFSharp
 @using ReqifViewer.Infrastructure.Services
 @using reqifviewer.Components
+@using ReqifViewer.Infrastructure.ReqIFExtensions
 
 @inject IReqIFLoaderService reqIfLoaderService
 
 @if (isLoading)
 {
-    <RadzenHeading Size="H1" style="display: inline-block" Text="Spec Object Types"></RadzenHeading>
+    <RadzenHeading Size="H1" style="display: inline-block" Text=@($"{this.currentSpecTypeName} Details") ></RadzenHeading>
 
     <RadzenProgressBar Value="100" ShowValue="false" Mode="ProgressBarMode.Indeterminate" Style="margin-bottom: 20px" />
 }
@@ -32,16 +33,16 @@ else
 {
     <RadzenCard Style="margin-bottom: 20px">
         <ChildContent>
-            @this.specObjectType?.LongName
+            @this.specType?.LongName
         </ChildContent>
     </RadzenCard>
 
     <div class="row">
         <div class="col-md-12 col-lg-12 col-xl-12">
             <RadzenCard Style="margin-bottom: 20px">
-                <RadzenHeading Text="SpecObject Type Attribute Definitions" Size="H6"></RadzenHeading>
+                <RadzenHeading Text=@($"{this.currentSpecTypeName} Attribute Definitions") Size="H6"></RadzenHeading>
 
-                <AttributeDefinitionsComponent AttributeDefinitions="this.specObjectType?.SpecAttributes" />
+                <AttributeDefinitionsComponent AttributeDefinitions="this.specType?.SpecAttributes" />
             </RadzenCard>
         </div>
     </div>
@@ -67,14 +68,14 @@ else
     private bool isLoading = true;
 
     /// <summary>
-    /// a value that states the total amount of <see cref="SpecObjectType"/>s in the reqif file
+    /// The title of the page
     /// </summary>
-    private int count;
+    private string currentSpecTypeName = "";
 
     /// <summary>
-    /// The <see cref="SpecObjectType"/> object that is loaded on the page
+    /// The <see cref="SpecType"/> object that is loaded on the page
     /// </summary>
-    private SpecObjectType specObjectType;
+    private SpecType specType;
 
     /// <summary>
     /// The <see cref="ReqIF"/> object that is loaded on the page
@@ -95,12 +96,14 @@ else
     {
         try
         {
-            isLoading = true;
+            this.isLoading = true;
             this.StateHasChanged();
 
-            var reqIf = this.reqIfLoaderService.ReqIFData.SingleOrDefault(x => x.TheHeader.Identifier == this.ReqIF);
+            this.reqIf = this.reqIfLoaderService.ReqIFData.SingleOrDefault(x => x.TheHeader.Identifier == this.ReqIF);
 
-            this.specObjectType = reqIf.CoreContent.SpecTypes.OfType<SpecObjectType>().SingleOrDefault(x => x.Identifier == Identifier);
+            this.specType = reqIf.CoreContent.SpecTypes.SingleOrDefault(x => x.Identifier == Identifier);
+
+            this.currentSpecTypeName = this.specType.QueryTypeDisplayName();
         }
         catch (Exception e)
         {

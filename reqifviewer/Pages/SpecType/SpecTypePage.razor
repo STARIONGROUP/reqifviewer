@@ -1,0 +1,186 @@
+﻿<!------------------------------------------------------------------------------
+    Copyright 2021 RHEA System S.A.
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+------------------------------------------------------------------------------->
+
+@page "/reqif/{ReqIF}/spectypes"
+
+@using Microsoft.AspNetCore.WebUtilities;
+@using ReqIFSharp
+@using ReqifViewer.Infrastructure.Navigation
+@using ReqifViewer.Infrastructure.Services
+
+@inject NavigationManager navigationManager
+@inject IReqIFLoaderService reqIfLoaderService
+
+@if (this.isLoading)
+{
+    <RadzenHeading Size="H1" style="display: inline-block" Text="@this.subType"></RadzenHeading>
+
+    <RadzenProgressBar Value="100" ShowValue="false" Mode="ProgressBarMode.Indeterminate" Style="margin-bottom: 20px" />
+}
+else
+{
+    <RadzenHeading Size="H1" style="display: inline-block" Text="@this.pageTitle"></RadzenHeading>
+
+    <RadzenDataGrid Count="@this.count" PageSize="10" AllowPaging="true" AllowSorting="true" AllowFiltering="true" ExpandMode="DataGridExpandMode.Multiple" Data="@this.specTypes" TItem="SpecType">
+
+        <Template Context="specType">
+
+            <RadzenCard Style="margin-bottom: 20px">Attribute Definitions:</RadzenCard>
+
+            <RadzenDataGrid Data="@specType.SpecAttributes" TItem="AttributeDefinition">
+                <Columns>
+                    <RadzenDataGridColumn TItem="AttributeDefinition" Property="LongName" Title="Long Name" />
+                    <RadzenDataGridColumn TItem="AttributeDefinition" Property="Description" Title="Description" />
+                    <RadzenDataGridColumn TItem="AttributeDefinition" Property="IsEditable" Title="Is Editable" />
+                    <RadzenDataGridColumn TItem="AttributeDefinition" Property="Identifier" Title="Identifier">
+                        <Template Context="attributeDefinition">
+                            <a href="/reqif/@this.ReqIF/spectype/@specType.Identifier/attributedefinition/@attributeDefinition.Identifier">@attributeDefinition.Identifier</a>
+                        </Template>
+                    </RadzenDataGridColumn>
+                </Columns>
+            </RadzenDataGrid>
+        </Template>
+
+        <Columns>
+            <RadzenDataGridColumn TItem="SpecType" Property="Identifier" Title="Long Name">
+                <Template Context="specType">
+                    <a href="/reqif/@this.ReqIF/spectype/@specType?.Identifier">@specType?.LongName</a>
+                </Template>
+            </RadzenDataGridColumn>
+            <RadzenDataGridColumn TItem="SpecType" Property="Description" Title="Description" />
+            <RadzenDataGridColumn TItem="SpecType" Property="LastChange" Title="Last Change" />
+            <RadzenDataGridColumn TItem="SpecType" Property="Identifier" Title="Identifier" />
+            <RadzenDataGridColumn TItem="SpecType" Property="AlternativeId" Title="Alternative Id" />
+        </Columns>
+    </RadzenDataGrid>
+}
+
+@code {
+
+    /// <summary>
+    /// Gets or sets the unique identifier of the <see cref="ReqIF.TheHeader"/>
+    /// </summary>
+    [Parameter]
+    public string ReqIF { get; set; }
+
+    /// <summary>
+    /// the subtype of <see cref="SpecType"/> that is to be displayed on the page
+    /// </summary>
+    private string subType = "SpecObjectType";
+
+    /// <summary>
+    /// The title of the page
+    /// </summary>
+    private string pageTitle = "";
+
+    /// <summary>
+    /// a value indicating whether the page is loading or not
+    /// </summary>
+    private bool isLoading = true;
+
+    /// <summary>
+    /// a value that states the total amount of <see cref="SpecObjectType"/>s in the reqif file
+    /// </summary>
+    private int count;
+
+    /// <summary>
+    /// The <see cref="ReqIF"/> object that is loaded on the page
+    /// </summary>
+    private ReqIF reqIf;
+
+    /// <summary>
+    /// The <see cref="SpecRelationType"/>s that are contained in the <see cref="ReqIF"/>
+    /// </summary>
+    private IEnumerable<SpecType> specTypes;
+
+    /// <summary>
+    /// Asynchronous Component initialization
+    /// </summary>
+    /// <returns>
+    /// an awaitable <see cref="Task" />
+    /// </returns>
+    protected override void OnInitialized()
+    {
+        isLoading = false;
+        this.navigationManager.LocationChanged += HandleLocationChanged;
+        this.LoadData();
+    }
+
+    /// <summary>
+    ///     Load the data into view-models
+    /// </summary>
+    protected void LoadData()
+    {
+        try
+        {
+            isLoading = true;
+
+            if (this.navigationManager.TryGetQueryString("type", out this.subType))
+            {
+                this.reqIf = this.reqIfLoaderService.ReqIFData.SingleOrDefault(x => x.TheHeader.Identifier == this.ReqIF);
+
+                switch (this.subType)
+                {
+                    case "RelationGroupType":
+                        this.pageTitle = $"Relation Group Types - {reqIf?.TheHeader.Title}";
+                        this.specTypes = reqIf.CoreContent.SpecTypes.OfType<RelationGroupType>();
+                        break;
+                    case "SpecificationType":
+                        this.pageTitle = $"Specification Types - {reqIf?.TheHeader.Title}";
+                        this.specTypes = reqIf.CoreContent.SpecTypes.OfType<SpecificationType>();
+                        break;
+                    case "SpecObjectType":
+                        this.pageTitle = $"Spec Object Types - {reqIf?.TheHeader.Title}";
+                        this.specTypes = reqIf.CoreContent.SpecTypes.OfType<SpecObjectType>();
+                        break;
+                    case "SpecRelationType":
+                        this.pageTitle = $"Spec Relation Types - {reqIf?.TheHeader.Title}";
+                        this.specTypes = reqIf.CoreContent.SpecTypes.OfType<SpecRelationType>();
+                        break;
+                }
+
+                this.count = this.specTypes.Count();
+            }
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+        }
+        finally
+        {
+            isLoading = false;
+            StateHasChanged();
+        }
+    }
+
+    /// <summary>
+    /// Handles the HandleLocationChanged event of the <see cref="NavigationManager"/>
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    void HandleLocationChanged(object sender, LocationChangedEventArgs e)
+    {
+        this.LoadData();
+    }
+
+    /// <summary>
+    /// Disposes the page
+    /// </summary>
+    public void Dispose()
+    {
+        this.navigationManager.LocationChanged -= HandleLocationChanged;
+    }
+}

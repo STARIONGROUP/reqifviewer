@@ -18,12 +18,11 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
-using System.Linq;
-
 namespace ReqifViewer.Infrastructure.ReqIFExtensions
 {
     using System;
     using System.Globalization;
+    using System.Linq;
 
     using ReqIFSharp;
 

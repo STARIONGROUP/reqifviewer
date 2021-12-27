@@ -128,7 +128,7 @@ else
                 </div>
 
                 <div class="col-md-12 col-xl-2 col-lg-6">
-                    <a href="@($"/reqif/{reqIfHeader.Identifier}/specobjecttypes")">
+                    <a href="@($"/reqif/{reqIfHeader.Identifier}/spectypes?type=SpecObjectType")">
                         <RadzenCard style="margin-bottom: 16px">
                             <ChildContent>
                                 <div class="row">
@@ -147,7 +147,7 @@ else
                 </div>
 
                 <div class="col-md-12 col-xl-2 col-lg-6">
-                    <a href="@($"/reqif/{reqIfHeader.Identifier}/specificationtypes")">
+                    <a href="@($"/reqif/{reqIfHeader.Identifier}/spectypes?type=SpecificationType")">
                         <RadzenCard style="margin-bottom: 16px">
                             <ChildContent>
                                 <div class="row">
@@ -166,7 +166,7 @@ else
                 </div>
 
                 <div class="col-md-12 col-xl-2 col-lg-6">
-                    <a href="@($"/reqif/{reqIfHeader.Identifier}/specrelationtypes")">
+                    <a href="@($"/reqif/{reqIfHeader.Identifier}/spectypes?type=SpecRelationType")">
                         <RadzenCard style="margin-bottom: 16px">
                             <ChildContent>
                                 <div class="row">
@@ -177,6 +177,25 @@ else
                                         <RadzenHeading Size="H4" style="margin-bottom: 0px; text-align: right" Text="Spec Relation Types"></RadzenHeading>
                                         <RadzenHeading Size="H4" style="color: #88989b; font-size: 12px; margin-bottom: 0px; text-align: right" Text="Number of Spec Relation Types"></RadzenHeading>
                                         <RadzenHeading Size="H4" style="color: #479cc8; font-size: 24px; margin-bottom: 0px; margin-top: 13px; text-align: right" Text="@(reqIfContent?.SpecTypes.OfType<SpecRelationType>().Count().ToString())"></RadzenHeading>
+                                    </div>
+                                </div>
+                            </ChildContent>
+                        </RadzenCard>
+                    </a>
+                </div>
+
+                <div class="col-md-12 col-xl-2 col-lg-6">
+                    <a href="@($"/reqif/{reqIfHeader.Identifier}/spectypes?type=RelationGroupType")">
+                        <RadzenCard style="margin-bottom: 16px">
+                            <ChildContent>
+                                <div class="row">
+                                    <div class="col-md-12 col-4">
+                                        <RadzenIcon Icon="nat" style="color: #484472; font-size: 48px; height: 64px; width: 100%"></RadzenIcon>
+                                    </div>
+                                    <div class="col-md-12 col-8">
+                                        <RadzenHeading Size="H4" style="margin-bottom: 0px; text-align: right" Text="Relation Group Types"></RadzenHeading>
+                                        <RadzenHeading Size="H4" style="color: #88989b; font-size: 12px; margin-bottom: 0px; text-align: right" Text="Number of Spec Relation Types"></RadzenHeading>
+                                        <RadzenHeading Size="H4" style="color: #484472; font-size: 24px; margin-bottom: 0px; margin-top: 13px; text-align: right" Text="@(reqIfContent?.SpecTypes.OfType<RelationGroupType>().Count().ToString())"></RadzenHeading>
                                     </div>
                                 </div>
                             </ChildContent>
