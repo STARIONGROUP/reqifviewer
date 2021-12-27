@@ -109,6 +109,25 @@ else
                 </div>
 
                 <div class="col-md-12 col-xl-2 col-lg-6">
+                    <a href="@($"/reqif/{reqIfHeader.Identifier}/specrelations")">
+                        <RadzenCard style="margin-bottom: 16px">
+                            <ChildContent>
+                                <div class="row">
+                                    <div class="col-md-12 col-4">
+                                        <RadzenIcon Icon="link" style="color: #a4f977; font-size: 48px; height: 64px; width: 100%"></RadzenIcon>
+                                    </div>
+                                    <div class="col-md-12 col-8">
+                                        <RadzenHeading Size="H4" style="margin-bottom: 0px; text-align: right" Text="Spec Relations"></RadzenHeading>
+                                        <RadzenHeading Size="H4" style="color: #88989b; font-size: 12px; margin-bottom: 0px; text-align: right " Text="Number of Spec Relations"></RadzenHeading>
+                                        <RadzenHeading Size="H4" style="color: #a4f977; font-size: 24px; margin-bottom: 0px; margin-top: 13px; text-align: right" Text="@reqIfContent?.SpecRelations.Count.ToString()"></RadzenHeading>
+                                    </div>
+                                </div>
+                            </ChildContent>
+                        </RadzenCard>
+                    </a>
+                </div>
+
+                <div class="col-md-12 col-xl-2 col-lg-6">
                     <a href="@($"/reqif/{reqIfHeader.Identifier}/datatypedefinitions")">
                         <RadzenCard style="margin-bottom: 16px">
                             <ChildContent>
