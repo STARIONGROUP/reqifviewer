@@ -33,37 +33,31 @@ else
 {
     <RadzenCard Style="margin-bottom: 20px">
         <ChildContent>
-            @(new MarkupString(this.specification?.ExtractDisplayName().ToString()))
+            @(new MarkupString(this.specification?.ExtractDisplayName().ToString())) 
         </ChildContent>
     </RadzenCard>
 
+    <AttributeValuesComponent  AttributeValues="this.specification?.Values" />
+
     <div class="row">
-        <div class="col-md-12 col-lg-6 col-xl-4">
+        <div class="col-sm-12 col-md-6 col-lg-5 col-xl-4">
             <RadzenCard Style="margin-bottom: 20px">
-
-                <RadzenHeading Text="Specification Tree" Size="H6"></RadzenHeading>
-
-                <RadzenTree Data=@specification?.Children Expand=@LoadChildSpecHierarchies @bind-Value=@selectedSpecHierarchy Style="width: 100%; height: 300px">
-                    <RadzenTreeLevel Text=@(e => "") Template=@SpecObjectTemplate/>
+                <RadzenTree Data=@specification?.Children Expand=@LoadChildSpecHierarchies @bind-Value=@selectedSpecHierarchy Style="width: 100%; height: 450px">
+                    <RadzenTreeLevel Text=@(e => "") Template=@SpecObjectTemplate />
                 </RadzenTree>
             </RadzenCard>
         </div>
 
-        <div class="col-md-12 col-lg-6 col-xl-8">
-            <RadzenCard Style="margin-bottom: 20px">
-                <RadzenHeading Text="Specification Attributes" Size="H6"></RadzenHeading>
+        <div class="col-sm-12 col-md-6 col-lg-5 col-xl-8">
+            <RadzenCard Visible="@(this.selectedSpecHierarchy != null)">
 
-                <AttributeValuesComponent AttributeValues="this.specification?.Values" />
+                <SpecObjectComponent SpecObject="((SpecHierarchy)this.selectedSpecHierarchy)?.Object"></SpecObjectComponent>
+
+                <AttributeValuesComponent AttributeValues="((SpecHierarchy)this.selectedSpecHierarchy)?.Object?.Values" />
             </RadzenCard>
         </div>
     </div>
-
-    <RadzenCard Visible="@(this.selectedSpecHierarchy != null)">
-
-        <RadzenHeading Text="Selected Spec Object Attributes" Size="H6"></RadzenHeading>
-
-        <AttributeValuesComponent AttributeValues="((SpecHierarchy)this.selectedSpecHierarchy)?.Object?.Values" />
-    </RadzenCard>
+    
 }
 
 @code {
@@ -120,6 +114,8 @@ else
             var reqIf = this.reqIfLoaderService.ReqIFData.SingleOrDefault(x => x.TheHeader.Identifier == this.ReqIF);
 
             this.specification = reqIf.CoreContent.Specifications.SingleOrDefault(x => x.Identifier == Specification);
+
+            this.selectedSpecHierarchy = this.specification.Children.FirstOrDefault();
         }
         catch (Exception e)
         {

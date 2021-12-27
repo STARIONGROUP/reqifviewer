@@ -15,48 +15,76 @@
 ------------------------------------------------------------------------------->
 
 @using ReqIFSharp;
+@using System.Text
 
-<RadzenDataGrid Data="@this.AttributeValues" AllowFiltering="true" TItem="AttributeValue">
-    <Columns>
-        <RadzenDataGridColumn TItem="AttributeValue" Title="Long Name">
-            <Template Context="attributeValue">
-                <a href="@QueryAttributeDefinitionUrl(attributeValue.AttributeDefinition)">@attributeValue?.AttributeDefinition.LongName</a>
-            </Template>
-        </RadzenDataGridColumn>
-        <RadzenDataGridColumn TItem="AttributeValue" Property="ObjectValue" Title="Value" >
-            <Template Context="attributeValue">
-                @(new MarkupString(attributeValue?.ObjectValue.ToString())) 
-            </Template>
-        </RadzenDataGridColumn>
-        <RadzenDataGridColumn TItem="AttributeValue" Title="Description">
-            <Template Context="attributeValue">
-                @attributeValue?.AttributeDefinition.Description
-            </Template>
-        </RadzenDataGridColumn>
-    </Columns>
-</RadzenDataGrid>
+<RadzenFieldset AllowCollapse="true" Style="margin-bottom: 10px;">
+
+    <HeaderTemplate>
+        <span class="d-inline-flex align-items-center align-middle">
+            <RadzenIcon Icon="stars" Class="mr-1" /><b>Attributes</b>
+        </span>
+    </HeaderTemplate>
+
+    <ChildContent>
+        <RadzenDataGrid Data="@this.AttributeValues" AllowFiltering="true" TItem="AttributeValue">
+            <Columns>
+                <RadzenDataGridColumn TItem="AttributeValue" Title="Long Name">
+                    <Template Context="attributeValue">
+                        <a href="@QueryAttributeDefinitionUrl(attributeValue.AttributeDefinition)">@attributeValue?.AttributeDefinition.LongName</a>
+                    </Template>
+                </RadzenDataGridColumn>
+                <RadzenDataGridColumn TItem="AttributeValue" Property="ObjectValue" Title="Value">
+                    <Template Context="attributeValue">
+                        @(new MarkupString(attributeValue?.ObjectValue.ToString()))
+                    </Template>
+                </RadzenDataGridColumn>
+                <RadzenDataGridColumn TItem="AttributeValue" Title="Description">
+                    <Template Context="attributeValue">
+                        @attributeValue?.AttributeDefinition.Description
+                    </Template>
+                </RadzenDataGridColumn>
+            </Columns>
+        </RadzenDataGrid>    
+
+    </ChildContent>
+</RadzenFieldset>
 
 @code {
 
-    /// <summary>
-    /// Gets or sets the <see cref="IEnumerable{AttributeValue}"/>
-    /// </summary>
-    [Parameter]
-    public IEnumerable<AttributeValue> AttributeValues { get; set; }
-    
-    private string QueryAttributeDefinitionUrl(AttributeDefinition attributeDefinition)
-    {
-        var result = "/";
+        /// <summary>
+        /// Gets or sets the <see cref="IEnumerable{AttributeValue}"/>
+        /// </summary>
+        [Parameter]
+        public IEnumerable<AttributeValue> AttributeValues { get; set; }
 
-        try
+        /// <summary>
+        /// Queries the url of the <see cref="AttributeDefinition"/>
+        /// </summary>
+        /// <param name="attributeDefinition">
+        /// The <see cref="AttributeDefinition"/> of which the url is to be queried
+        /// </param>
+        /// <returns>
+        /// a string representing the url of the <see cref="AttributeDefinition"/>
+        /// </returns>
+        private string QueryAttributeDefinitionUrl(AttributeDefinition attributeDefinition)
         {
-            result = $"reqif/{attributeDefinition.DatatypeDefinition.ReqIFContent.DocumentRoot.TheHeader.Identifier}/datatypedefinition/{attributeDefinition.Identifier}";
+            var result = "/";
+
+            try
+            {
+                var sb = new StringBuilder();
+
+                sb.Append($"/reqif/{attributeDefinition.DatatypeDefinition.ReqIFContent.DocumentRoot.TheHeader.Identifier}");
+                sb.Append($"/spectype/{attributeDefinition.SpecType.Identifier}");
+                sb.Append($"/attributedefinition/{attributeDefinition.Identifier}");
+
+                result = sb.ToString();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+
+            return result;
         }
-        catch (Exception e)
-        {
-            Console.WriteLine(e);
-        }
-        
-        return result;
     }
-}

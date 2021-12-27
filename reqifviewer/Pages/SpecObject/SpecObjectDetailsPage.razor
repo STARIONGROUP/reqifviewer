@@ -38,12 +38,13 @@ else
     </RadzenCard>
 
     <div class="row">
-        <div class="col-md-12 col-lg-12 col-xl-12">
-            <RadzenCard Style="margin-bottom: 20px">
-                <RadzenHeading Text="SpecObject Attributes" Size="H6"></RadzenHeading>
 
-                <AttributeValuesComponent AttributeValues="this.specObject?.Values" />
-            </RadzenCard>
+        <div class="col-md-12 col-lg-12 col-xl-12">
+            <SpecObjectComponent SpecObject="@this.specObject" />
+        </div>
+
+        <div class="col-md-12 col-lg-12 col-xl-12">
+            <AttributeValuesComponent AttributeValues="this.specObject?.Values" />
         </div>
     </div>
 
