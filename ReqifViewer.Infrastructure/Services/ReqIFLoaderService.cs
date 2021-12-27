@@ -22,7 +22,6 @@ namespace ReqifViewer.Infrastructure.Services
 {
     using System;
     using System.Collections.Generic;
-    using System.Diagnostics;
     using System.IO;
     using System.Threading;
     using System.Threading.Tasks;
@@ -59,8 +58,6 @@ namespace ReqifViewer.Infrastructure.Services
         /// </returns>
         public async Task Load(Stream reqIFStream, CancellationToken token)
         {
-            var sw = Stopwatch.StartNew();
-
             this.SourceStream = new MemoryStream();
             await reqIFStream.CopyToAsync(this.SourceStream, token);
             

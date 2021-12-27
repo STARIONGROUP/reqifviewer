@@ -18,10 +18,9 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
-using System.Net.Http;
-
 namespace reqifviewer
 {
+    using System.Net.Http;
     using System.Threading.Tasks;
 
     using Blazor.Analytics;
@@ -32,13 +31,12 @@ namespace reqifviewer
     using Radzen;
     
     using ReqifViewer.Infrastructure.Services;
-    using reqifviewer.Pages.Index;
 
     /// <summary>
     /// The purpose of the <see cref="Program"/> class is to provide the
     /// main entry point of te application
     /// </summary>
-    public class Program
+    public static class Program
     {
         /// <summary>
         /// Main entry point of the application
