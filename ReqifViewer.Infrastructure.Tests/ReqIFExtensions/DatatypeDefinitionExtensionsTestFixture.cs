@@ -18,14 +18,13 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
-using System.Threading;
-using System.Threading.Tasks;
-using System.Xml;
-
 namespace ReqifViewer.Infrastructure.Tests.ReqIFExtensions
 {
     using System;
-    
+    using System.Threading;
+    using System.Threading.Tasks;
+    using System.Xml;
+
     using NUnit.Framework;
 
     using ReqIFSharp;

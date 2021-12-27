@@ -131,21 +131,6 @@ else
     /// </summary>
     private bool isLoading = true;
 
-    /// <summary>
-    /// Asynchronous Component initialization
-    /// </summary>
-    /// <returns>
-    /// an awaitable <see cref="Task" />
-    /// </returns>
-    protected override void OnInitialized()
-    {
-        base.OnInitialized();
-
-        //isLoading = false;
-
-        //this.LoadData();
-    }
-
     protected override void OnParametersSet()
     {
         isLoading = false;

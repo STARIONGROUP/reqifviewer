@@ -1,0 +1,154 @@
+﻿<!------------------------------------------------------------------------------
+    Copyright 2021 RHEA System S.A.
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+------------------------------------------------------------------------------->
+
+@page "/reqif/{ReqIF}/spectype/{SpecType}/attributedefinition/{Identifier}"
+
+@using System.Globalization
+
+@using ReqIFSharp
+@using ReqifViewer.Infrastructure.ReqIFExtensions
+@using ReqifViewer.Infrastructure.Services
+
+@inject IReqIFLoaderService reqIfLoaderService
+
+@if (this.isLoading)
+{
+    <RadzenHeading Size="H1" style="display: inline-block" Text="Loading Datatype Definition"></RadzenHeading>
+
+    <RadzenProgressBar Value="100" ShowValue="false" Mode="ProgressBarMode.Indeterminate" Style="margin-bottom: 20px" />
+}
+else
+{
+    <RadzenCard Style="margin-bottom: 20px">
+        <ChildContent>
+            @this.attributeDefinition.LongName
+        </ChildContent>
+    </RadzenCard>
+
+    <RadzenCard Style="margin-bottom: 10px;">
+
+        <h3 class="h5">Properties:</h3>
+        
+        <div class="row">
+
+            <div class="col-md-6 col-xl-6 col-lg-6">
+                <div><b>Description:</b></div>
+                <div>@(string.IsNullOrEmpty(this.attributeDefinition.Description) ? "NOT SET" : this.attributeDefinition.Description) </div>
+
+                <div><b>Default Value:</b></div>
+                @if (this.attributeDefinition is AttributeDefinitionXHTML)
+                {
+                    <div> @(new MarkupString(this.attributeDefinition.QueryDefaultValueAsFormattedString())) </div>
+                }
+                else
+                {
+                    <div>@this.attributeDefinition.QueryDefaultValueAsFormattedString()</div>
+                }
+
+                @if (this.attributeDefinition is AttributeDefinitionEnumeration attributeDefinitionEnumeration)
+                {
+                    <div><b>Multi-Valued:</b></div>
+                    <div> @attributeDefinitionEnumeration.IsMultiValued</div>
+                }
+
+                <div><b>Last Change Date:</b></div>
+                <div>@this.attributeDefinition.LastChange.ToString("MMMM dd, yyyy HH:mm", CultureInfo.InvariantCulture)</div>
+            </div>
+
+            <div class="col-md-6 col-xl-6 col-lg-6">
+
+                <div><b>Identifier:</b></div>
+                <div>@this.attributeDefinition.Identifier</div>
+
+                <div><b>Alternative ID:</b></div>
+                <div>@(this.attributeDefinition.AlternativeId != null ? this.attributeDefinition.AlternativeId.Identifier : "NOT SET")</div>
+
+                <div><b>Is Editable:</b></div>
+                <div>@this.attributeDefinition.IsEditable</div>
+
+            </div>
+        </div>
+    </RadzenCard>
+}
+
+@code {
+    /// <summary>
+    /// Gets or sets the unique identifier of the <see cref="TheHeader"/>
+    /// </summary>
+    [Parameter]
+    public string ReqIF { get; set; }
+
+    /// <summary>
+    /// Gets or sets the unique identifier of the <see cref="SpecType"/>
+    /// </summary>
+    [Parameter]
+    public string SpecType { get; set; }
+
+    /// <summary>
+    /// Gets or sets the unique identifier of the <see cref="AttributeDefinition"/>
+    /// </summary>
+    [Parameter]
+    public string Identifier { get; set; }
+
+    /// <summary>
+    /// The <see cref="AttributeDefinition"/> object that is loaded on the page
+    /// </summary>
+    private AttributeDefinition attributeDefinition;
+
+    /// <summary>
+    /// a value indicating whether the page is loading or not
+    /// </summary>
+    private bool isLoading = true;
+
+    /// <summary>
+    /// Asynchronous Component initialization
+    /// </summary>
+    /// <returns>
+    /// an awaitable <see cref="Task" />
+    /// </returns>
+    protected override void OnInitialized()
+    {
+        isLoading = false;
+
+        this.LoadData();
+    }
+
+    /// <summary>
+    /// Load the data into view-models
+    /// </summary>
+    protected void LoadData()
+    {
+        try
+        {
+            isLoading = true;
+
+            var reqIf = this.reqIfLoaderService.ReqIFData.SingleOrDefault(x => x.TheHeader.Identifier == this.ReqIF);
+
+            var spectType = reqIf.CoreContent.SpecTypes.SingleOrDefault(x => x.Identifier == this.SpecType);
+
+            this.attributeDefinition = this.attributeDefinition = spectType.SpecAttributes.SingleOrDefault(x => x.Identifier == this.Identifier);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+        }
+        finally
+        {
+            isLoading = false;
+            StateHasChanged();
+        }
+    }
+}
