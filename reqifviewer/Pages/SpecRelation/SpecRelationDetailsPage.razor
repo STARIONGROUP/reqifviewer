@@ -58,7 +58,7 @@ else
                     <div>@(string.IsNullOrEmpty(this.specRelation?.Description) ? "NOT SET" : this.specRelation.Description) </div>
 
                     <div><b>Last Change Date:</b></div>
-                    <div>@this.specRelation?.LastChange.ToString("MMMM dd, yyyy HH:mm", CultureInfo.InvariantCulture)</div>
+                    <div>@this.specRelation?.LastChange.ToString("yyyy-MM-dd, HH:mm:ss", CultureInfo.InvariantCulture)</div>
                 </div>
 
                 <div class="col-md-6 col-xl-6 col-lg-6">

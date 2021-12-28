@@ -47,19 +47,19 @@ namespace ReqifViewer.Infrastructure.ReqIFExtensions
         {
             switch (datatypeDefinition)
             {
-                case DatatypeDefinitionBoolean datatypeDefinitionBoolean:
+                case DatatypeDefinitionBoolean:
                     return "Boolean";
-                case DatatypeDefinitionDate datatypeDefinitionDate:
+                case DatatypeDefinitionDate:
                     return "Date";
-                case DatatypeDefinitionEnumeration datatypeDefinitionEnumeration:
+                case DatatypeDefinitionEnumeration:
                     return "Enumeration";
-                case DatatypeDefinitionInteger datatypeDefinitionInteger:
+                case DatatypeDefinitionInteger:
                     return "Integer";
-                case DatatypeDefinitionReal datatypeDefinitionReal:
+                case DatatypeDefinitionReal:
                     return "Real";
-                case DatatypeDefinitionString datatypeDefinitionString:
+                case DatatypeDefinitionString:
                     return "String";
-                case DatatypeDefinitionXHTML datatypeDefinitionXHTML:
+                case DatatypeDefinitionXHTML:
                     return "XHTML";
                 default:
                     throw new InvalidOperationException("");

@@ -73,7 +73,7 @@ else
                 </RadzenGridColumn>
                 <RadzenGridColumn Sortable="true" TItem="ReqIF" Title="Creation Date">
                     <Template Context="data">
-                        <div>@data?.TheHeader?.CreationTime.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture)</div>
+                        <div>@data?.TheHeader?.CreationTime.ToString("yyyy-MM-dd, HH:mm:ss", CultureInfo.InvariantCulture)</div>
                     </Template>
                 </RadzenGridColumn>
                 <RadzenGridColumn Sortable="true" TItem="ReqIF" Title="Comment">
