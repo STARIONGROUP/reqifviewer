@@ -17,7 +17,7 @@
 @using ReqifViewer.Infrastructure.ReqIFExtensions
 @using ReqIFSharp
 
-<RadzenDataGrid PageSize="10" AllowPaging="true" AllowSorting="true" AllowFiltering="true" Data="@this.Specifications" TItem="Specification">
+<RadzenDataGrid PageSize="10" AllowPaging="true" AllowSorting="true" AllowFiltering="true" AllowColumnResize="true" Data="@this.Specifications" TItem="Specification">
     <Columns>
         <RadzenDataGridColumn TItem="Specification" Title="Long Name">
             <Template Context="specification">

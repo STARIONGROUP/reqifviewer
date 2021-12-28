@@ -32,7 +32,7 @@ else
 {
     <RadzenHeading Size="H1" style="display: inline-block" Text="@($"{reqIf?.TheHeader.Title} - Specifications")"></RadzenHeading>
 
-    <RadzenDataGrid Count="@count" PageSize="10" AllowPaging="true" AllowSorting="true" AllowFiltering="true" Data="@this.specifications" TItem="Specification">
+    <RadzenDataGrid Count="@count" PageSize="10" AllowPaging="true" AllowSorting="true" AllowFiltering="true" AllowColumnResize="true" Data="@this.specifications" TItem="Specification">
 
         <Columns>
             <RadzenDataGridColumn TItem="Specification" Title="Long Name">

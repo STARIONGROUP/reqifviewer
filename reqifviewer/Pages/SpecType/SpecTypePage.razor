@@ -34,7 +34,7 @@ else
 {
     <RadzenHeading Size="H1" style="display: inline-block" Text="@this.pageTitle"></RadzenHeading>
 
-    <RadzenDataGrid Count="@this.count" PageSize="10" AllowPaging="true" AllowSorting="true" AllowFiltering="true" ExpandMode="DataGridExpandMode.Multiple" Data="@this.specTypes" TItem="SpecType">
+    <RadzenDataGrid Count="@this.count" PageSize="10" AllowPaging="true" AllowSorting="true" AllowFiltering="true" AllowColumnResize="true" ExpandMode="DataGridExpandMode.Multiple" Data="@this.specTypes" TItem="SpecType">
 
         <Template Context="specType">
 

@@ -17,7 +17,7 @@
 @using ReqIFSharp;
 @using ReqifViewer.Infrastructure.ReqIFExtensions
 
-<RadzenDataGrid Data="@this.AttributeDefinitions" AllowFiltering="true" TItem="AttributeDefinition">
+<RadzenDataGrid Data="@this.AttributeDefinitions" AllowFiltering="true" AllowColumnResize="true" TItem="AttributeDefinition">
     <Columns>
         <RadzenDataGridColumn TItem="AttributeDefinition" Title="Long Name">
             <Template Context="attributeDefinition">

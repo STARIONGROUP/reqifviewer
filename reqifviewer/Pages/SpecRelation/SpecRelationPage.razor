@@ -32,7 +32,7 @@ else
 {
     <RadzenHeading Size="H1" style="display: inline-block" Text="@($"Spec Relations - {reqIf?.TheHeader.Title}")"></RadzenHeading>
 
-    <RadzenGrid Count="@count" PageSize="10" AllowPaging="true" Data="@this.specRelations" TItem="SpecRelation">
+    <RadzenGrid Count="@count" PageSize="10" AllowPaging="true" AllowColumnResize="true" Data="@this.specRelations" TItem="SpecRelation">
         <Columns>
             <RadzenGridColumn TItem="SpecRelation" Title="Spec Relation">
                 <Template Context="specRelation">

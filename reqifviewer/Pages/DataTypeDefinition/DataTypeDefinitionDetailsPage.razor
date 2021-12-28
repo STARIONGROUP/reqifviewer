@@ -102,7 +102,7 @@ else
 
                 <h3 class="h5">Referencing AttributeDefinitions:</h3>
 
-                <RadzenDataGrid Data="@this.datatypeDefinition.QueryReferencingAttributeDefinitions()" TItem="AttributeDefinition">
+                <RadzenDataGrid Data="@this.datatypeDefinition.QueryReferencingAttributeDefinitions()" AllowColumnResize="true" TItem="AttributeDefinition">
                     <Columns>
                         <RadzenDataGridColumn TItem="AttributeDefinition" Title="Long Name">
                             <Template Context="attributeDefinition">

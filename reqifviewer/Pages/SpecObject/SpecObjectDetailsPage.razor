@@ -60,7 +60,7 @@ else
             <RadzenCard Style="margin-bottom: 20px">
                 <RadzenHeading Text="Relationships" Size="H6"></RadzenHeading>
 
-                <RadzenDataGrid PageSize="10" AllowPaging="true" AllowSorting="true" AllowFiltering="true" Data="@this.specRelations" TItem="SpecRelation">
+                <RadzenDataGrid PageSize="10" AllowPaging="true" AllowSorting="true" AllowFiltering="true" AllowColumnResize="true" Data="@this.specRelations" TItem="SpecRelation">
                     <Columns>
                         <RadzenDataGridColumn TItem="SpecRelation" Title="Source">
                             <Template Context="specRelation">
