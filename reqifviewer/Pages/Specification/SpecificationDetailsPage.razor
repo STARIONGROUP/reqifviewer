@@ -98,6 +98,11 @@ else
     protected override void OnInitialized()
     {
         isLoading = false;
+    }
+
+    protected override void OnParametersSet()
+    {
+        isLoading = false;
 
         this.LoadData();
     }

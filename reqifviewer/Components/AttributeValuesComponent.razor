@@ -87,6 +87,11 @@
     /// </summary>
     private IList<AttributeValue> selectedAttributeValues;
 
+    protected override void OnParametersSet()
+    {
+        this.selectedAttributeValues = null;
+    }
+
     /// <summary>
     /// Queries the url of the <see cref="AttributeDefinition"/>
     /// </summary>
