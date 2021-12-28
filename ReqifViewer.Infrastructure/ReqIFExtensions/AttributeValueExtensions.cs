@@ -47,9 +47,9 @@ namespace ReqifViewer.Infrastructure.ReqIFExtensions
                 case AttributeValueBoolean attributeValueBoolean:
                     return attributeValueBoolean.TheValue.ToString();
                 case AttributeValueDate attributeValueDate:
-                    return attributeValueDate.TheValue.ToString("yyyy-MMM-dd, HH:mm:ss", CultureInfo.InvariantCulture);
+                    return attributeValueDate.TheValue.ToString("yyyy-MM-dd, HH:mm:ss", CultureInfo.InvariantCulture);
                 case AttributeValueEnumeration attributeValueEnumeration:
-                    return string.Join(";", attributeValueEnumeration.Values.Select(x => x.Properties.EnumValue));
+                    return string.Join(";", attributeValueEnumeration.Values.Select(x => x.Properties.OtherContent));
                 case AttributeValueInteger attributeValueInteger:
                     return attributeValueInteger.TheValue.ToString();
                 case AttributeValueReal attributeValueReal:

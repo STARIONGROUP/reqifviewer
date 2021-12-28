@@ -60,8 +60,15 @@
                 </RadzenDataGridColumn>
                 <RadzenDataGridColumn TItem="AttributeValue" Title="Value">
                     <Template Context="attributeValue">
-                        @(new MarkupString(attributeValue?.ObjectValue.ToString()))
-                    </Template>
+                        @if (attributeValue is AttributeValueXHTML)
+                        {
+                            @(new MarkupString(attributeValue?.ObjectValue.ToString()))
+                        }
+                        else
+                        {
+                            @(attributeValue.QueryFormattedValue())
+                        }
+                        </Template>
                 </RadzenDataGridColumn>
                 <RadzenDataGridColumn TItem="AttributeValue" Title="Description">
                     <Template Context="attributeValue">
