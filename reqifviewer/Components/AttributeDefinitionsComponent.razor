@@ -16,6 +16,7 @@
 
 @using ReqIFSharp;
 @using ReqifViewer.Infrastructure.ReqIFExtensions
+@using Serilog;
 
 <RadzenDataGrid Data="@this.AttributeDefinitions" AllowFiltering="true" AllowColumnResize="true" TItem="AttributeDefinition">
     <Columns>
@@ -54,7 +55,7 @@
     /// The unique identifier of the container reqif document
     /// </summary>
     private string reqifIdentifier;
-    
+
     protected override void OnParametersSet()
     {
         var attributeDefinition = this.AttributeDefinitions.FirstOrDefault();
@@ -65,7 +66,7 @@
         }
         catch (Exception e)
         {
-            Console.WriteLine(e);
+            Log.ForContext<AttributeDefinitionsComponent>().Error(e, "OnParametersSet Failed");
         }
     }
 }

@@ -20,6 +20,7 @@
 @using ReqifViewer.Infrastructure.Services
 @using reqifviewer.Components
 @using ReqifViewer.Infrastructure.ReqIFExtensions
+@using Serilog 
 
 @inject IReqIFLoaderService reqIfLoaderService
 
@@ -107,7 +108,7 @@ else
         }
         catch (Exception e)
         {
-            Console.WriteLine(e);
+            Log.ForContext<SpecTypeDetailsPage>().Error(e, "LoadData Failed");
         }
         finally
         {

@@ -23,9 +23,13 @@ namespace ReqifViewer.Infrastructure.Services
     using System;
     using System.Collections.Concurrent;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.IO;
     using System.Threading;
     using System.Threading.Tasks;
+
+    using Microsoft.Extensions.Logging;
+    using Microsoft.Extensions.Logging.Abstractions;
 
     using ReqIFSharp;
 
@@ -35,7 +39,26 @@ namespace ReqifViewer.Infrastructure.Services
     /// </summary>
     public class ReqIFLoaderService : IReqIFLoaderService
     {
+        /// <summary>
+        /// the <see cref="Stream"/> that holds a copy of the stream the reqif was loaded from
+        /// </summary>
         private Stream sourceStream;
+
+        /// <summary>
+        /// The <see cref="ILogger"/> used to log
+        /// </summary>
+        private readonly ILogger<ReqIFLoaderService> logger;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ReqIFLoaderService"/>
+        /// </summary>
+        /// <param name="logger">
+        /// The (injected) logger
+        /// </param>
+        public ReqIFLoaderService(ILogger<ReqIFLoaderService> logger = null)
+        {
+            this.logger = logger ?? NullLogger<ReqIFLoaderService>.Instance;
+        }
 
         /// <summary>
         /// a thread safe cache where the data associated to an <see cref="ExternalObject"/> is stored
@@ -88,12 +111,16 @@ namespace ReqifViewer.Infrastructure.Services
 
             var deserializationStream = new MemoryStream();
 
+            this.logger.LogDebug("copying the reqif stream to the deserialization stream for deserialization");
+
             reqIFStream.Seek(0, SeekOrigin.Begin);
             await reqIFStream.CopyToAsync(deserializationStream, token);
             if (deserializationStream.Position != 0)
             {
                 deserializationStream.Seek(0, SeekOrigin.Begin);
             }
+
+            this.logger.LogDebug("copying the reqif stream to the source stream for safe keeping");
 
             reqIFStream.Seek(0, SeekOrigin.Begin);
             await reqIFStream.CopyToAsync(this.sourceStream, token);
@@ -105,8 +132,12 @@ namespace ReqifViewer.Infrastructure.Services
             IEnumerable<ReqIF> result = null;
 
             var reqIfDeserializer = new ReqIFDeserializer();
+
+            var sw = Stopwatch.StartNew();
+            this.logger.LogDebug("starting deserialization");
             result = await reqIfDeserializer.DeserializeAsync(deserializationStream, token);
-            
+            this.logger.LogDebug("deserialization finished in {time} [ms]", sw.ElapsedMilliseconds);
+
             await deserializationStream.DisposeAsync();
 
             this.ReqIFData = result;
@@ -138,6 +169,8 @@ namespace ReqifViewer.Infrastructure.Services
 
             if (externalObjectDataCache.TryGetValue(externalObject, out var result))
             {
+                this.logger.LogDebug("External Object {uri} retrieved from Cache", externalObject.Uri);
+
                 return result;
             }
 
@@ -149,20 +182,25 @@ namespace ReqifViewer.Infrastructure.Services
 
             result = $"data:{externalObject.MimeType};base64,{Convert.ToBase64String(targetStream.ToArray())}";
 
-            this.externalObjectDataCache.TryAdd(externalObject, result);
-
+            if (this.externalObjectDataCache.TryAdd(externalObject, result))
+            {
+                this.logger.LogDebug("External Object {uri} added to Cache", externalObject.Uri);
+            }
+            
             return result;
         }
 
         /// <summary>
         /// Resets the <see cref="ReqIFLoaderService"/> by clearing <see cref="ReqIFData"/> and
-        /// <see cref="SourceStream"/>
+        /// <see cref="sourceStream"/>
         /// </summary>
         public void Reset()
         {
             this.sourceStream = null;
             this.ReqIFData = null;
             this.externalObjectDataCache.Clear();
+
+            this.logger.LogDebug("loader service reset");
 
             ReqIfChanged?.Invoke(this, null);
         }

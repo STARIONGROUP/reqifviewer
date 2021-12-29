@@ -20,6 +20,7 @@
 @using ReqifViewer.Infrastructure.ReqIFExtensions
 @using ReqifViewer.Infrastructure.Services
 @using System.Threading
+@using Serilog
 
 @inject IReqIFLoaderService reqIfLoaderService
 
@@ -80,7 +81,7 @@ else
 
         await this.LoadData();
     }
-    
+
     /// <summary>
     /// Load the data into view-models
     /// </summary>
@@ -102,7 +103,7 @@ else
         }
         catch (Exception e)
         {
-            Console.WriteLine(e);
+            Log.ForContext<ExternalObjectDetailsPage>().Error(e, "LoadData Failed");
         }
         finally
         {
@@ -121,7 +122,5 @@ else
         }
 
         return "";
-
     }
-
 }

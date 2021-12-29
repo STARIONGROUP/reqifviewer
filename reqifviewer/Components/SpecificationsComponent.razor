@@ -16,6 +16,7 @@
 
 @using ReqifViewer.Infrastructure.ReqIFExtensions
 @using ReqIFSharp
+@using Serilog
 
 <RadzenDataGrid PageSize="10" AllowPaging="true" AllowSorting="true" AllowFiltering="true" AllowColumnResize="true" Data="@this.Specifications" TItem="Specification">
     <Columns>
@@ -60,7 +61,7 @@
         }
         catch (Exception e)
         {
-            Console.WriteLine(e);
+            Log.ForContext<SpecificationsComponent>().Error(e, "OnParametersSet Failed");
         }
     }
 }

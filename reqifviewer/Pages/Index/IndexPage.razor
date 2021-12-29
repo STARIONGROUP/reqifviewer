@@ -22,6 +22,7 @@
 @using System.Threading
 @using ReqIFSharp
 @using ReqifViewer.Infrastructure.Services
+@using Serilog;
 
 @inject IReqIFLoaderService reqIfLoaderService
 
@@ -113,10 +114,14 @@ else
         if (this.reqIfLoaderService.ReqIFData == null || !this.reqIfLoaderService.ReqIFData.Any())
         {
             this.reqIfs = null;
+
+            Log.ForContext<IndexPage>().Debug("no ReqIF loaded");
         }
         else
         {
             this.reqIfs = this.reqIfLoaderService.ReqIFData;
+
+            Log.ForContext<IndexPage>().Debug("a Total of {amount} ReqIF loaded", this.reqIfs.Count());
         }
     }
 
@@ -143,7 +148,7 @@ else
 
         this.reqifisAvailable = true;
 
-        Console.WriteLine($"IndexPage: file read into stream in {sw.ElapsedMilliseconds} [ms]");
+        Log.ForContext<IndexPage>().Information("file read into stream in {time} [ms]" , sw.ElapsedMilliseconds);
     }
 
     /// <summary>
@@ -176,15 +181,15 @@ else
             await this.reqIfLoaderService.Load(this.reqifStream, this.cancellationTokenSource.Token);
             this.reqIfs = this.reqIfLoaderService.ReqIFData;
 
-            Console.WriteLine($"IndexPage: a total  of {this.reqIfs.Count()} ReqIF objects deserialized in {sw.ElapsedMilliseconds} [ms]");
+            Log.ForContext<IndexPage>().Information("a total of {amount} ReqIF objects deserialized in {time} [ms]", this.reqIfs.Count(), sw.ElapsedMilliseconds);
         }
         catch (TaskCanceledException)
         {
-            Console.WriteLine("IndexPage: Load was cancelled");
+            Log.ForContext<IndexPage>().Information("Load was cancelled");
         }
         catch (Exception e)
         {
-            Console.WriteLine($"IndexPage: {e}");
+            Log.ForContext<IndexPage>().Error(e, "load reqif failed");
         }
         finally
         {

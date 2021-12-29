@@ -16,8 +16,8 @@
 
 @using System.Globalization
 @using System.Text
-
 @using ReqIFSharp
+@using Serilog
 
 <RadzenFieldset AllowCollapse="true" Style="margin-bottom: 10px;">
 
@@ -129,7 +129,7 @@
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
+                Log.ForContext<SpecObjectComponent>().Error(e, "QuerySpecObjectTypeUrl Failed");
             }
 
             return result;

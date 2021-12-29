@@ -17,6 +17,7 @@
 @using ReqIFSharp;
 @using System.Text
 @using ReqifViewer.Infrastructure.ReqIFExtensions
+@using Serilog
 
 <RadzenFieldset AllowCollapse="true" Style="margin-bottom: 10px;">
 
@@ -124,9 +125,9 @@
         }
         catch (Exception e)
         {
-            Console.WriteLine(e);
+            Log.ForContext<AttributeValuesComponent>().Error(e, "QueryAttributeDefinitionUrl Failed");
         }
 
         return result;
     }
-    }
+}

@@ -20,6 +20,7 @@
 @using ReqIFSharp
 @using ReqifViewer.Infrastructure.Navigation
 @using ReqifViewer.Infrastructure.Services
+@using Serilog
 
 @inject NavigationManager navigationManager
 @inject IReqIFLoaderService reqIfLoaderService
@@ -157,7 +158,7 @@ else
         }
         catch (Exception e)
         {
-            Console.WriteLine(e);
+            Log.ForContext<SpecTypePage>().Error(e, "QuerySpecObjectTypeUrl Failed");
         }
         finally
         {
