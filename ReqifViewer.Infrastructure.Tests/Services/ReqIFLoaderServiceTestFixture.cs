@@ -20,6 +20,8 @@
 
 namespace ReqifViewer.Infrastructure.Tests.Services
 {
+    using System;
+    using System.Diagnostics;
     using System.IO;
     using System.Linq;
     using System.Threading;
@@ -27,6 +29,7 @@ namespace ReqifViewer.Infrastructure.Tests.Services
 
     using NUnit.Framework;
 
+    using ReqifViewer.Infrastructure.ReqIFExtensions;
     using ReqifViewer.Infrastructure.Services;
 
     /// <summary>
@@ -49,7 +52,7 @@ namespace ReqifViewer.Infrastructure.Tests.Services
 
             var reqifPath = Path.Combine(TestContext.CurrentContext.TestDirectory, "TestData", "ProR_Traceability-Template-v1.0.reqif");
 
-            using var fileStream = new FileStream(reqifPath, FileMode.Open);
+            await using var fileStream = new FileStream(reqifPath, FileMode.Open);
             await this.reqIfLoaderService.Load(fileStream, cts.Token);
 
             Assert.That(this.reqIfLoaderService.ReqIFData, Is.Not.Empty);
@@ -62,18 +65,65 @@ namespace ReqifViewer.Infrastructure.Tests.Services
         [Test]
         public async Task Verify_that_ReqIF_data_with_objects_is_loaded_and_set_to_ReqIFData()
         {
+            var sw = Stopwatch.StartNew();
+
             var cts = new CancellationTokenSource();
 
             var reqifPath = Path.Combine(TestContext.CurrentContext.TestDirectory, "TestData", "requirements-and-objects.reqifz");
 
-            using var fileStream = new FileStream(reqifPath, FileMode.Open);
+            await using var fileStream = new FileStream(reqifPath, FileMode.Open);
             await this.reqIfLoaderService.Load(fileStream, cts.Token);
+
+            Console.WriteLine($"requirements-and-objects.reqifz desserialized in {sw.ElapsedMilliseconds} [ms]");
 
             Assert.That(this.reqIfLoaderService.ReqIFData, Is.Not.Empty);
 
             var reqIF = this.reqIfLoaderService.ReqIFData.First();
 
             Assert.That(reqIF.TheHeader.Title, Is.EqualTo("Subset026"));
+        }
+
+        [Test]
+        public async Task Verify_that_ExternalObject_image_can_be_Queried()
+        {
+            var sw = Stopwatch.StartNew();
+
+            var cts = new CancellationTokenSource();
+
+            var reqifPath = Path.Combine(TestContext.CurrentContext.TestDirectory, "TestData", "requirements-and-objects.reqifz");
+
+            await using var fileStream = new FileStream(reqifPath, FileMode.Open);
+            await this.reqIfLoaderService.Load(fileStream, cts.Token);
+
+            Console.WriteLine($"requirements-and-objects.reqifz desserialized in {sw.ElapsedMilliseconds} [ms]");
+            
+            var reqIF = this.reqIfLoaderService.ReqIFData.First();
+
+            var externalObjects = reqIF.CoreContent.QueryExternalObjects().ToList();
+
+            // firs iteration to assert that is retrieved from stream
+            foreach (var externalObject in externalObjects)
+            {
+                sw.Restart();
+
+                var image = await this.reqIfLoaderService.QueryData(externalObject, cts.Token);
+
+                Console.WriteLine($"image extracted in {sw.ElapsedMilliseconds} [ms]");
+
+                Assert.That(image, Is.Not.Null.Or.Empty); 
+            }
+
+            // second iteration to assert that is retrieve from cache
+            foreach (var externalObject in externalObjects)
+            {
+                sw.Restart();
+
+                var image = await this.reqIfLoaderService.QueryData(externalObject, cts.Token);
+
+                Console.WriteLine($"image extracted in {sw.ElapsedMilliseconds} [ms]");
+
+                Assert.That(image, Is.Not.Null.Or.Empty);
+            }
         }
     }
 }

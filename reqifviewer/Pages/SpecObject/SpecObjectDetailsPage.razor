@@ -20,6 +20,7 @@
 @using ReqifViewer.Infrastructure.ReqIFExtensions
 @using ReqifViewer.Infrastructure.Services
 @using reqifviewer.Components
+@using System.Threading
 
 @inject IReqIFLoaderService reqIfLoaderService
 
@@ -87,7 +88,7 @@ else
                                 }
                                 else
                                 {
-                                <a href="reqif/@ReqIF/specobject/@specRelation.Target?.Identifier">@(new MarkupString(specRelation.Target.ExtractDisplayName().ToString()))</a>
+                                    <a href="reqif/@ReqIF/specobject/@specRelation.Target?.Identifier">@(new MarkupString(specRelation.Target.ExtractDisplayName().ToString()))</a>
                                 }
                             </Template>
                         </RadzenDataGridColumn>
@@ -96,6 +97,27 @@ else
             </RadzenCard>
         </div>
     </div>
+
+    <RadzenCard Style="margin-bottom: 20px" Visible="@this.externalObjectPayloads.Any()">
+        <RadzenHeading Text="Embedded Objects" Size="H6"></RadzenHeading>
+
+        <RadzenDataList WrapItems="true" AllowPaging="true" Data="@this.externalObjectPayloads" TItem="Tuple<ExternalObject, String>" PageSize="5">
+            <Template Context="payload">
+                <RadzenCard>
+                    
+                        <div class="row">
+                            <div>
+                                <img src="@payload.Item2" />
+                                <br />
+                                @(new MarkupString (payload.Item1.Owner?.ExtractUnformattedTextFromValue()))
+                            </div>
+                        </div>
+                    
+                </RadzenCard>
+            </Template>
+        </RadzenDataList>
+    </RadzenCard>
+
 }
 
 @code {
@@ -117,6 +139,8 @@ else
     /// </summary>
     private SpecObject specObject;
 
+    private IEnumerable<Tuple<ExternalObject, string>> externalObjectPayloads;
+
     /// <summary>
     /// The <see cref="Specification"/> that the <see cref="SpecObject"/> is contained by
     /// </summary>
@@ -132,17 +156,17 @@ else
     /// </summary>
     private bool isLoading = true;
 
-    protected override void OnParametersSet()
+    protected override async Task OnParametersSetAsync()
     {
         isLoading = false;
 
-        this.LoadData();
+        await this.LoadData();
     }
 
     /// <summary>
     /// Load the data into view-models
     /// </summary>
-    protected void LoadData()
+    protected async Task LoadData()
     {
         try
         {
@@ -151,6 +175,8 @@ else
             var reqIf = this.reqIfLoaderService.ReqIFData.SingleOrDefault(x => x.TheHeader.Identifier == this.ReqIF);
 
             this.specObject = reqIf.CoreContent.SpecObjects.SingleOrDefault(x => x.Identifier == SpecObject);
+
+            this.externalObjectPayloads = await this.specObject.QueryBase64Payloads(this.reqIfLoaderService);
 
             this.specifications = this.specObject.QueryContainerSpecifications();
 
@@ -165,5 +191,23 @@ else
             isLoading = false;
             StateHasChanged();
         }
+    }
+
+    private async Task<IEnumerable<string>> QueryBase64Payloads(SpecObject specObject)
+    {
+        var result = new List<string>();
+
+        var cts = new CancellationTokenSource();
+
+        foreach (var specObjectValue in this.specObject.Values.OfType<AttributeValueXHTML>())
+        {
+            foreach (var externalObject in specObjectValue.ExternalObjects)
+            {
+                var payload = await this.reqIfLoaderService.QueryData(externalObject, cts.Token);
+                result.Add(payload);
+            }
+        }
+
+        return result;
     }
 }

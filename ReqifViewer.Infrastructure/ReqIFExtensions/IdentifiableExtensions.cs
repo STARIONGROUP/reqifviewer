@@ -70,6 +70,8 @@ namespace ReqifViewer.Infrastructure.ReqIFExtensions
                     return "Spec Hierarchy";
                 case Specification:
                     return "Specification";
+                case SpecObject:
+                    return "Spec Object";
                 case SpecRelation:
                     return "Spec Relation";
                 case RelationGroupType:

@@ -40,9 +40,9 @@ namespace ReqifViewer.Infrastructure.Services
         IEnumerable<ReqIF> ReqIFData { get; }
 
         /// <summary>
-        /// Gets the <see cref="Stream"/> from which the ReqIF is loaded
+        /// Gets a copy of the <see cref="Stream"/> from which the ReqIF is loaded
         /// </summary>
-        Stream SourceStream { get; }
+        Task<Stream> GetSourceStream(CancellationToken token);
 
         /// <summary>
         /// Loads the <see cref="ReqIF"/> objects from the provided <see cref="Stream"/>
@@ -58,6 +58,23 @@ namespace ReqifViewer.Infrastructure.Services
         /// an awaitable <see cref="Task"/>
         /// </returns>
         Task Load(Stream reqifStream, CancellationToken token);
+
+        /// <summary>
+        /// Query the data object from associated to the <see cref="ExternalObject"/>
+        /// </summary>
+        /// <param name="externalObject">
+        /// The <see cref="ExternalObject"/> that holds a reference to the data
+        /// </param>
+        /// <param name="token">
+        /// A cancellation token that can be used by other objects or threads to receive notice of cancellation.
+        /// </param>
+        /// <returns>
+        /// a Base64 encoded string that can be used in an HTML image element
+        /// </returns>
+        /// <remarks>
+        /// The <see cref="IReqIFLoaderService"/> caches the data for fast
+        /// </remarks>
+        Task<string> QueryData(ExternalObject externalObject, CancellationToken token);
 
         /// <summary>
         /// Resets the <see cref="IReqIFLoaderService"/> by clearing <see cref="ReqIFData"/> and

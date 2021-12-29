@@ -1,5 +1,5 @@
 ﻿// -------------------------------------------------------------------------------------------------
-// <copyright file="SpecificationExtensions.cs" company="RHEA System S.A.">
+// <copyright file="SpecObjectExtensions.cs" company="RHEA System S.A.">
 //
 //   Copyright 2021 RHEA System S.A.
 //

@@ -1,0 +1,127 @@
+﻿<!------------------------------------------------------------------------------
+    Copyright 2021 RHEA System S.A.
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+------------------------------------------------------------------------------->
+
+@page "/reqif/{ReqIF}/externalobject/{Identifier}"
+
+@using ReqIFSharp
+@using ReqifViewer.Infrastructure.ReqIFExtensions
+@using ReqifViewer.Infrastructure.Services
+@using System.Threading
+
+@inject IReqIFLoaderService reqIfLoaderService
+
+@if (this.isLoading)
+{
+    <RadzenHeading Size="H1" style="display: inline-block" Text="Spec Objects"></RadzenHeading>
+
+    <RadzenProgressBar Value="100" ShowValue="false" Mode="ProgressBarMode.Indeterminate" Style="margin-bottom: 20px" />
+}
+else
+{
+    <RadzenCard Style="margin-bottom: 20px">
+        <ChildContent>
+            <div>
+                @this.externalObject?.Owner?.SpecElAt?.QueryTypeDisplayName() <a href="@this.externalObject?.Owner?.SpecElAt?.CreateUrl()">@(new MarkupString(this.externalObject?.Owner?.SpecElAt?.ExtractDisplayName().ToString()))</a>
+            </div>
+        </ChildContent>
+    </RadzenCard>
+
+    <div class="row">
+        <div class="col-md-12 col-lg-12 col-xl-12">
+            <img alt="@this.externalObject?.Owner?.ExtractUnformattedTextFromValue()" src="@this.base64Payload" />
+        </div>
+    </div>
+}
+
+@code {
+    /// <summary>
+    /// Gets or sets the unique identifier of the <see cref="ReqIF.TheHeader"/>
+    /// </summary>
+    [Parameter]
+    public string ReqIF { get; set; }
+
+    /// <summary>
+    /// Gets or sets the base64 encode identifier of the <see cref="ExternalObject"/>
+    /// </summary>
+    [Parameter]
+    public string Identifier { get; set; }
+
+    /// <summary>
+    /// a value indicating whether the page is loading or not
+    /// </summary>
+    private bool isLoading = true;
+
+    /// <summary>
+    /// The <see cref="ExternalObject"/> that is loaded on the page
+    /// </summary>
+    private ExternalObject externalObject;
+
+    /// <summary>
+    /// a string that contains the base64 encoded payload that can be displayed as an image
+    /// </summary>
+    private string base64Payload;
+
+    protected override async Task OnInitializedAsync()
+    {
+        isLoading = false;
+
+        await this.LoadData();
+    }
+    
+    /// <summary>
+    /// Load the data into view-models
+    /// </summary>
+    protected async Task LoadData()
+    {
+        try
+        {
+            isLoading = true;
+
+            var reqIf = this.reqIfLoaderService.ReqIFData.SingleOrDefault(x => x.TheHeader.Identifier == this.ReqIF);
+
+            var externalObjects = reqIf.CoreContent.QueryExternalObjects().ToList();
+
+            var externalObjectUri = Identifier.Base64Decode();
+
+            this.externalObject = externalObjects.SingleOrDefault(x => x.Uri == externalObjectUri);
+
+            this.base64Payload = await this.QueryExternalObjectPayloadData();
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+        }
+        finally
+        {
+            isLoading = false;
+            StateHasChanged();
+        }
+    }
+
+    private async Task<string> QueryExternalObjectPayloadData()
+    {
+        if (this.externalObject != null)
+        {
+            var cts = new CancellationTokenSource();
+
+            return await this.reqIfLoaderService.QueryData(this.externalObject, cts.Token);
+        }
+
+        return "";
+
+    }
+
+}

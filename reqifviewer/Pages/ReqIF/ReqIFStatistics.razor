@@ -18,6 +18,7 @@
 
 @using System.Globalization
 @using ReqIFSharp
+@using ReqifViewer.Infrastructure.ReqIFExtensions
 @using ReqifViewer.Infrastructure.Services
 
 @inject IReqIFLoaderService reqIfLoaderService
@@ -120,6 +121,25 @@ else
                                         <RadzenHeading Size="H4" style="margin-bottom: 0px; text-align: right" Text="Spec Relations"></RadzenHeading>
                                         <RadzenHeading Size="H4" style="color: #88989b; font-size: 12px; margin-bottom: 0px; text-align: right " Text="Number of Spec Relations"></RadzenHeading>
                                         <RadzenHeading Size="H4" style="color: #a4f977; font-size: 24px; margin-bottom: 0px; margin-top: 13px; text-align: right" Text="@reqIfContent?.SpecRelations.Count.ToString()"></RadzenHeading>
+                                    </div>
+                                </div>
+                            </ChildContent>
+                        </RadzenCard>
+                    </a>
+                </div>
+
+                <div class="col-md-12 col-xl-2 col-lg-6">
+                    <a href="@($"/reqif/{reqIfHeader.Identifier}/externalobjects")">
+                        <RadzenCard style="margin-bottom: 16px">
+                            <ChildContent>
+                                <div class="row">
+                                    <div class="col-md-12 col-4">
+                                        <RadzenIcon Icon="photo_library" style="color: #f977dd; font-size: 48px; height: 64px; width: 100%"></RadzenIcon>
+                                    </div>
+                                    <div class="col-md-12 col-8">
+                                        <RadzenHeading Size="H4" style="margin-bottom: 0px; text-align: right" Text="External Objects"></RadzenHeading>
+                                        <RadzenHeading Size="H4" style="color: #88989b; font-size: 12px; margin-bottom: 0px; text-align: right " Text="Number of External Objects"></RadzenHeading>
+                                        <RadzenHeading Size="H4" style="color: #f977dd; font-size: 24px; margin-bottom: 0px; margin-top: 13px; text-align: right" Text="@this.amountOfExternalObjects.ToString(CultureInfo.InvariantCulture)"></RadzenHeading>
                                     </div>
                                 </div>
                             </ChildContent>
@@ -237,6 +257,8 @@ else
 
     private bool isLoading = true;
 
+    private int amountOfExternalObjects = 0;
+
     /// <summary>
     /// Asynchronous Component initialization
     /// </summary>
@@ -252,6 +274,8 @@ else
             {
                 this.reqIfHeader = reqIf.TheHeader;
                 this.reqIfContent = reqIf.CoreContent;
+
+                this.amountOfExternalObjects = this.reqIfContent.QueryExternalObjects().Count();
             }
         }
         catch (Exception e)
