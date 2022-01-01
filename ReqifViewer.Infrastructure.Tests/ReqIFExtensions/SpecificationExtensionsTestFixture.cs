@@ -48,7 +48,8 @@ namespace ReqifViewer.Infrastructure.Tests.ReqIFExtensions
             var reqifPath = Path.Combine(TestContext.CurrentContext.TestDirectory, "TestData", "ProR_Traceability-Template-v1.0.reqif");
 
             await using var fileStream = new FileStream(reqifPath, FileMode.Open);
-            var reqIfLoaderService = new ReqIFLoaderService();
+            var reqIfDeserializer = new ReqIFDeserializer();
+            var reqIfLoaderService = new ReqIFLoaderService(reqIfDeserializer);
             await reqIfLoaderService.Load(fileStream, cts.Token);
 
             this.reqIf = reqIfLoaderService.ReqIFData.Single();

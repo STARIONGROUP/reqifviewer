@@ -44,6 +44,8 @@ namespace ReqifViewer.Infrastructure.Services
         /// </summary>
         private Stream sourceStream;
 
+        private readonly IReqIFDeSerializer reqIfDeSerializer;
+
         /// <summary>
         /// The <see cref="ILogger"/> used to log
         /// </summary>
@@ -52,12 +54,17 @@ namespace ReqifViewer.Infrastructure.Services
         /// <summary>
         /// Initializes a new instance of the <see cref="ReqIFLoaderService"/>
         /// </summary>
-        /// <param name="logger">
-        /// The (injected) logger
+        /// <param name="reqIfDeSerializer">
+        /// The (injected) <see cref="IReqIFDeSerializer"/>
         /// </param>
-        public ReqIFLoaderService(ILogger<ReqIFLoaderService> logger = null)
+        /// <param name="loggerFactory">
+        /// The (injected) <see cref="ILoggerFactory"/>
+        /// </param>
+        public ReqIFLoaderService(IReqIFDeSerializer reqIfDeSerializer, ILoggerFactory loggerFactory = null)
         {
-            this.logger = logger ?? NullLogger<ReqIFLoaderService>.Instance;
+            this.reqIfDeSerializer = reqIfDeSerializer;
+
+            this.logger = loggerFactory == null ? NullLogger<ReqIFLoaderService>.Instance : loggerFactory.CreateLogger<ReqIFLoaderService>();
         }
 
         /// <summary>
@@ -130,12 +137,10 @@ namespace ReqifViewer.Infrastructure.Services
             }
 
             IEnumerable<ReqIF> result = null;
-
-            var reqIfDeserializer = new ReqIFDeserializer();
-
+            
             var sw = Stopwatch.StartNew();
             this.logger.LogDebug("starting deserialization");
-            result = await reqIfDeserializer.DeserializeAsync(deserializationStream, token);
+            result = await this.reqIfDeSerializer.DeserializeAsync(deserializationStream, token);
             this.logger.LogDebug("deserialization finished in {time} [ms]", sw.ElapsedMilliseconds);
 
             await deserializationStream.DisposeAsync();

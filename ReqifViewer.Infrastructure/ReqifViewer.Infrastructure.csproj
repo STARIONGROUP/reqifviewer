@@ -4,7 +4,7 @@
     <TargetFramework>net5.0</TargetFramework>
     <Company>RHEA System S.A.</Company>
     <Title>ReqifViewer.Infrastructure</Title>
-    <Version>0.6.0</Version>
+    <Version>0.7.0</Version>
     <Description>Shared Infrastructure</Description>
     <Copyright>Copyright © RHEA System S.A.</Copyright>
     <Authors>Sam Gerené</Authors>
@@ -15,7 +15,7 @@
     <PackageReference Include="Microsoft.AspNetCore.Components" Version="5.0.13" />
     <PackageReference Include="Microsoft.AspNetCore.WebUtilities" Version="2.2.0" />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="6.0.0" />
-    <PackageReference Include="ReqIFSharp" Version="5.0.0-rc5" />
+    <PackageReference Include="ReqIFSharp" Version="5.0.0" />
   </ItemGroup>
 
 </Project>

@@ -59,27 +59,6 @@ namespace ReqifViewer.Infrastructure.Tests.ReqIFExtensions
 
             var attributeDefinitionXhtml = new AttributeDefinitionXHTML();
             Assert.That(attributeDefinitionXhtml.QueryDatatypeName(), Is.EqualTo("XHTML"));
-
-            var attributeDefinition = new TestAttributeDefinition();
-            Assert.Throws<InvalidOperationException>(() => attributeDefinition.QueryDatatypeName());
-        }
-
-        private class TestAttributeDefinition : AttributeDefinition
-        {
-            protected override DatatypeDefinition GetDatatypeDefinition()
-            {
-                throw new NotImplementedException();
-            }
-
-            protected override void SetDatatypeDefinition(DatatypeDefinition datatypeDefinition)
-            {
-                throw new NotImplementedException();
-            }
-
-            public override Task ReadXmlAsync(XmlReader reader, CancellationToken token)
-            {
-                throw new NotImplementedException();
-            }
         }
     }
 }

@@ -28,6 +28,8 @@ namespace reqifviewer
     using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
     using Microsoft.Extensions.DependencyInjection;
 
+    using ReqIFSharp;
+
     using Radzen;
     
     using ReqifViewer.Infrastructure.Services;
@@ -51,7 +53,7 @@ namespace reqifviewer
         public static async Task Main(string[] args)
         {
             Log.Logger = new LoggerConfiguration()
-                .MinimumLevel.Verbose()
+                .MinimumLevel.Debug()
                 .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
                 .Enrich.FromLogContext()
                 .WriteTo.BrowserConsole()
@@ -72,6 +74,7 @@ namespace reqifviewer
 
             builder.Services.AddGoogleAnalytics("295704041");
 
+            builder.Services.AddSingleton<IReqIFDeSerializer, ReqIFDeserializer>();
             builder.Services.AddSingleton<IReqIFLoaderService, ReqIFLoaderService>();
 
             await builder.Build().RunAsync();

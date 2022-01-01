@@ -29,6 +29,8 @@ namespace ReqifViewer.Infrastructure.Tests.Services
 
     using NUnit.Framework;
 
+    using ReqIFSharp;
+
     using ReqifViewer.Infrastructure.ReqIFExtensions;
     using ReqifViewer.Infrastructure.Services;
 
@@ -42,7 +44,8 @@ namespace ReqifViewer.Infrastructure.Tests.Services
         [SetUp]
         public void Setup()
         {
-            this.reqIfLoaderService = new ReqIFLoaderService();
+            var reqIfDeserializer = new ReqIFDeserializer();
+            this.reqIfLoaderService = new ReqIFLoaderService(reqIfDeserializer);
         }
 
         [Test]
