@@ -18,11 +18,8 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
-using Serilog.Events;
-
 namespace reqifviewer
 {
-    using System;
     using System.Net.Http;
     using System.Threading.Tasks;
 
@@ -36,7 +33,7 @@ namespace reqifviewer
     using ReqifViewer.Infrastructure.Services;
 
     using Serilog;
-    using Serilog.Debugging;
+    using Serilog.Events;
 
     /// <summary>
     /// The purpose of the <see cref="Program"/> class is to provide the
@@ -54,7 +51,7 @@ namespace reqifviewer
         public static async Task Main(string[] args)
         {
             Log.Logger = new LoggerConfiguration()
-                .MinimumLevel.Debug()
+                .MinimumLevel.Verbose()
                 .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
                 .Enrich.FromLogContext()
                 .WriteTo.BrowserConsole()
