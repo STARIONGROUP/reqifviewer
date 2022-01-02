@@ -30,6 +30,8 @@ jobs:
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 6.0.x
+    - name: install wasm-tools
+      run: dotnet workload install wasm-tools
     - name: Install dependencies
       run: dotnet restore
     - name: Build
