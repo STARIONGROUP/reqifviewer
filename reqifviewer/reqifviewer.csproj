@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
 
   <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
     <Company>RHEA System S.A.</Company>
     <Title>reqifviewer</Title>
     <Version>0.10.0</Version>
@@ -9,7 +9,7 @@
     <Copyright>Copyright © RHEA System S.A.</Copyright>
     <Authors>Sam Gerené</Authors>
     <Confi1gurations>Debug;Release</Confi1gurations>
-    <PublishTrimmed>false</PublishTrimmed>
+	<RunAOTCompilation>true</RunAOTCompilation>
   </PropertyGroup>
 
   <ItemGroup>
@@ -22,8 +22,8 @@
 
   <ItemGroup>
     <PackageReference Include="Blazor-Analytics" Version="3.10.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="5.0.13" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="5.0.13" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="6.0.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="6.0.1" PrivateAssets="all" />
     <PackageReference Include="Radzen.Blazor" Version="3.13.12" />
     <PackageReference Include="Serilog.Extensions.Logging" Version="3.1.0" />
     <PackageReference Include="Serilog.Sinks.BrowserConsole" Version="1.0.0" />

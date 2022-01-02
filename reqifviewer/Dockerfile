@@ -1,4 +1,8 @@
-FROM mcr.microsoft.com/dotnet/sdk:5.0-buster-slim AS build
+FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
+RUN apt-get update
+RUN apt-get install --no-install-recommends --yes python3
+RUN dotnet workload install wasm-tools
+
 WORKDIR /src
 
 COPY Nuget.Config .

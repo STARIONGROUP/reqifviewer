@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
 
   <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
     <Company>RHEA System S.A.</Company>
     <Title>reqifviewer.Tests</Title>
     <Description>reqifviewer test project</Description>
