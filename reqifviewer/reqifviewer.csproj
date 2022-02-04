@@ -4,7 +4,7 @@
     <TargetFramework>net6.0</TargetFramework>
     <Company>RHEA System S.A.</Company>
     <Title>reqifviewer</Title>
-    <Version>0.11.1</Version>
+    <Version>0.12.0</Version>
     <Description>Web Application to inspect ReqIF files</Description>
     <Copyright>Copyright © RHEA System S.A.</Copyright>
     <Authors>Sam Gerené</Authors>
@@ -23,7 +23,7 @@
     <PackageReference Include="Blazor-Analytics" Version="3.10.0" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="6.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="6.0.1" PrivateAssets="all" />
-    <PackageReference Include="Radzen.Blazor" Version="3.13.12" />
+    <PackageReference Include="Radzen.Blazor" Version="3.14.11" />
     <PackageReference Include="Serilog.Extensions.Logging" Version="3.1.0" />
     <PackageReference Include="Serilog.Sinks.BrowserConsole" Version="1.0.0" />
   </ItemGroup>
