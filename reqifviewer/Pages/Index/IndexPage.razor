@@ -21,7 +21,7 @@
 @using System.IO
 @using System.Threading
 @using ReqIFSharp
-@using ReqifViewer.Infrastructure.Services
+@using ReqIFSharp.Extensions.Services
 @using Serilog;
 
 @inject IReqIFLoaderService reqIfLoaderService
@@ -178,7 +178,9 @@ else
                 this.reqifStream.Seek(0, SeekOrigin.Begin);
             }
 
-            await this.reqIfLoaderService.Load(this.reqifStream, this.cancellationTokenSource.Token);
+	        var convertPathToSupportedFileExtensionKind = this.fileSelectionText.ConvertPathToSupportedFileExtensionKind();
+
+            await this.reqIfLoaderService.Load(this.reqifStream,convertPathToSupportedFileExtensionKind, this.cancellationTokenSource.Token);
             this.reqIfs = this.reqIfLoaderService.ReqIFData;
 
             Log.ForContext<IndexPage>().Information("a total of {amount} ReqIF objects deserialized in {time} [ms]", this.reqIfs.Count(), sw.ElapsedMilliseconds);

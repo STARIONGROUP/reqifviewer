@@ -51,17 +51,17 @@
     </ChildContent>
 </RadzenHeader>
 
-<div style="width:100%">
-    <RadzenBody @bind-Expanded="@bodyExpanded">
-        <ChildContent>
-            <RadzenContentContainer Name="main">
-                @Body
-            </RadzenContentContainer>
-        </ChildContent>
-    </RadzenBody>
-</div>
+<RadzenBody @bind-Expanded="@bodyExpanded">
+    <ChildContent>
+        <RadzenContentContainer Name="main">
+            @Body
+        </RadzenContentContainer>
+    </ChildContent>
+</RadzenBody>
 
+<!--
 <SideMenu @bind-Expanded="@sidebarExpanded"></SideMenu>
+-->
 
 <div class="text-center">
     <RadzenFooter>

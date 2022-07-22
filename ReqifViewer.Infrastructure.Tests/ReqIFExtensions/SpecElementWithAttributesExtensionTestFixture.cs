@@ -30,9 +30,10 @@ namespace ReqifViewer.Infrastructure.Tests.ReqIFExtensions
     using NUnit.Framework;
 
     using ReqIFSharp;
-    using ReqifViewer.Infrastructure.ReqIFExtensions;
-    using ReqifViewer.Infrastructure.Services;
+    using ReqIFSharp.Extensions.Services;
 
+    using ReqifViewer.Infrastructure.ReqIFExtensions;
+    
     /// <summary>
     /// Suite of tests for the <see cref="SpecElementWithAttributesExtensions"/>
     /// </summary>
@@ -52,7 +53,7 @@ namespace ReqifViewer.Infrastructure.Tests.ReqIFExtensions
 
             await using var fileStream = new FileStream(reqifPath, FileMode.Open);
             var reqIfLoaderService = new ReqIFLoaderService(reqIfDeserializer);
-            await reqIfLoaderService.Load(fileStream, cts.Token);
+            await reqIfLoaderService.Load(fileStream, SupportedFileExtensionKind.Reqif, cts.Token);
 
             this.reqIf = reqIfLoaderService.ReqIFData.Single();
         }

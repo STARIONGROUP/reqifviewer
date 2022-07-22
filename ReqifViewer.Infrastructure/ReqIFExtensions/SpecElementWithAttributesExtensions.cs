@@ -20,18 +20,13 @@
 
 namespace ReqifViewer.Infrastructure.ReqIFExtensions
 {
-    using System;
-    using System.Collections.Generic;
     using System.Linq;
     using System.Text;
-    using System.Threading;
-    using System.Threading.Tasks;
-
+    
     using Microsoft.AspNetCore.Components;
 
     using ReqIFSharp;
-    using ReqifViewer.Infrastructure.Services;
-
+    
     /// <summary>
     /// The <see cref="SpecElementWithAttributesExtensions"/> class provides a number of extension methods for the <see cref="SpecElementWithAttributes"/> class
     /// </summary>
@@ -78,57 +73,7 @@ namespace ReqifViewer.Infrastructure.ReqIFExtensions
                 return specElementWithAttributes.LongName;
             }
         }
-
-        /// <summary>
-        /// Queries the <see cref="ExternalObject"/> from a <see cref="SpecElementWithAttributes"/> 
-        /// </summary>
-        /// <param name="specElementWithAttributes">
-        /// The <see cref="SpecElementWithAttributes"/> to query the <see cref="ExternalObject"/>s from
-        /// </param>
-        /// <returns>
-        /// an <see cref="IEnumerable{ExternalObject}"/>
-        /// </returns>
-        public static IEnumerable<ExternalObject> QueryExternalObjects(this SpecElementWithAttributes specElementWithAttributes)
-        {
-            var result = new List<ExternalObject>();
-
-            foreach (var attributeValue in specElementWithAttributes.Values.OfType<AttributeValueXHTML>())
-            {
-                result.AddRange(attributeValue.ExternalObjects);
-            }
-
-            return result;
-        }
-        /// <summary>
-        /// Queries the base64 payloads of the <see cref="SpecElementWithAttributes"/>
-        /// </summary>
-        /// <param name="specElementWithAttributes">
-        /// The <see cref="SpecElementWithAttributes"/> to query the base64 payloads from from
-        /// </param>
-        /// <param name="reqIfLoaderService">
-        /// The <see cref="IReqIFLoaderService"/> that is used to query the payload from the associated reqifz file-stream
-        /// </param>
-        /// <returns>
-        /// an <see cref="IEnumerable{String}"/> that contains base64 encoded strings
-        /// </returns>
-        public static async Task<IEnumerable<Tuple<ExternalObject, string>>> QueryBase64Payloads(this SpecElementWithAttributes specElementWithAttributes, IReqIFLoaderService reqIfLoaderService)
-        {
-            var result = new List<Tuple<ExternalObject, string>>();
-
-            var cts = new CancellationTokenSource();
-            
-            foreach (var specObjectValue in specElementWithAttributes.Values.OfType<AttributeValueXHTML>())
-            {
-                foreach (var externalObject in specObjectValue.ExternalObjects)
-                {
-                    var payload = await reqIfLoaderService.QueryData(externalObject, cts.Token);
-                    result.Add(new Tuple<ExternalObject, string>(externalObject, payload));
-                }
-            }
-
-            return result;
-        }
-
+        
         /// <summary>
         /// Creates the url of a <see cref="SpecElementWithAttributes"/>
         /// </summary>

@@ -25,15 +25,16 @@ namespace reqifviewer
 
     using Blazor.Analytics;
 
+    using Microsoft.AspNetCore.Components.Web;
     using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
+
     using Microsoft.Extensions.DependencyInjection;
 
     using ReqIFSharp;
+    using ReqIFSharp.Extensions.Services;
 
     using Radzen;
     
-    using ReqifViewer.Infrastructure.Services;
-
     using Serilog;
     using Serilog.Events;
 
@@ -64,6 +65,7 @@ namespace reqifviewer
                 loggingBuilder.AddSerilog(dispose: true));
 
             builder.RootComponents.Add<App>("#app");
+            builder.RootComponents.Add<HeadOutlet>("head::after");
 
             builder.Services.AddScoped(sp => new HttpClient());
 

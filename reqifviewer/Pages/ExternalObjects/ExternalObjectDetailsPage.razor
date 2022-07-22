@@ -17,9 +17,11 @@
 @page "/reqif/{ReqIF}/externalobject/{Identifier}"
 
 @using ReqIFSharp
-@using ReqifViewer.Infrastructure.ReqIFExtensions
-@using ReqifViewer.Infrastructure.Services
+@using ReqIFSharp.Extensions.ReqIFExtensions
+@using ReqIFSharp.Extensions.Services
 @using System.Threading
+@using ReqIFSharp.Extensions
+@using ReqifViewer.Infrastructure.ReqIFExtensions
 @using Serilog
 
 @inject IReqIFLoaderService reqIfLoaderService

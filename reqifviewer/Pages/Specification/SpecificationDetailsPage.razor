@@ -17,9 +17,10 @@
 @page "/reqif/{ReqIF}/specification/{Specification}"
 
 @using ReqIFSharp
-@using ReqifViewer.Infrastructure.ReqIFExtensions
-@using ReqifViewer.Infrastructure.Services
+@using ReqIFSharp.Extensions.ReqIFExtensions
+@using ReqIFSharp.Extensions.Services
 @using reqifviewer.Components
+@using ReqifViewer.Infrastructure.ReqIFExtensions
 @using Serilog
 
 @inject IReqIFLoaderService reqIfLoaderService
@@ -70,7 +71,7 @@ else
     public string ReqIF { get; set; }
 
     /// <summary>
-    /// Gets or sets the unique identifier of the <see cref="ReqIF.Specification"/>
+    /// Gets or sets the unique identifier of the <see cref="ReqIFSharp.Specification"/>
     /// </summary>
     [Parameter]
     public string Specification { get; set; }
