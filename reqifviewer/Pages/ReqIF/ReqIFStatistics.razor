@@ -22,7 +22,7 @@
 @using ReqIFSharp.Extensions.Services
 @using Serilog
 
-@inject IReqIFLoaderService reqIfLoaderService
+@inject IReqIFLoaderService ReqIfLoaderService
 
 @if (@isLoading)
 {
@@ -270,7 +270,7 @@ else
     {
         try
         {
-            var reqIf = this.reqIfLoaderService.ReqIFData.SingleOrDefault(x => x.TheHeader.Identifier == this.Identifier);
+            var reqIf = this.ReqIfLoaderService.ReqIFData.SingleOrDefault(x => x.TheHeader.Identifier == this.Identifier);
             if (reqIf != null)
             {
                 this.reqIfHeader = reqIf.TheHeader;

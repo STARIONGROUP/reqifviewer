@@ -17,9 +17,8 @@ limitations under the License.
 @using System.Reflection
 @using ReqIFSharp
 
-@inject DialogService dialogService
-@inject HttpClient httpClient;
-
+@inject DialogService DialogService
+@inject HttpClient HttpClient;
 
 <div class="row">
     <div class="col-lg-6 d-flex">
@@ -61,7 +60,7 @@ limitations under the License.
 
 <div class="row">
     <div class="col-md-12 text-right">
-        <RadzenButton Click="@(args => dialogService.Close(true))" Text="Close" Style="width: 120px"/>
+        <RadzenButton Click="@(args => DialogService.Close(true))" Text="Close" Style="width: 120px"/>
     </div>
 </div>
 
@@ -98,6 +97,6 @@ limitations under the License.
         var assemblyVersion = typeof(ReqIF).Assembly.GetName().Version;
         this.reqifSharpVersion = $"{assemblyVersion.Major}.{assemblyVersion.Minor}.{assemblyVersion.Revision}";
         
-        license = await httpClient.GetStringAsync("https://raw.githubusercontent.com/RHEAGROUP/reqifviewer/development/LICENSE");
+        license = await HttpClient.GetStringAsync("https://raw.githubusercontent.com/RHEAGROUP/reqifviewer/development/LICENSE");
     }
 }

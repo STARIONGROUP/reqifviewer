@@ -16,15 +16,15 @@
 
 @page "/reqif/{ReqIF}/externalobject/{Identifier}"
 
+@using System.Threading
 @using ReqIFSharp
+@using ReqIFSharp.Extensions
 @using ReqIFSharp.Extensions.ReqIFExtensions
 @using ReqIFSharp.Extensions.Services
-@using System.Threading
-@using ReqIFSharp.Extensions
 @using ReqifViewer.Infrastructure.ReqIFExtensions
 @using Serilog
 
-@inject IReqIFLoaderService reqIfLoaderService
+@inject IReqIFLoaderService ReqIfLoaderService
 
 @if (this.isLoading)
 {
@@ -93,7 +93,7 @@ else
         {
             isLoading = true;
 
-            var reqIf = this.reqIfLoaderService.ReqIFData.SingleOrDefault(x => x.TheHeader.Identifier == this.ReqIF);
+            var reqIf = this.ReqIfLoaderService.ReqIFData.SingleOrDefault(x => x.TheHeader.Identifier == this.ReqIF);
 
             var externalObjects = reqIf.CoreContent.QueryExternalObjects().ToList();
 
@@ -120,7 +120,7 @@ else
         {
             var cts = new CancellationTokenSource();
 
-            return await this.reqIfLoaderService.QueryData(this.externalObject, cts.Token);
+            return await this.ReqIfLoaderService.QueryData(this.externalObject, cts.Token);
         }
 
         return "";

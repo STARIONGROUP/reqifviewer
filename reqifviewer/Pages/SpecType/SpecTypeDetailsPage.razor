@@ -22,7 +22,7 @@
 @using reqifviewer.Components
 @using Serilog 
 
-@inject IReqIFLoaderService reqIfLoaderService
+@inject IReqIFLoaderService ReqIfLoaderService
 
 @if (isLoading)
 {
@@ -100,7 +100,7 @@ else
             this.isLoading = true;
             this.StateHasChanged();
 
-            this.reqIf = this.reqIfLoaderService.ReqIFData.SingleOrDefault(x => x.TheHeader.Identifier == this.ReqIF);
+            this.reqIf = this.ReqIfLoaderService.ReqIFData.SingleOrDefault(x => x.TheHeader.Identifier == this.ReqIF);
 
             this.specType = reqIf.CoreContent.SpecTypes.SingleOrDefault(x => x.Identifier == Identifier);
 

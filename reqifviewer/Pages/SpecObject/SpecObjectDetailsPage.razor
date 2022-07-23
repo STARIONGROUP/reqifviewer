@@ -24,7 +24,7 @@
 @using System.Threading
 @using Serilog
 
-@inject IReqIFLoaderService reqIfLoaderService
+@inject IReqIFLoaderService ReqIfLoaderService
 
 @if (isLoading)
 {
@@ -174,11 +174,11 @@ else
         {
             isLoading = true;
 
-            var reqIf = this.reqIfLoaderService.ReqIFData.SingleOrDefault(x => x.TheHeader.Identifier == this.ReqIF);
+            var reqIf = this.ReqIfLoaderService.ReqIFData.SingleOrDefault(x => x.TheHeader.Identifier == this.ReqIF);
 
             this.specObject = reqIf.CoreContent.SpecObjects.SingleOrDefault(x => x.Identifier == SpecObject);
 
-            this.externalObjectPayloads = await this.specObject.QueryBase64Payloads(this.reqIfLoaderService);
+            this.externalObjectPayloads = await this.specObject.QueryBase64Payloads(this.ReqIfLoaderService);
 
             this.specifications = this.specObject.QueryContainerSpecifications();
 
@@ -205,7 +205,7 @@ else
         {
             foreach (var externalObject in specObjectValue.ExternalObjects)
             {
-                var payload = await this.reqIfLoaderService.QueryData(externalObject, cts.Token);
+                var payload = await this.ReqIfLoaderService.QueryData(externalObject, cts.Token);
                 result.Add(payload);
             }
         }

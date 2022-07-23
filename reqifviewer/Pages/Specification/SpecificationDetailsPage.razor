@@ -17,13 +17,12 @@
 @page "/reqif/{ReqIF}/specification/{Specification}"
 
 @using ReqIFSharp
-@using ReqIFSharp.Extensions.ReqIFExtensions
 @using ReqIFSharp.Extensions.Services
 @using reqifviewer.Components
 @using ReqifViewer.Infrastructure.ReqIFExtensions
 @using Serilog
 
-@inject IReqIFLoaderService reqIfLoaderService
+@inject IReqIFLoaderService ReqIfLoaderService
 
 @if (isLoading)
 {
@@ -118,7 +117,7 @@ else
         {
             isLoading = true;
 
-            var reqIf = this.reqIfLoaderService.ReqIFData.SingleOrDefault(x => x.TheHeader.Identifier == this.ReqIF);
+            var reqIf = this.ReqIfLoaderService.ReqIFData.SingleOrDefault(x => x.TheHeader.Identifier == this.ReqIF);
 
             this.specification = reqIf.CoreContent.Specifications.SingleOrDefault(x => x.Identifier == Specification);
 

@@ -24,7 +24,7 @@
 @using ReqIFSharp.Extensions.Services
 @using Serilog;
 
-@inject IReqIFLoaderService reqIfLoaderService
+@inject IReqIFLoaderService ReqIfLoaderService
 
 <div class="row mt-5 pt-5 text-center">
     <div class="col-md-12">
@@ -104,7 +104,7 @@ else
     /// </summary>
     protected override void OnInitialized()
     {
-        if (this.reqIfLoaderService.ReqIFData == null || !this.reqIfLoaderService.ReqIFData.Any())
+        if (this.ReqIfLoaderService.ReqIFData == null || !this.ReqIfLoaderService.ReqIFData.Any())
         {
             this.reqIfs = null;
 
@@ -112,7 +112,7 @@ else
         }
         else
         {
-            this.reqIfs = this.reqIfLoaderService.ReqIFData;
+            this.reqIfs = this.ReqIfLoaderService.ReqIFData;
 
             Log.ForContext<IndexPage>().Debug("a Total of {amount} ReqIF loaded", this.reqIfs.Count());
         }
@@ -173,8 +173,8 @@ else
 
 	        var convertPathToSupportedFileExtensionKind = this.fileSelectionText.ConvertPathToSupportedFileExtensionKind();
 
-            await this.reqIfLoaderService.Load(this.reqifStream,convertPathToSupportedFileExtensionKind, this.cancellationTokenSource.Token);
-            this.reqIfs = this.reqIfLoaderService.ReqIFData;
+            await this.ReqIfLoaderService.Load(this.reqifStream,convertPathToSupportedFileExtensionKind, this.cancellationTokenSource.Token);
+            this.reqIfs = this.ReqIfLoaderService.ReqIFData;
 
             Log.ForContext<IndexPage>().Information("a total of {amount} ReqIF objects deserialized in {time} [ms]", this.reqIfs.Count(), sw.ElapsedMilliseconds);
         }
@@ -212,7 +212,7 @@ else
     private void OnClear()
     {
         this.reqIfs = null;
-        this.reqIfLoaderService.Reset();
+        this.ReqIfLoaderService.Reset();
         isLoading = false;
         this.StateHasChanged();
     }

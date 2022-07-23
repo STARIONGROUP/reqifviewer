@@ -21,7 +21,7 @@
 @using ReqIFSharp.Extensions.Services
 @using Serilog 
 
-@inject IReqIFLoaderService reqIfLoaderService
+@inject IReqIFLoaderService ReqIfLoaderService
 
 @if (isLoading)
 {
@@ -107,7 +107,7 @@ else
         {
             isLoading = true;
 
-            this.reqIf = this.reqIfLoaderService.ReqIFData.SingleOrDefault(x => x.TheHeader.Identifier == this.Identifier);
+            this.reqIf = this.ReqIfLoaderService.ReqIFData.SingleOrDefault(x => x.TheHeader.Identifier == this.Identifier);
 
             this.datatypeDefinitions = reqIf.CoreContent.DataTypes;
 

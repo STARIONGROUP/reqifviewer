@@ -21,8 +21,8 @@
 @using ReqifViewer.Infrastructure.Navigation
 @using Serilog
 
-@inject NavigationManager navigationManager
-@inject IReqIFLoaderService reqIfLoaderService
+@inject NavigationManager NavigationManager
+@inject IReqIFLoaderService ReqIfLoaderService
 
 @if (this.isLoading)
 {
@@ -115,7 +115,7 @@ else
     protected override void OnInitialized()
     {
         isLoading = false;
-        this.navigationManager.LocationChanged += HandleLocationChanged;
+        this.NavigationManager.LocationChanged += HandleLocationChanged;
         this.LoadData();
     }
 
@@ -128,9 +128,9 @@ else
         {
             isLoading = true;
 
-            if (this.navigationManager.TryGetQueryString("type", out this.subType))
+            if (this.NavigationManager.TryGetQueryString("type", out this.subType))
             {
-                this.reqIf = this.reqIfLoaderService.ReqIFData.SingleOrDefault(x => x.TheHeader.Identifier == this.ReqIF);
+                this.reqIf = this.ReqIfLoaderService.ReqIFData.SingleOrDefault(x => x.TheHeader.Identifier == this.ReqIF);
 
                 switch (this.subType)
                 {
@@ -167,7 +167,7 @@ else
     }
 
     /// <summary>
-    /// Handles the HandleLocationChanged event of the <see cref="NavigationManager"/>
+    /// Handles the HandleLocationChanged event of the <see cref="Microsoft.AspNetCore.Components.NavigationManager"/>
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
@@ -181,6 +181,6 @@ else
     /// </summary>
     public void Dispose()
     {
-        this.navigationManager.LocationChanged -= HandleLocationChanged;
+        this.NavigationManager.LocationChanged -= HandleLocationChanged;
     }
 }
