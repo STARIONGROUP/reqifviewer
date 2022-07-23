@@ -21,60 +21,43 @@
 
 @inject IReqIFLoaderService reqIfLoaderService
 
-<RadzenSidebar @bind-Expanded="@Expanded">
-    <ChildContent>
-        <div style="padding: 1rem"></div>
-        <RadzenPanelMenu>
-            <RadzenPanelMenuItem Text="Home" Icon="home" Path="/"></RadzenPanelMenuItem>
+<RadzenPanelMenu>
+	<RadzenPanelMenuItem Text="Home" Icon="home" Path="/"></RadzenPanelMenuItem>
 
-                @if (this.reqifLoaded)
-                {
-                    @foreach (var reqif in this.reqIfLoaderService.ReqIFData)
-                    {
-        <RadzenPanelMenuItem Text=@($"ReqIF: {reqif?.TheHeader.Title}")>
-            <RadzenPanelMenuItem Text="Stats" Icon="dashboard" Path="@($"/reqifstatistics/{reqif?.TheHeader.Identifier}")"></RadzenPanelMenuItem>
-            <RadzenPanelMenuItem Text="Specifications">
+	@if (this.reqifLoaded)
+	{
+		@foreach (var reqif in this.reqIfLoaderService.ReqIFData)
+		{
+			<RadzenPanelMenuItem Text=@($"ReqIF: {reqif?.TheHeader.Title}")>
+				<RadzenPanelMenuItem Text="Stats" Icon="dashboard" Path="@($"/reqifstatistics/{reqif?.TheHeader.Identifier}")"></RadzenPanelMenuItem>
+				<RadzenPanelMenuItem Text="Specifications">
 
-                @if (reqif != null)
-                {
-                    @foreach (var specification in reqif.CoreContent.Specifications)
-                    {
-                        <RadzenPanelMenuItem Text="@specification.LongName" Icon="flare" Path=@($"/reqif/{reqif.TheHeader.Identifier}/specification/{specification.Identifier}")></RadzenPanelMenuItem>
-                    }
-                }
+					@if (reqif != null)
+					{
+						@foreach (var specification in reqif.CoreContent.Specifications)
+						{
+							<RadzenPanelMenuItem Text="@specification.LongName" Icon="flare" Path=@($"/reqif/{reqif.TheHeader.Identifier}/specification/{specification.Identifier}")></RadzenPanelMenuItem>
+						}
+					}
 
-            </RadzenPanelMenuItem>
+				</RadzenPanelMenuItem>
 
-            <RadzenPanelMenuItem Text="Spec Objects" Icon="nature" Path="@($"/reqif/{reqif.TheHeader.Identifier}/specobjects")"></RadzenPanelMenuItem>
-            <RadzenPanelMenuItem Text="Spec Relations" Icon="link" Path="@($"/reqif/{reqif.TheHeader.Identifier}/specrelations")"></RadzenPanelMenuItem>
-            <RadzenPanelMenuItem Text="External Objects" Icon="photo_library" Path="@($"/reqif/{reqif.TheHeader.Identifier}/externalobjects")"></RadzenPanelMenuItem>
-            <RadzenPanelMenuItem Text="Data Types" Icon="grain" Path="@($"/reqif/{reqif.TheHeader.Identifier}/datatypedefinitions")"></RadzenPanelMenuItem>
-            <RadzenPanelMenuItem Text="Spec Object Types" Icon="filter_hdr" Path="@($"/reqif/{reqif.TheHeader.Identifier}/spectypes?type=SpecObjectType")"></RadzenPanelMenuItem>
-            <RadzenPanelMenuItem Text="Specification Types" Icon="panorama_photosphere_select" Path="@($"/reqif/{reqif.TheHeader.Identifier}/spectypes?type=SpecificationType")"></RadzenPanelMenuItem>
-            <RadzenPanelMenuItem Text="Spec Relation Types" Icon="nat" Path="@($"/reqif/{reqif.TheHeader.Identifier}/spectypes?type=SpecRelationType")"></RadzenPanelMenuItem>
-            <RadzenPanelMenuItem Text="Relation Group Types" Icon="mediation" Path="@($"/reqif/{reqif.TheHeader.Identifier}/spectypes?type=RelationGroupType")"></RadzenPanelMenuItem>
+				<RadzenPanelMenuItem Text="Spec Objects" Icon="nature" Path="@($"/reqif/{reqif.TheHeader.Identifier}/specobjects")"></RadzenPanelMenuItem>
+				<RadzenPanelMenuItem Text="Spec Relations" Icon="link" Path="@($"/reqif/{reqif.TheHeader.Identifier}/specrelations")"></RadzenPanelMenuItem>
+				<RadzenPanelMenuItem Text="External Objects" Icon="photo_library" Path="@($"/reqif/{reqif.TheHeader.Identifier}/externalobjects")"></RadzenPanelMenuItem>
+				<RadzenPanelMenuItem Text="Data Types" Icon="grain" Path="@($"/reqif/{reqif.TheHeader.Identifier}/datatypedefinitions")"></RadzenPanelMenuItem>
+				<RadzenPanelMenuItem Text="Spec Object Types" Icon="filter_hdr" Path="@($"/reqif/{reqif.TheHeader.Identifier}/spectypes?type=SpecObjectType")"></RadzenPanelMenuItem>
+				<RadzenPanelMenuItem Text="Specification Types" Icon="panorama_photosphere_select" Path="@($"/reqif/{reqif.TheHeader.Identifier}/spectypes?type=SpecificationType")"></RadzenPanelMenuItem>
+				<RadzenPanelMenuItem Text="Spec Relation Types" Icon="nat" Path="@($"/reqif/{reqif.TheHeader.Identifier}/spectypes?type=SpecRelationType")"></RadzenPanelMenuItem>
+				<RadzenPanelMenuItem Text="Relation Group Types" Icon="mediation" Path="@($"/reqif/{reqif.TheHeader.Identifier}/spectypes?type=RelationGroupType")"></RadzenPanelMenuItem>
 
-        </RadzenPanelMenuItem>
-                    }
-                }
-        </RadzenPanelMenu>
-    </ChildContent>
-</RadzenSidebar>
+			</RadzenPanelMenuItem>
+		}
+	}
+</RadzenPanelMenu>
 
 @code {
-
-    /// <summary>
-    /// Gets or sets a value indicating whether the <see cref="SideMenu"/> is expanded or not
-    /// </summary>
-    [Parameter]
-    public bool Expanded { get; set; }
-
-    /// <summary>
-    /// The <see cref="EventCallback"/> associated to the <see cref="Expanded"/> property
-    /// </summary>
-    [Parameter]
-    public EventCallback<bool> ExpandedChanged { get; set; }
-
+    
     /// <summary>
     /// a value indicating whether a ReqIF file is loaded or not
     /// </summary>
@@ -96,7 +79,7 @@
 
         this.reqIfLoaderService.ReqIfChanged += ReqIfLoaderServiceOnReqIfChanged;
     }
-
+    
     /// <summary>
     /// Handler for the <see cref="IReqIFLoaderService.ReqIfChanged"/> event
     /// </summary>

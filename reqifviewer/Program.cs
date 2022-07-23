@@ -25,6 +25,8 @@ namespace reqifviewer
 
     using Blazor.Analytics;
 
+    using BlazorStrap;
+
     using Microsoft.AspNetCore.Components.Web;
     using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 
@@ -78,6 +80,8 @@ namespace reqifviewer
 
             builder.Services.AddSingleton<IReqIFDeSerializer, ReqIFDeserializer>();
             builder.Services.AddSingleton<IReqIFLoaderService, ReqIFLoaderService>();
+
+            builder.Services.AddBlazorStrap();
 
             await builder.Build().RunAsync();
         }
