@@ -21,11 +21,11 @@
 @using ReqifViewer.Infrastructure.ReqIFExtensions
 @using Serilog
 
-@inject IReqIFLoaderService reqIfLoaderService
+@inject IReqIFLoaderService ReqIfLoaderService
 
 @if (isLoading)
 {
-    <RadzenHeading Size="H1" style="display: inline-block" Text="Spec Objects"></RadzenHeading>
+    <RadzenHeading Size="H1" style="display: inline-block" Text="Spec Relations"></RadzenHeading>
 
     <RadzenProgressBar Value="100" ShowValue="false" Mode="ProgressBarMode.Indeterminate" Style="margin-bottom: 20px" />
 }
@@ -113,7 +113,7 @@ else
         {
             isLoading = true;
 
-            this.reqIf = this.reqIfLoaderService.ReqIFData.SingleOrDefault(x => x.TheHeader.Identifier == this.Identifier);
+            this.reqIf = this.ReqIfLoaderService.ReqIFData.SingleOrDefault(x => x.TheHeader.Identifier == this.Identifier);
 
             this.specRelations = reqIf.CoreContent.SpecRelations;
 
