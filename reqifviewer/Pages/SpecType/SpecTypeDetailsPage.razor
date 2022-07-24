@@ -39,13 +39,22 @@ else
     </RadzenCard>
 
     <div class="row">
-        <div class="col-md-12 col-lg-12 col-xl-12">
-            <RadzenCard Style="margin-bottom: 20px">
-                <RadzenHeading Text=@($"{this.currentSpecTypeName} Attribute Definitions") Size="H6"></RadzenHeading>
-
-                <AttributeDefinitionsComponent AttributeDefinitions="this.specType?.SpecAttributes" />
-            </RadzenCard>
-        </div>
+	    <div class="col-md-12 col-lg-12 col-xl-12">
+		    <RadzenCard Style="margin-bottom: 20px">
+			    <RadzenHeading Text=@($"{this.currentSpecTypeName} - Attribute Definitions") Size="H6"></RadzenHeading>
+			    <AttributeDefinitionsComponent AttributeDefinitions="this.specType?.SpecAttributes" />
+		    </RadzenCard>
+	    </div>
+        
+	    @if (this.specType is SpecObjectType specObjectType)
+	    {
+		    <div class="col-md-12 col-lg-12 col-xl-12">
+			    <RadzenCard Visible="@(this.specType != null)">
+				    <RadzenHeading Text=@($"{this.currentSpecTypeName} - Referencing SpecObjects") Size="H6"></RadzenHeading>
+				    <SpecObjectsComponent SpecObjects="@specObjectType.QueryReferencingSpecObjects()" />
+			    </RadzenCard>
+		    </div>
+	    }
     </div>
 }
 
@@ -83,6 +92,10 @@ else
     /// </summary>
     private ReqIF reqIf;
 
+	/// <summary>
+	/// Method invoked when the component has received parameters from its parent in the render tree,
+	/// and the incoming values have been assigned to properties.
+	/// </summary>
     protected override void OnParametersSet()
     {
         isLoading = false;
@@ -98,6 +111,7 @@ else
         try
         {
             this.isLoading = true;
+
             this.StateHasChanged();
 
             this.reqIf = this.ReqIfLoaderService.ReqIFData.SingleOrDefault(x => x.TheHeader.Identifier == this.ReqIF);
@@ -116,5 +130,5 @@ else
             StateHasChanged();
         }
     }
-
 }
+

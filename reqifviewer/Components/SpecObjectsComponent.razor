@@ -1,0 +1,88 @@
+﻿<!------------------------------------------------------------------------------
+Copyright 2021-2022 RHEA System S.A.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+------------------------------------------------------------------------------->
+
+@using ReqIFSharp
+@using ReqifViewer.Infrastructure.ReqIFExtensions
+@using Serilog
+
+<RadzenGrid Count="@count" PageSize="10" AllowPaging="true" AllowColumnResize="true" Data="@this.SpecObjects" TItem="SpecObject">
+	<Columns>
+		<RadzenGridColumn TItem="SpecObject" Title="Name">
+			<Template Context="specObject">
+				<a href="reqif/@this.reqifIdentifier/specobject/@specObject?.Identifier">
+					@(new MarkupString(specObject?.ExtractDisplayName().ToString()))
+				</a>
+			</Template>
+		</RadzenGridColumn>
+		<RadzenGridColumn TItem="SpecObject" Title="Spec Object Type">
+			<Template Context="specObject">
+				<a href="reqif/@this.reqifIdentifier/spectype/@specObject?.SpecType?.Identifier">@specObject?.SpecType?.LongName</a>
+			</Template>
+		</RadzenGridColumn>
+		<RadzenGridColumn TItem="SpecObject" Property="Identifier" Title="Identifier">
+			<Template Context="specObject">
+				<a href="reqif/@this.reqifIdentifier/specobject/@specObject?.Identifier">@specObject?.Identifier</a>
+			</Template>
+		</RadzenGridColumn>
+		<RadzenGridColumn TItem="SpecObject" Property="Description" Title="Description" />
+		<RadzenGridColumn TItem="SpecObject" Property="LastChange" Title="Last Change" />
+		<RadzenGridColumn TItem="SpecObject" Property="AlternativeId" Title="Alternative Id" />
+	</Columns>
+</RadzenGrid>
+
+@code {
+
+	/// <summary>
+	/// Gets or sets the <see cref="IEnumerable{SpecObject}"/>
+	/// </summary>
+	[Parameter]
+	public IEnumerable<SpecObject> SpecObjects { get; set; }
+
+	/// <summary>
+	/// a value that states the total amount of <see cref="SpecObject"/>s in the reqif file
+	/// </summary>
+	private int count;
+
+	/// <summary>
+	/// The unique identifier of the container ReqIF document
+	/// </summary>
+	private string reqifIdentifier;
+
+	/// <summary>
+	/// The Title of the ReqIF document
+	/// </summary>
+	private string title;
+
+	/// <summary>
+	/// Method invoked when the component has received parameters from its parent in the render tree,
+	/// and the incoming values have been assigned to properties.
+	/// </summary>
+	protected override void OnParametersSet()
+	{
+		this.count = this.SpecObjects.Count();
+		var specObject = this.SpecObjects.FirstOrDefault();
+		
+		try
+		{
+			this.reqifIdentifier = specObject.SpecType.ReqIFContent.DocumentRoot.TheHeader.Identifier;
+			this.title = specObject.SpecType.ReqIFContent.DocumentRoot.TheHeader.Title;
+		}
+		catch (Exception e)
+		{
+			Log.ForContext<SpecObjectsComponent>().Error(e, "OnParametersSet Failed");
+		}
+	}
+}

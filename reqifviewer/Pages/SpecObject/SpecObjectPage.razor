@@ -18,7 +18,7 @@
 
 @using ReqIFSharp
 @using ReqIFSharp.Extensions.Services
-@using ReqifViewer.Infrastructure.ReqIFExtensions
+@using reqifviewer.Components
 @using Serilog
 
 @inject IReqIFLoaderService ReqIfLoaderService
@@ -31,32 +31,9 @@
 }
 else
 {
-    <RadzenHeading Size="H1" style="display: inline-block" Text="@($"{reqIf?.TheHeader.Title} - Spec Objects")"></RadzenHeading>
+	<RadzenHeading Size="H1" style="display: inline-block" Text="@($"{reqIf?.TheHeader.Title} - Spec Objects")"></RadzenHeading>
 
-    <RadzenGrid Count="@count" PageSize="10" AllowPaging="true" AllowColumnResize="true" Data="@this.specObjects" TItem="SpecObject">
-        <Columns>
-            <RadzenGridColumn TItem="SpecObject" Title="Name">
-                <Template Context="specObject">
-                    <a href="reqif/@this.Identifier/specobject/@specObject?.Identifier">
-                        @(new MarkupString(specObject?.ExtractDisplayName().ToString()))
-                    </a>
-                </Template>
-            </RadzenGridColumn>
-            <RadzenGridColumn TItem="SpecObject" Title="Spec Object Type">
-                <Template Context="specObject">
-                    <a href="reqif/@this.Identifier/spectype/@specObject?.SpecType?.Identifier">@specObject?.SpecType?.LongName</a>
-                </Template>
-            </RadzenGridColumn>
-            <RadzenGridColumn TItem="SpecObject" Property="Identifier" Title="Identifier">
-                <Template Context="specObject">
-                    <a href="reqif/@this.Identifier/specobject/@specObject?.Identifier">@specObject?.Identifier</a>
-                </Template>
-            </RadzenGridColumn>
-            <RadzenGridColumn TItem="SpecObject" Property="Description" Title="Description" />
-            <RadzenGridColumn TItem="SpecObject" Property="LastChange" Title="Last Change" />
-            <RadzenGridColumn TItem="SpecObject" Property="AlternativeId" Title="Alternative Id" />
-        </Columns>
-    </RadzenGrid>
+	<SpecObjectsComponent SpecObjects="@this.specObjects" />
 }
 
 @code {
@@ -71,22 +48,17 @@ else
     /// a value indicating whether the page is loading or not
     /// </summary>
     private bool isLoading = true;
-
-    /// <summary>
-    /// a value that states the total amount of <see cref="SpecObject"/>s in the reqif file
-    /// </summary>
-    private int count;
-
+    
     /// <summary>
     /// The <see cref="SpecObject"/>s that are contained in the <see cref="ReqIF"/>
     /// </summary>
     private IEnumerable<SpecObject> specObjects;
 
-    /// <summary>
-    /// The <see cref="ReqIF"/> object that is loaded on the page
-    /// </summary>
-    private ReqIF reqIf;
-
+	/// <summary>
+	/// The <see cref="ReqIF"/> object that is loaded on the page
+	/// </summary>
+	private ReqIF reqIf;
+    
     /// <summary>
     /// Asynchronous Component initialization
     /// </summary>
@@ -111,9 +83,8 @@ else
 
             this.reqIf = this.ReqIfLoaderService.ReqIFData.SingleOrDefault(x => x.TheHeader.Identifier == this.Identifier);
 
-            this.specObjects = reqIf.CoreContent.SpecObjects;
-
-            this.count = this.specObjects.Count();
+            this.specObjects = this.reqIf.CoreContent.SpecObjects;
+            
         }
         catch (Exception e)
         {
