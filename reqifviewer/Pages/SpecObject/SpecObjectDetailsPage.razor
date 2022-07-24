@@ -21,7 +21,6 @@
 @using ReqIFSharp.Extensions.Services
 @using reqifviewer.Components
 @using ReqifViewer.Infrastructure.ReqIFExtensions
-@using System.Threading
 @using Serilog
 
 @inject IReqIFLoaderService ReqIfLoaderService
@@ -141,6 +140,9 @@ else
     /// </summary>
     private SpecObject specObject;
 
+    /// <summary>
+    /// The <see cref="ExternalObject"/> associated with the current <see cref="SpecObject"/>
+    /// </summary>
     private IEnumerable<Tuple<ExternalObject, string>> externalObjectPayloads;
 
     /// <summary>
@@ -158,6 +160,10 @@ else
     /// </summary>
     private bool isLoading = true;
 
+	/// <summary>
+	/// Method invoked when the component has received parameters from its parent in the render tree,
+	/// and the incoming values have been assigned to properties.
+	/// </summary>
     protected override async Task OnParametersSetAsync()
     {
         isLoading = false;
@@ -193,23 +199,5 @@ else
             isLoading = false;
             StateHasChanged();
         }
-    }
-
-    private async Task<IEnumerable<string>> QueryBase64Payloads(SpecObject specObject)
-    {
-        var result = new List<string>();
-
-        var cts = new CancellationTokenSource();
-
-        foreach (var specObjectValue in this.specObject.Values.OfType<AttributeValueXHTML>())
-        {
-            foreach (var externalObject in specObjectValue.ExternalObjects)
-            {
-                var payload = await this.ReqIfLoaderService.QueryData(externalObject, cts.Token);
-                result.Add(payload);
-            }
-        }
-
-        return result;
     }
 }

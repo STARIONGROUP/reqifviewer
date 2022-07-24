@@ -38,7 +38,7 @@ else
         </ChildContent>
     </RadzenCard>
 
-    <AttributeValuesComponent  AttributeValues="this.specification?.Values" />
+    <AttributeValuesComponent AttributeValues="this.specification?.Values" />
 
     <div class="row">
         <div class="col-sm-12 col-md-6 col-lg-5 col-xl-4">
@@ -58,7 +58,6 @@ else
             </RadzenCard>
         </div>
     </div>
-    
 }
 
 @code {
@@ -101,6 +100,10 @@ else
         isLoading = false;
     }
 
+    /// <summary>
+    /// Method invoked when the component has received parameters from its parent in the render tree,
+    /// and the incoming values have been assigned to properties.
+    /// </summary>
     protected override void OnParametersSet()
     {
         isLoading = false;
@@ -133,7 +136,7 @@ else
             StateHasChanged();
         }
     }
-
+    
     private void LoadChildSpecHierarchies(TreeExpandEventArgs args)
     {
         if (args.Value is SpecHierarchy specHierarchy)
