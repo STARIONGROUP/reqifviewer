@@ -18,7 +18,7 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
-namespace ReqifViewer.Infrastructure.ReqIFExtensions
+namespace ReqifViewer.ReqIFExtensions
 {
     using System.Text;
 

@@ -18,7 +18,7 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
-namespace ReqifViewer.Infrastructure.Tests.ReqIFExtensions
+namespace ReqifViewer.Tests.ReqIFExtensions
 {
     using System.IO;
     using System.Linq;
@@ -32,8 +32,8 @@ namespace ReqifViewer.Infrastructure.Tests.ReqIFExtensions
     using ReqIFSharp;
     using ReqIFSharp.Extensions.Services;
 
-    using ReqifViewer.Infrastructure.ReqIFExtensions;
-    
+    using ReqifViewer.ReqIFExtensions;
+
     /// <summary>
     /// Suite of tests for the <see cref="SpecElementWithAttributesExtensions"/>
     /// </summary>

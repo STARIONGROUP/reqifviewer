@@ -18,7 +18,7 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
-namespace ReqifViewer.Infrastructure.Navigation
+namespace ReqifViewer.Navigation
 {
     using Microsoft.AspNetCore.Components;
     using Microsoft.AspNetCore.WebUtilities;

@@ -21,6 +21,7 @@
 
   <ItemGroup>
     <PackageReference Include="Blazor-Analytics" Version="3.11.0" />
+	<PackageReference Include="Microsoft.AspNetCore.WebUtilities" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="7.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="7.0.0" PrivateAssets="all" />
     <PackageReference Include="Radzen.Blazor" Version="4.3.1" />
@@ -32,10 +33,6 @@
 
   <ItemGroup>
     <Folder Include="wwwroot\images\" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\ReqifViewer.Infrastructure\ReqifViewer.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

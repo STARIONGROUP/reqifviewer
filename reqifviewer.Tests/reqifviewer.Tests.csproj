@@ -35,4 +35,16 @@
     <Folder Include="Pages\Index\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="TestData\ProR_Traceability-Template-v1.0.reqif">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="TestData\requirements-and-objects.reqifz">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="TestData\test-multiple-reqif.reqifz">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>
