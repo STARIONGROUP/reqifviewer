@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
 
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net7.0</TargetFramework>
     <Company>RHEA System S.A.</Company>
     <Title>reqifviewer</Title>
     <Version>0.15.0</Version>
@@ -21,11 +21,11 @@
 
   <ItemGroup>
     <PackageReference Include="Blazor-Analytics" Version="3.11.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="6.0.7" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="6.0.7" PrivateAssets="all" />
-    <PackageReference Include="Radzen.Blazor" Version="3.19.9" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="7.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="7.0.0" PrivateAssets="all" />
+    <PackageReference Include="Radzen.Blazor" Version="4.3.1" />
     <PackageReference Include="BlazorStrap" Version="5.0.106" />
-    <PackageReference Include="ReqIFSharp.Extensions" Version="1.0.0-RC3" />
+    <PackageReference Include="ReqIFSharp.Extensions" Version="2.0.0" />
     <PackageReference Include="Serilog.Extensions.Logging" Version="3.1.0" />
     <PackageReference Include="Serilog.Sinks.BrowserConsole" Version="1.0.0" />
   </ItemGroup>
