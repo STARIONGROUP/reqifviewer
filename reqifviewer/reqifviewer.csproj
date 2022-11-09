@@ -1,38 +1,45 @@
 <Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
 
-  <PropertyGroup>
-    <TargetFramework>net7.0</TargetFramework>
-    <Company>RHEA System S.A.</Company>
-    <Title>reqifviewer</Title>
-    <Version>0.15.0</Version>
-    <Description>Web Application to inspect ReqIF files</Description>
-    <Copyright>Copyright © RHEA System S.A.</Copyright>
-    <Authors>Sam Gerené</Authors>
-    <Confi1gurations>Debug;Release</Confi1gurations>
-  </PropertyGroup>
+	<PropertyGroup Label="Application">
+		<Title>reqifviewer</Title>
+		<Version>0.15.0</Version>
+		<Description>Web Application to inspect ReqIF files</Description>
+		<TargetFramework>net7.0</TargetFramework>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <None Remove="Dockerfile" />
-  </ItemGroup>
+	<PropertyGroup Label="Copyright">
+		<Company>RHEA System S.A.</Company>
+		<Copyright>Copyright 2022 RHEA System S.A.</Copyright>
+		<Authors>Sam Gerené</Authors>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <Content Include="Dockerfile" />
-  </ItemGroup>
+	<PropertyGroup Label="Repository">
+		<RepositoryType>Git</RepositoryType>
+		<RepositoryUrl>https://github.com/RHEAGROUP/reqifviewer.git</RepositoryUrl>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Blazor-Analytics" Version="3.11.0" />
-	<PackageReference Include="Microsoft.AspNetCore.WebUtilities" Version="2.2.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="7.0.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="7.0.0" PrivateAssets="all" />
-    <PackageReference Include="Radzen.Blazor" Version="4.3.1" />
-    <PackageReference Include="BlazorStrap" Version="5.0.106" />
-    <PackageReference Include="ReqIFSharp.Extensions" Version="2.0.0" />
-    <PackageReference Include="Serilog.Extensions.Logging" Version="3.1.0" />
-    <PackageReference Include="Serilog.Sinks.BrowserConsole" Version="1.0.0" />
-  </ItemGroup>
+	<ItemGroup>
+		<None Remove="Dockerfile" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="wwwroot\images\" />
-  </ItemGroup>
+	<ItemGroup>
+		<Content Include="Dockerfile" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Blazor-Analytics" Version="3.11.0" />
+		<PackageReference Include="Microsoft.AspNetCore.WebUtilities" Version="2.2.0" />
+		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="7.0.0" />
+		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="7.0.0" PrivateAssets="all" />
+		<PackageReference Include="Radzen.Blazor" Version="4.3.1" />
+		<PackageReference Include="BlazorStrap" Version="5.0.106" />
+		<PackageReference Include="ReqIFSharp.Extensions" Version="2.0.0" />
+		<PackageReference Include="Serilog.Extensions.Logging" Version="3.1.0" />
+		<PackageReference Include="Serilog.Sinks.BrowserConsole" Version="1.0.0" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Folder Include="wwwroot\images\" />
+	</ItemGroup>
 
 </Project>

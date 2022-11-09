@@ -1,9 +1,5 @@
 # reqifviewer
 
-The reqifviewer is a web application to inspect and navigate [ReqIF](https://www.omg.org/spec/ReqIF/1.2/About-ReqIF/) files. The web application is developed using Blazor and depends on [ReqIFSharp](https://reqifsharp.org) for [ReqIF](https://www.omg.org/spec/ReqIF/1.2/About-ReqIF/) processing. 
-
-> Visit https://viewer.reqifsharp.org to see the application in action.
-
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=RHEAGROUP_reqifviewer&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=RHEAGROUP_reqifviewer)
 [![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=RHEAGROUP_reqifviewer&metric=code_smells)](https://sonarcloud.io/summary/new_code?id=RHEAGROUP_reqifviewer)
 [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=RHEAGROUP_reqifviewer&metric=coverage)](https://sonarcloud.io/summary/new_code?id=RHEAGROUP_reqifviewer)
@@ -14,6 +10,10 @@ The reqifviewer is a web application to inspect and navigate [ReqIF](https://www
 [![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=RHEAGROUP_reqifviewer&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=RHEAGROUP_reqifviewer)
 [![Technical Debt](https://sonarcloud.io/api/project_badges/measure?project=RHEAGROUP_reqifviewer&metric=sqale_index)](https://sonarcloud.io/summary/new_code?id=RHEAGROUP_reqifviewer)
 [![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=RHEAGROUP_reqifviewer&metric=vulnerabilities)](https://sonarcloud.io/summary/new_code?id=RHEAGROUP_reqifviewer)
+
+The reqifviewer is a web application to inspect and navigate [ReqIF](https://www.omg.org/spec/ReqIF/1.2/About-ReqIF/) files. The web application is developed using Blazor and depends on [ReqIFSharp](https://reqifsharp.org) for [ReqIF](https://www.omg.org/spec/ReqIF/1.2/About-ReqIF/) processing. 
+
+> Visit https://viewer.reqifsharp.org to see the application in action.
 
 ## Build and Deploy using Docker
 
