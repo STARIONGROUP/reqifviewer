@@ -3,10 +3,9 @@ FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
 WORKDIR /src
 
 COPY Nuget.Config .
-COPY ReqifViewer.Infrastructure ReqifViewer.Infrastructure
 COPY reqifviewer reqifviewer
 RUN dotnet restore --configfile Nuget.Config reqifviewer
-RUN dotnet build reqifviewer -c Release -o /app/build
+RUN dotnet build --no-restore reqifviewer -c Release -o /app/build
 
 FROM build AS publish
 RUN dotnet publish reqifviewer -c Release -o /app/publish
