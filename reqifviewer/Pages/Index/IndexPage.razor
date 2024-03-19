@@ -1,4 +1,5 @@
-﻿<!------------------------------------------------------------------------------
+﻿@page "/"
+<!------------------------------------------------------------------------------
   Copyright 2021-2022 RHEA System S.A.
 
   Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,17 +15,8 @@
   limitations under the License.
 ------------------------------------------------------------------------------->
 
-@page "/"
-
-@using System.Diagnostics
 @using System.Globalization
-@using System.IO
-@using System.Threading
 @using ReqIFSharp
-@using ReqIFSharp.Extensions.Services
-@using Serilog;
-
-@inject IReqIFLoaderService ReqIfLoaderService
 
 <div class="row mt-5 pt-5 text-center">
     <div class="col-md-12">
@@ -35,17 +27,18 @@
 
 <div class="row">
     <div class="col align-self-center">
-	    <div class="input-group mb-3">
-		    <InputFile OnChange="HandleSelection" id="inputGroupFile" class="form-control" accept=".reqif,.reqifz,.zip"></InputFile>
-	    </div>
+        <div class="input-group mb-3">
+            <InputFile OnChange="HandleSelection" id="inputGroupFile" class="form-control" accept=".reqif,.reqifz,.zip"></InputFile>
+        </div>
     </div>
+    <span class="text-danger pb-3">@(this.ErrorMessage)</span>
 </div>
 
-<RadzenButton style="margin: 0 1rem 1rem 0; width: 200px" Icon="update" Disabled="@(!reqifisAvailable)" BusyText="Loading ..." IsBusy=@this.isLoading Click=@OnLoadReqIF Text="Load" />
-<RadzenButton style="margin: 0 1rem 1rem 0; width: 200px" Click="@OnCancel" Text="Cancel" Disabled="@(!this.isLoading)" />
-<RadzenButton style="margin: 0 1rem 1rem 0; width: 200px" Click="@OnClear" Text="Clear" Disabled="@(this.reqIfs == null)" />
+<RadzenButton style="margin: 0 1rem 1rem 0; width: 200px" Icon="update" Disabled="@(!reqifisAvailable)" BusyText="Loading ..." IsBusy="@this.IsLoading" Click="@(this.OnLoadReqIF)" Text="Load" />
+<RadzenButton style="margin: 0 1rem 1rem 0; width: 200px" Click="@this.OnCancel" Text="Cancel" Disabled="@(!this.IsLoading)" />
+<RadzenButton style="margin: 0 1rem 1rem 0; width: 200px" Click="@this.OnClear" Text="Clear" Disabled="@(this.reqIfs == null)" />
 
-@if (this.isLoading)
+@if (this.IsLoading)
 {
     <RadzenProgressBar Value="100" ShowValue="false" Mode="ProgressBarMode.Indeterminate" Style="margin-bottom: 20px" />
 }
@@ -82,138 +75,5 @@ else
                 </RadzenGridColumn>
             </Columns>
         </RadzenGrid>
-    }
-}
-
-@code {
-
-    private string fileSelectionText = "Select a file";
-
-    private MemoryStream reqifStream;
-
-    private bool reqifisAvailable = false;
-
-    private bool isLoading = false;
-
-    private IEnumerable<ReqIF> reqIfs;
-
-    private CancellationTokenSource cancellationTokenSource;
-
-    /// <summary>
-    /// Invoked when the component is initialized after having received its initial parameters
-    /// </summary>
-    protected override void OnInitialized()
-    {
-        if (this.ReqIfLoaderService.ReqIFData == null || !this.ReqIfLoaderService.ReqIFData.Any())
-        {
-            this.reqIfs = null;
-
-            Log.ForContext<IndexPage>().Debug("no ReqIF loaded");
-        }
-        else
-        {
-            this.reqIfs = this.ReqIfLoaderService.ReqIFData;
-
-            Log.ForContext<IndexPage>().Debug("a Total of {amount} ReqIF loaded", this.reqIfs.Count());
-        }
-    }
-
-    /// <summary>
-    /// handles file selection
-    /// </summary>
-    /// <param name="e">
-    /// The <see cref="InputFileChangeEventArgs"/> to be used to handle the selected file
-    /// </param>
-    /// <returns>
-    /// an awaitable <see cref="Task"/>
-    /// </returns>
-    private async Task HandleSelection(InputFileChangeEventArgs e)
-    {
-        var sw = Stopwatch.StartNew();
-
-        this.reqifisAvailable = false;
-
-        this.reqifStream = new MemoryStream();
-
-        await e.File.OpenReadStream(long.MaxValue).CopyToAsync(this.reqifStream);
-
-        this.fileSelectionText = e.File.Name;
-
-        this.reqifisAvailable = true;
-
-        Log.ForContext<IndexPage>().Information("file read into stream in {time} [ms]" , sw.ElapsedMilliseconds);
-    }
-
-    /// <summary>
-    /// Loads the <see cref="ReqIF"/> from the selected file
-    /// </summary>
-    /// <returns>
-    /// an awaitable <see cref="Task"/>
-    /// </returns>
-    private async Task OnLoadReqIF()
-    {
-        try
-        {
-            var sw = Stopwatch.StartNew();
-
-            this.isLoading = true;
-
-            this.StateHasChanged();
-
-            await Task.Delay(500);
-
-            this.cancellationTokenSource = new CancellationTokenSource();
-
-            this.reqIfs = null;
-
-            if (this.reqifStream.Position != 0)
-            {
-                this.reqifStream.Seek(0, SeekOrigin.Begin);
-            }
-
-	        var convertPathToSupportedFileExtensionKind = this.fileSelectionText.ConvertPathToSupportedFileExtensionKind();
-
-            await this.ReqIfLoaderService.Load(this.reqifStream,convertPathToSupportedFileExtensionKind, this.cancellationTokenSource.Token);
-            this.reqIfs = this.ReqIfLoaderService.ReqIFData;
-
-            Log.ForContext<IndexPage>().Information("a total of {amount} ReqIF objects deserialized in {time} [ms]", this.reqIfs.Count(), sw.ElapsedMilliseconds);
-        }
-        catch (TaskCanceledException)
-        {
-            Log.ForContext<IndexPage>().Information("Load was cancelled");
-        }
-        catch (Exception e)
-        {
-            Log.ForContext<IndexPage>().Error(e, "load reqif failed");
-        }
-        finally
-        {
-            isLoading = false;
-            this.StateHasChanged();
-        }
-    }
-
-    /// <summary>
-    /// Cancel loading the ReqIF file
-    /// </summary>
-    private void OnCancel()
-    {
-        if (this.cancellationTokenSource != null)
-        {
-            this.cancellationTokenSource.Cancel();
-            isLoading = false;
-            this.StateHasChanged();
-        }
-    }
-
-    /// <summary>
-    /// Clear the ReqIF file and reset the <see cref="IReqIFLoaderService"/>
-    /// </summary>
-    private void OnClear()
-    {
-        this.reqIfs = null;
-        this.ReqIfLoaderService.Reset();
-        isLoading = false;
-        this.StateHasChanged();
     }
 }
