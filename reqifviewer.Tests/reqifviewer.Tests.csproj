@@ -32,10 +32,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Pages\Index\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <None Update="TestData\ProR_Traceability-Template-v1.0.reqif">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

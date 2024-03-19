@@ -55,7 +55,7 @@ namespace reqifviewer.Pages.Index
         /// <summary>
         /// The value to check if the component is loading
         /// </summary>
-        private bool IsLoading { get; set; }
+        public bool IsLoading { get; private set; }
 
         /// <summary>
         /// The text of file selection
@@ -97,7 +97,8 @@ namespace reqifviewer.Pages.Index
         /// </summary>
         public void Dispose()
         {
-            this.TryDeleteFile(this.ReqIfFilePath);
+            TryDeleteFile(this.ReqIfFilePath);
+            this.cancellationTokenSource.Dispose();
         }
 
         /// <summary>
@@ -133,11 +134,12 @@ namespace reqifviewer.Pages.Index
             if (e.File.Size > MaxFileSizeInBytes)
             {
                 this.ErrorMessage = $"The max file size is {MaxFileSizeInBytes/(1024*1024)} MB";
+                return;
             }
 
             if (!string.IsNullOrEmpty(this.ReqIfFilePath))
             {
-                this.TryDeleteFile(this.ReqIfFilePath);
+                TryDeleteFile(this.ReqIfFilePath);
             }
 
             this.ErrorMessage = string.Empty;
@@ -210,7 +212,7 @@ namespace reqifviewer.Pages.Index
             if (this.cancellationTokenSource != null)
             {
                 await this.cancellationTokenSource.CancelAsync();
-                this.TryDeleteFile(this.ReqIfFilePath);
+                TryDeleteFile(this.ReqIfFilePath);
                 this.IsLoading = false;
                 await this.InvokeAsync(this.StateHasChanged);
             }
@@ -223,7 +225,7 @@ namespace reqifviewer.Pages.Index
         {
             this.reqIfs = null;
             this.ReqIfLoaderService.Reset();
-            this.TryDeleteFile(this.ReqIfFilePath);
+            TryDeleteFile(this.ReqIfFilePath);
             this.IsLoading = false;
             await this.InvokeAsync(this.StateHasChanged);
         }
@@ -233,7 +235,7 @@ namespace reqifviewer.Pages.Index
         /// </summary>
         /// <param name="filePath">The file path</param>
         /// <returns>true if the file was removed, otherwise false</returns>
-        private bool TryDeleteFile(string filePath)
+        private static bool TryDeleteFile(string filePath)
         {
             try
             {
