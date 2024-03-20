@@ -35,13 +35,14 @@ namespace reqifviewer
     using Radzen;
     
     using Serilog;
-    using Serilog.Events;
+    using Microsoft.Extensions.Logging;
+    using ReqifViewer.Resources;
 
     /// <summary>
     /// The purpose of the <see cref="Program"/> class is to provide the
     /// main entry point of te application
     /// </summary>
-    public static class Program
+    public class Program
     {
         /// <summary>
         /// Main entry point of the application
@@ -52,21 +53,19 @@ namespace reqifviewer
         /// </returns>
         public static async Task Main(string[] args)
         {
-            Log.Logger = new LoggerConfiguration()
-                .MinimumLevel.Debug()
-                .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
-                .Enrich.FromLogContext()
-                .WriteTo.BrowserConsole()
-                .CreateLogger();
-
             var builder = WebApplication.CreateBuilder(args);
 
             builder.Services.AddRazorPages();
             builder.Services.AddServerSideBlazor();
             
-            builder.Services.AddLogging(loggingBuilder =>
-                loggingBuilder.AddSerilog(dispose: true));
+            builder.Host.UseSerilog((hostingContext, loggerConfiguration) =>
+            {
+                loggerConfiguration
+                    .ReadFrom.Configuration(hostingContext.Configuration)
+                    .WriteTo.Console();
+            });
 
+            builder.Services.AddSingleton<IResourceLoader, ResourceLoader>();
             builder.Services.AddScoped<DialogService>();
             builder.Services.AddScoped<NotificationService>();
             builder.Services.AddScoped<TooltipService>();
@@ -77,6 +76,13 @@ namespace reqifviewer
             builder.Services.AddBlazorStrap();
 
             var app = builder.Build();
+
+            var logger = app.Services.GetService<ILogger<Program>>();
+            var resourceLoader = app.Services.GetService<IResourceLoader>();
+            var logo = resourceLoader.QueryLogo();
+            logger.LogInformation("################################################################");
+            logger.LogInformation(logo);
+            logger.LogInformation("################################################################");
 
             app.UseStaticFiles();
             app.UseRouting();

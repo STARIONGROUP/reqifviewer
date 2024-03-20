@@ -20,10 +20,15 @@
 
 	<ItemGroup>
 		<None Remove="Dockerfile" />
+		<None Remove="Resources\ascii-art.txt" />
 	</ItemGroup>
 
 	<ItemGroup>
 		<Content Include="Dockerfile" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <EmbeddedResource Include="Resources\ascii-art.txt" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -32,8 +37,9 @@
 		<PackageReference Include="Radzen.Blazor" Version="4.13.6" />
 		<PackageReference Include="BlazorStrap.V5" Version="5.1.102.51723" />
 		<PackageReference Include="ReqIFSharp.Extensions" Version="2.0.1" />
-		<PackageReference Include="Serilog.Extensions.Logging" Version="8.0.0" />
-		<PackageReference Include="Serilog.Sinks.BrowserConsole" Version="1.0.0" />
+        <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.0" />
+        <PackageReference Include="Serilog.AspNetCore" Version="8.0.1" />
+        <PackageReference Include="Serilog.Sinks.Async" Version="1.5.0" />
 	</ItemGroup>
 
 	<ItemGroup>
