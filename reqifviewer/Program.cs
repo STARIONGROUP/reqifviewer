@@ -20,17 +20,14 @@
 
 namespace reqifviewer
 {
-    using System.Net.Http;
     using System.Threading.Tasks;
 
     using Blazor.Analytics;
 
     using BlazorStrap;
 
-    using Microsoft.AspNetCore.Components.Web;
-    using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
-
     using Microsoft.Extensions.DependencyInjection;
+    using Microsoft.AspNetCore.Builder;
 
     using ReqIFSharp;
     using ReqIFSharp.Extensions.Services;
@@ -62,28 +59,32 @@ namespace reqifviewer
                 .WriteTo.BrowserConsole()
                 .CreateLogger();
 
-            var builder = WebAssemblyHostBuilder.CreateDefault(args);
+            var builder = WebApplication.CreateBuilder(args);
+
+            builder.Services.AddRazorPages();
+            builder.Services.AddServerSideBlazor();
+            
             builder.Services.AddLogging(loggingBuilder =>
                 loggingBuilder.AddSerilog(dispose: true));
-
-            builder.RootComponents.Add<App>("#app");
-            builder.RootComponents.Add<HeadOutlet>("head::after");
-
-            builder.Services.AddScoped(sp => new HttpClient());
 
             builder.Services.AddScoped<DialogService>();
             builder.Services.AddScoped<NotificationService>();
             builder.Services.AddScoped<TooltipService>();
             builder.Services.AddScoped<ContextMenuService>();
-
+            builder.Services.AddScoped<IReqIFDeSerializer, ReqIFDeserializer>();
+            builder.Services.AddScoped<IReqIFLoaderService, ReqIFLoaderService>();
             builder.Services.AddGoogleAnalytics("295704041");
-
-            builder.Services.AddSingleton<IReqIFDeSerializer, ReqIFDeserializer>();
-            builder.Services.AddSingleton<IReqIFLoaderService, ReqIFLoaderService>();
-
             builder.Services.AddBlazorStrap();
 
-            await builder.Build().RunAsync();
+            var app = builder.Build();
+
+            app.UseStaticFiles();
+            app.UseRouting();
+            app.MapBlazorHub();
+            app.MapRazorPages();
+            app.MapFallbackToPage("/_Host");
+
+            await app.RunAsync();
         }
     }
 }
