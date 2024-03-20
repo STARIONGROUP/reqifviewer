@@ -98,7 +98,7 @@ namespace reqifviewer.Pages.Index
         public void Dispose()
         {
             TryDeleteFile(this.ReqIfFilePath);
-            this.cancellationTokenSource.Dispose();
+            this.cancellationTokenSource?.Dispose();
         }
 
         /// <summary>
