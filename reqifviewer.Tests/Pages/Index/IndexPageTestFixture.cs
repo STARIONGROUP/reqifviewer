@@ -20,6 +20,8 @@
 
 namespace ReqifViewer.Tests.Pages.Index
 {
+    using System.Collections.Generic;
+    using System.Globalization;
     using System.IO;
     using System.Threading;
     using System.Threading.Tasks;
@@ -27,6 +29,7 @@ namespace ReqifViewer.Tests.Pages.Index
     using Bunit;
 
     using Microsoft.AspNetCore.Components.Forms;
+    using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
 
     using Moq;
@@ -39,7 +42,7 @@ namespace ReqifViewer.Tests.Pages.Index
     using ReqIFSharp.Extensions.Services;
 
     using reqifviewer.Pages.Index;
-
+    using reqifviewer.Utilities;
     using TestContext = Bunit.TestContext;
 
     /// <summary>
@@ -50,7 +53,8 @@ namespace ReqifViewer.Tests.Pages.Index
     {
         private Mock<IReqIFLoaderService> reqIfLoaderService;
         private TestContext context;
-        private const long MaxFileSize = 5 * 1024 * 1024;
+        private IConfiguration configuration;
+        private const double MaxFileSizeInMb = 5;
 
         [SetUp]
         public void SetUp()
@@ -58,7 +62,12 @@ namespace ReqifViewer.Tests.Pages.Index
             this.context = new TestContext();
             this.reqIfLoaderService = new Mock<IReqIFLoaderService>();
 
+            this.configuration = new ConfigurationBuilder()
+                .AddInMemoryCollection([new KeyValuePair<string, string>(Constants.MaxUploadFileSizeInMbConfigurationKey, MaxFileSizeInMb.ToString(CultureInfo.InvariantCulture))])
+                .Build();
+
             this.context.Services.AddSingleton(this.reqIfLoaderService.Object);
+            this.context.Services.AddSingleton(this.configuration);
         }
 
         [TearDown]
@@ -72,16 +81,17 @@ namespace ReqifViewer.Tests.Pages.Index
         {
             var renderer = this.context.RenderComponent<IndexPage>();
             var uploadComponent = renderer.FindComponent<InputFile>();
+            var maxFileSizeInBytes = (long)(MaxFileSizeInMb * 1024 * 1024);
 
             var file = new Mock<IBrowserFile>();
-            file.Setup(x => x.Size).Returns(MaxFileSize + 1);
+            file.Setup(x => x.Size).Returns(maxFileSizeInBytes + 1);
             file.Setup(x => x.Name).Returns("file.reqif");
             file.Setup(x => x.OpenReadStream(It.IsAny<long>(), It.IsAny<CancellationToken>())).Returns(new MemoryStream());
 
             await renderer.InvokeAsync(() => uploadComponent.Instance.OnChange.InvokeAsync(new InputFileChangeEventArgs([file.Object])));
             file.Verify(x => x.OpenReadStream(It.IsAny<long>(), It.IsAny<CancellationToken>()), Times.Never);
 
-            file.Setup(x => x.Size).Returns(MaxFileSize - 1);
+            file.Setup(x => x.Size).Returns(maxFileSizeInBytes - 1);
             await renderer.InvokeAsync(() => uploadComponent.Instance.OnChange.InvokeAsync(new InputFileChangeEventArgs([file.Object])));
             file.Verify(x => x.OpenReadStream(It.IsAny<long>(), It.IsAny<CancellationToken>()), Times.Once);
 
