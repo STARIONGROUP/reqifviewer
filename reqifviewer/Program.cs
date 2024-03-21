@@ -74,6 +74,7 @@ namespace reqifviewer
             builder.Services.AddScoped<IReqIFLoaderService, ReqIFLoaderService>();
             builder.Services.AddGoogleAnalytics("295704041");
             builder.Services.AddBlazorStrap();
+            builder.Services.AddHttpClient();
 
             var app = builder.Build();
 

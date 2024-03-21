@@ -22,6 +22,7 @@ namespace reqifviewer.Pages.Index
 {
     using Microsoft.AspNetCore.Components;
     using Microsoft.AspNetCore.Components.Forms;
+    using Microsoft.Extensions.Configuration;
 
     using ReqIFSharp;
     using ReqIFSharp.Extensions.Services;
@@ -35,6 +36,9 @@ namespace reqifviewer.Pages.Index
     using System.Threading.Tasks;
     using System.Threading;
     using System;
+    using System.Globalization;
+
+    using Utilities;
 
     /// <summary>
     /// The code behind for the <see cref="IndexPage"/> component
@@ -46,6 +50,12 @@ namespace reqifviewer.Pages.Index
         /// </summary>
         [Inject]
         public IReqIFLoaderService ReqIfLoaderService { get; set; }
+
+        /// <summary>
+        /// Gets or sets the <see cref="IConfiguration"/>
+        /// </summary>
+        [Inject]
+        public IConfiguration Configuration { get; set; }
 
         /// <summary>
         /// Gets or sets the error message that is displayed in the component
@@ -68,9 +78,9 @@ namespace reqifviewer.Pages.Index
         private const string UploadsDirectory = "wwwroot/uploads/";
 
         /// <summary>
-        /// The directory where uploaded files are stored
+        /// The maximum file size to upload in megabytes
         /// </summary>
-        private const long MaxFileSizeInBytes = 5 * 1024 * 1024;
+        private double MaxUploadFileSizeInMb => double.Parse(this.Configuration.GetSection(Constants.MaxUploadFileSizeInMbConfigurationKey).Value!, CultureInfo.InvariantCulture);
 
         /// <summary>
         /// Gets or sets the <see cref="ReqIF"/> file path
@@ -131,9 +141,11 @@ namespace reqifviewer.Pages.Index
         /// </returns>
         private async Task HandleSelection(InputFileChangeEventArgs e)
         {
-            if (e.File.Size > MaxFileSizeInBytes)
+            var maxUploadFileSizeInBytes = (long)(this.MaxUploadFileSizeInMb * 1024 * 1024);
+
+            if (e.File.Size > maxUploadFileSizeInBytes)
             {
-                this.ErrorMessage = $"The max file size is {MaxFileSizeInBytes/(1024*1024)} MB";
+                this.ErrorMessage = $"The max file size is {this.MaxUploadFileSizeInMb} MB";
                 return;
             }
 
@@ -152,7 +164,7 @@ namespace reqifviewer.Pages.Index
 
             await using (var fileStream = new FileStream(this.ReqIfFilePath, FileMode.Create))
             {
-                await e.File.OpenReadStream(MaxFileSizeInBytes).CopyToAsync(fileStream);
+                await e.File.OpenReadStream(maxUploadFileSizeInBytes).CopyToAsync(fileStream);
             }
 
             this.reqifisAvailable = true;
@@ -212,7 +224,6 @@ namespace reqifviewer.Pages.Index
             if (this.cancellationTokenSource != null)
             {
                 await this.cancellationTokenSource.CancelAsync();
-                TryDeleteFile(this.ReqIfFilePath);
                 this.IsLoading = false;
                 await this.InvokeAsync(this.StateHasChanged);
             }
