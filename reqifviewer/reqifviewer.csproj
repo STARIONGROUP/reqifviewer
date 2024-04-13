@@ -2,7 +2,7 @@
 
 	<PropertyGroup Label="Application">
 		<Title>reqifviewer</Title>
-		<Version>1.0.0</Version>
+		<Version>1.1.0</Version>
 		<Description>Web Application to inspect ReqIF files</Description>
 		<TargetFramework>net8.0</TargetFramework>
 	</PropertyGroup>
@@ -33,10 +33,10 @@
 
 	<ItemGroup>
 		<PackageReference Include="Blazor-Analytics" Version="3.12.0" />
-		<PackageReference Include="Microsoft.AspNetCore.WebUtilities" Version="8.0.3" />
-		<PackageReference Include="Radzen.Blazor" Version="4.13.6" />
+		<PackageReference Include="Microsoft.AspNetCore.WebUtilities" Version="8.0.4" />
+		<PackageReference Include="Radzen.Blazor" Version="4.29.6" />
 		<PackageReference Include="BlazorStrap.V5" Version="5.1.102.51723" />
-		<PackageReference Include="ReqIFSharp.Extensions" Version="2.1.0" />
+		<PackageReference Include="ReqIFSharp.Extensions" Version="2.1.1" />
         <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.1" />
         <PackageReference Include="Serilog.AspNetCore" Version="8.0.1" />
         <PackageReference Include="Serilog.Sinks.Async" Version="1.5.0" />
