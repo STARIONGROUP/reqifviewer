@@ -7,5 +7,5 @@
   ██║  ██║███████╗╚██████╔╝██║██║     ███████║██║  ██║██║  ██║██║  ██║██║     
    ═╝  ╚═╝╚══════╝ ╚══▀▀═╝ ╚═╝╚═╝     ╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝╚═╝     
                                                                                                                                                                                                                                                                                                                                                                       
-    Copyright (c) 2022-2024 RHEA System S.A.
+    Copyright (c) 2022-2024 Starion Group S.A.
     reqifviewer version: reqifviewerVersion

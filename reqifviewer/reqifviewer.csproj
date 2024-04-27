@@ -8,14 +8,14 @@
 	</PropertyGroup>
 
 	<PropertyGroup Label="Copyright">
-		<Company>RHEA System S.A.</Company>
-		<Copyright>Copyright 2022-2024 RHEA System S.A.</Copyright>
+		<Company>Starion Group S.A.</Company>
+		<Copyright>Copyright 2022-2024 Starion Group S.A.</Copyright>
 		<Authors>Sam Gerené</Authors>
 	</PropertyGroup>
 
 	<PropertyGroup Label="Repository">
 		<RepositoryType>Git</RepositoryType>
-		<RepositoryUrl>https://github.com/RHEAGROUP/reqifviewer.git</RepositoryUrl>
+		<RepositoryUrl>https://github.com/STARIONGROUP/reqifviewer.git</RepositoryUrl>
 	</PropertyGroup>
 
 	<ItemGroup>

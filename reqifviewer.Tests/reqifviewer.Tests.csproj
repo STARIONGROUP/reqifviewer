@@ -2,10 +2,10 @@
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
-    <Company>RHEA System S.A.</Company>
+    <Company>Starion Group S.A.</Company>
     <Title>reqifviewer.Tests</Title>
     <Description>reqifviewer test project</Description>
-    <Copyright>Copyright © RHEA System S.A.</Copyright>
+    <Copyright>Copyright © Starion Group S.A.</Copyright>
     <Authors>Sam Gerené</Authors>
     <IsPackable>false</IsPackable>
   </PropertyGroup>

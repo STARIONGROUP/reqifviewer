@@ -1,7 +1,7 @@
 ﻿// -------------------------------------------------------------------------------------------------
-// <copyright file="ResourceLoader.cs" company="RHEA System S.A.">
+// <copyright file="ResourceLoader.cs" company="Starion Group S.A.">
 //
-//   Copyright 2021-2024 RHEA System S.A.
+//   Copyright 2021-2024 Starion Group S.A.
 //
 //   Licensed under the Apache License, Version 2.0 (the "License");
 //   you may not use this file except in compliance with the License.

@@ -2,7 +2,7 @@ version: "3.8"
 
 services:
   reqifviewer: 
-    image: index.docker.io/rheagroup/reqifviewer:latest
+    image: index.docker.io/STARIONGROUP/reqifviewer:latest
     labels:
       - "com.centurylinklabs.watchtower.enable=true"
     ports:
