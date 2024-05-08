@@ -37,6 +37,7 @@ namespace reqifviewer
     using Serilog;
     using Microsoft.Extensions.Logging;
     using ReqifViewer.Resources;
+    using Microsoft.AspNetCore.HttpOverrides;
 
     /// <summary>
     /// The purpose of the <see cref="Program"/> class is to provide the
@@ -77,6 +78,14 @@ namespace reqifviewer
             builder.Services.AddHttpClient();
 
             var app = builder.Build();
+
+            app.UseForwardedHeaders(
+                new ForwardedHeadersOptions
+                {
+                    ForwardedHeaders =
+                        ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+                }
+            );
 
             var logger = app.Services.GetService<ILogger<Program>>();
             var resourceLoader = app.Services.GetService<IResourceLoader>();
