@@ -50,7 +50,11 @@ else
                     <a href="/reqif/@Identifier/specification/@specification?.Identifier">@specification?.Identifier</a>
                 </Template>
             </RadzenDataGridColumn>
-            <RadzenDataGridColumn TItem="Specification" Property="AlternativeId" Title="Alternative Id" />
+            <RadzenDataGridColumn TItem="Specification" Title="Alternative Id">
+                <Template Context="specification">
+                    @specification?.AlternativeId?.Identifier
+                </Template>
+            </RadzenDataGridColumn>
         </Columns>
     </RadzenDataGrid>
 }

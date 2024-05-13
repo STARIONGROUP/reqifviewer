@@ -63,7 +63,11 @@ else
             <RadzenDataGridColumn TItem="SpecType" Property="Description" Title="Description" />
             <RadzenDataGridColumn TItem="SpecType" Property="LastChange" Title="Last Change" />
             <RadzenDataGridColumn TItem="SpecType" Property="Identifier" Title="Identifier" />
-            <RadzenDataGridColumn TItem="SpecType" Property="AlternativeId" Title="Alternative Id" />
+            <RadzenDataGridColumn TItem="SpecType" Title="Alternative Id">
+                <Template Context="specType">
+                    @specType?.AlternativeId?.Identifier
+                </Template>
+            </RadzenDataGridColumn>
         </Columns>
     </RadzenDataGrid>
 }

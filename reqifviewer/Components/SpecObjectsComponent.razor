@@ -39,7 +39,11 @@ limitations under the License.
 		</RadzenGridColumn>
 		<RadzenGridColumn TItem="SpecObject" Property="Description" Title="Description" />
 		<RadzenGridColumn TItem="SpecObject" Property="LastChange" Title="Last Change" />
-		<RadzenGridColumn TItem="SpecObject" Property="AlternativeId" Title="Alternative Id" />
+		<RadzenDataGridColumn TItem="SpecObject" Title="Alternative Id">
+			<Template Context="specObject">
+				@specObject?.AlternativeId?.Identifier
+			</Template>
+		</RadzenDataGridColumn>
 	</Columns>
 </RadzenGrid>
 

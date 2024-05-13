@@ -136,7 +136,11 @@ else
                                 <a href="/reqif/@this.ReqIF/spectype/@attributeDefinition?.SpecType?.Identifier/attributedefinition/@attributeDefinition?.Identifier">@attributeDefinition?.Identifier</a>
                             </Template>
                         </RadzenDataGridColumn>
-                        <RadzenDataGridColumn TItem="DatatypeDefinition" Property="AlternativeId" Title="Alternative Id" />
+                        <RadzenDataGridColumn TItem="AttributeDefinition" Title="Alternative Id">
+                            <Template Context="attributeDefinition">
+                                @attributeDefinition?.AlternativeId?.Identifier
+                            </Template>
+                        </RadzenDataGridColumn>
                     </Columns>
 
                 </RadzenDataGrid>

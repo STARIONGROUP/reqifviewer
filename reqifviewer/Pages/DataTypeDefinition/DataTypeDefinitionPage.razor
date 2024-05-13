@@ -52,7 +52,11 @@ else
                     <a href="/reqif/@this.Identifier/datatypedefinition/@datatypeDefinition?.Identifier">@datatypeDefinition?.Identifier</a>
                 </Template>
             </RadzenDataGridColumn>
-            <RadzenDataGridColumn TItem="DatatypeDefinition" Property="AlternativeId" Title="Alternative Id" />
+            <RadzenDataGridColumn TItem="DatatypeDefinition" Title="Alternative Id">
+                <Template Context="datatypeDefinition">
+                    @datatypeDefinition?.AlternativeId?.Identifier
+                </Template>
+            </RadzenDataGridColumn>
         </Columns>
     </RadzenDataGrid>
 }

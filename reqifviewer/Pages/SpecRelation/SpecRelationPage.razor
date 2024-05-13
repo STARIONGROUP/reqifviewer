@@ -58,7 +58,11 @@ else
             </RadzenGridColumn>
             <RadzenGridColumn TItem="SpecRelation" Property="Description" Title="Description" />
             <RadzenGridColumn TItem="SpecRelation" Property="LastChange" Title="Last Change" />
-            <RadzenGridColumn TItem="SpecRelation" Property="AlternativeId" Title="Alternative Id" />
+            <RadzenDataGridColumn TItem="SpecRelation" Title="Alternative Id">
+                <Template Context="specRelation">
+                    @specRelation?.AlternativeId?.Identifier
+                </Template>
+            </RadzenDataGridColumn>
         </Columns>
     </RadzenGrid>
 }
