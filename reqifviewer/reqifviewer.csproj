@@ -34,9 +34,9 @@
 	<ItemGroup>
 		<PackageReference Include="Blazor-Analytics" Version="3.12.0" />
 		<PackageReference Include="Microsoft.AspNetCore.WebUtilities" Version="8.0.4" />
-		<PackageReference Include="Radzen.Blazor" Version="4.31.3" />
+		<PackageReference Include="Radzen.Blazor" Version="4.31.4" />
 		<PackageReference Include="BlazorStrap.V5" Version="5.1.102.51723" />
-		<PackageReference Include="ReqIFSharp.Extensions" Version="3.0.0" />
+		<PackageReference Include="ReqIFSharp.Extensions" Version="3.1.0" />
         <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.1" />
         <PackageReference Include="Serilog.AspNetCore" Version="8.0.1" />
         <PackageReference Include="Serilog.Sinks.Async" Version="1.5.0" />
