@@ -45,7 +45,21 @@ else
                 <div class="col-md-12 col-lg-4 col-xl-4">
 
                     <RadzenCard Style="margin-bottom: 20px">
-                        <h3 class="h5">Properties:</h3>
+                        <h3 class="h5">Enum Values:</h3>
+
+                        <RadzenDataGrid PageSize="10" AllowPaging="true" AllowColumnResize="true" Data="@datatypeDefinitionEnumeration.SpecifiedValues" TItem="EnumValue">
+                            <Columns>
+                                <RadzenDataGridColumn TItem="EnumValue" Property="LongName" Title="Long Name" />
+                                <RadzenDataGridColumn TItem="EnumValue" Property="Description" Title="Description" />
+                                <RadzenDataGridColumn TItem="EnumValue" Property="LastChange" Title="Last Change" />
+                                <RadzenDataGridColumn TItem="EnumValue" Property="Identifier" Title="Identifier"/>
+                                <RadzenDataGridColumn TItem="Specification" Title="Alternative Id">
+                                    <Template Context="enumValue">
+                                        @enumValue?.AlternativeId?.Identifier
+                                    </Template>
+                                </RadzenDataGridColumn>
+                            </Columns>
+                        </RadzenDataGrid>
                     </RadzenCard>
                 </div>
                 break;
