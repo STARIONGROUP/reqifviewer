@@ -22,14 +22,14 @@ The reqifviewer SPA is built using docker and the result is a Docker container r
 > The Docker command needs to be executed from the commandline in the **solution** folder.
 
 ```
-$ ./solutionfolder# docker build -f reqifviewer/Dockerfile -t rheagroup/reqifviewer:latest .
-$ ./solutionfolder# docker run -p 8080:80 --name reqifviewer rheagroup/reqifviewer:latest
+$ ./solutionfolder# docker build -f reqifviewer/Dockerfile -t stariongroup/reqifviewer:latest .
+$ ./solutionfolder# docker run -p 8080:80 --name reqifviewer stariongroup/reqifviewer:latest
 ```
 
 Push to docker hub
 
 ```
-$ ./solutionfolder# docker push rheagroup/reqifviewer:latest
+$ ./solutionfolder# docker push stariongroup/reqifviewer:latest
 ```
 
 ## Autodeployment
