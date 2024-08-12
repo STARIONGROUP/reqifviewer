@@ -17,8 +17,8 @@ jobs:
       id: vars
       run: echo ::set-output name=tag::${GITHUB_REF#refs/*/}
     - name: Build the Docker image and tag
-      run: docker build -f reqifviewer/Dockerfile -t rheagroup/reqifviewer:latest -t rheagroup/reqifviewer:${{ steps.vars.outputs.tag }} .
+      run: docker build -f reqifviewer/Dockerfile -t stariongroup/reqifviewer:latest -t stariongroup/reqifviewer:${{ steps.vars.outputs.tag }} .
     - name: push $RELEASE_VERSION tag
-      run: docker push rheagroup/reqifviewer:${{ steps.vars.outputs.tag }}
+      run: docker push stariongroup/reqifviewer:${{ steps.vars.outputs.tag }}
     - name: push latest tag
-      run: docker push rheagroup/reqifviewer:latest
+      run: docker push stariongroup/reqifviewer:latest

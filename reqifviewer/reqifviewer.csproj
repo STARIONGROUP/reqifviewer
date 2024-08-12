@@ -2,7 +2,7 @@
 
 	<PropertyGroup Label="Application">
 		<Title>reqifviewer</Title>
-		<Version>2.1.0</Version>
+		<Version>2.2.0</Version>
 		<Description>Web Application to inspect ReqIF files</Description>
 		<TargetFramework>net8.0</TargetFramework>
 	</PropertyGroup>
