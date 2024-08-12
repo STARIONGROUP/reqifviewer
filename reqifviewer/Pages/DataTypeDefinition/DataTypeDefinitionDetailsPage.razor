@@ -129,13 +129,13 @@ else
 
                                 @switch (attributeDefinition?.SpecType)
                                 {
-                                    case SpecObjectType specObjectType:
+                                    case SpecObjectType:
                                         <a href="/reqif/@this.ReqIF/spectype/@attributeDefinition?.SpecType?.Identifier">@attributeDefinition?.SpecType?.LongName [SpecObject Type]</a>
                                         break;
-                                    case SpecificationType specificationType:
+                                    case SpecificationType:
                                         <a href="/reqif/@this.ReqIF/spectype/@attributeDefinition?.SpecType?.Identifier">@attributeDefinition?.SpecType?.LongName [Specification Type]</a>
                                         break;
-                                    case SpecRelationType specRelationType:
+                                    case SpecRelationType:
                                         <a href="/reqif/@this.ReqIF/spectype/@attributeDefinition?.SpecType?.Identifier">@attributeDefinition?.SpecType?.LongName [SpecRelation Type] </a>
                                         break;
                                 }

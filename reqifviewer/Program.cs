@@ -89,9 +89,8 @@ namespace reqifviewer
 
             var logger = app.Services.GetService<ILogger<Program>>();
             var resourceLoader = app.Services.GetService<IResourceLoader>();
-            var logo = resourceLoader.QueryLogo();
             logger.LogInformation("################################################################");
-            logger.LogInformation(logo);
+            logger.LogInformation(resourceLoader.QueryLogo());
             logger.LogInformation("################################################################");
 
             app.UseStaticFiles();
