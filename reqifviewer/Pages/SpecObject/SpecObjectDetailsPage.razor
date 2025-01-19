@@ -184,7 +184,7 @@ else
 
             this.specObject = reqIf.CoreContent.SpecObjects.SingleOrDefault(x => x.Identifier == SpecObject);
 
-            this.externalObjectPayloads = await this.specObject.QueryBase64Payloads(this.ReqIfLoaderService);
+            this.externalObjectPayloads = await this.specObject.QueryBase64PayloadsAsync(this.ReqIfLoaderService);
 
             this.specifications = this.specObject.QueryContainerSpecifications();
 

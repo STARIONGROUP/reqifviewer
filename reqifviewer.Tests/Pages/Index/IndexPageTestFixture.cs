@@ -97,7 +97,7 @@ namespace ReqifViewer.Tests.Pages.Index
 
             var loadButton = renderer.FindComponent<RadzenButton>();
             await renderer.InvokeAsync(loadButton.Instance.Click.InvokeAsync);
-            this.reqIfLoaderService.Verify(x => x.Load(It.IsAny<Stream>(), It.IsAny<SupportedFileExtensionKind>(), It.IsAny<CancellationToken>()), Times.Once);
+            this.reqIfLoaderService.Verify(x => x.LoadAsync(It.IsAny<Stream>(), It.IsAny<SupportedFileExtensionKind>(), It.IsAny<CancellationToken>()), Times.Once);
 
             var cancelButton = renderer.FindComponents<RadzenButton>()[1];
             await renderer.InvokeAsync(cancelButton.Instance.Click.InvokeAsync);

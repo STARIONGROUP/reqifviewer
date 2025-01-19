@@ -120,7 +120,7 @@ else
         {
             var cts = new CancellationTokenSource();
 
-            return await this.ReqIfLoaderService.QueryData(this.externalObject, cts.Token);
+            return await this.ReqIfLoaderService.QueryDataAsync(this.externalObject, cts.Token);
         }
 
         return "";

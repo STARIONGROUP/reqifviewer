@@ -53,7 +53,7 @@ namespace ReqifViewer.Tests.ReqIFExtensions
 
             await using var fileStream = new FileStream(reqifPath, FileMode.Open);
             var reqIfLoaderService = new ReqIFLoaderService(reqIfDeserializer);
-            await reqIfLoaderService.Load(fileStream, SupportedFileExtensionKind.Reqif, cts.Token);
+            await reqIfLoaderService.LoadAsync(fileStream, SupportedFileExtensionKind.Reqif, cts.Token);
 
             this.reqIf = reqIfLoaderService.ReqIFData.Single();
         }

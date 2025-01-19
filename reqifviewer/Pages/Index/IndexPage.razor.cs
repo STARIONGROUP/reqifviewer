@@ -194,7 +194,7 @@ namespace reqifviewer.Pages.Index
 
                 await using (var reqIfFileMemoryStream = File.Open(this.ReqIfFilePath, FileMode.Open))
                 {
-                    await this.ReqIfLoaderService.Load(reqIfFileMemoryStream, convertPathToSupportedFileExtensionKind, this.cancellationTokenSource.Token);
+                    await this.ReqIfLoaderService.LoadAsync(reqIfFileMemoryStream, convertPathToSupportedFileExtensionKind, this.cancellationTokenSource.Token);
                     this.reqIfs = this.ReqIfLoaderService.ReqIFData;
                 }
 
