@@ -18,34 +18,34 @@ limitations under the License.
 @using ReqifViewer.ReqIFExtensions
 @using Serilog
 
-<RadzenGrid Count="@count" PageSize="10" AllowPaging="true" AllowColumnResize="true" Data="@this.SpecObjects" TItem="SpecObject">
+<RadzenDataGrid Count="@count" PageSize="10" AllowPaging="true" AllowColumnResize="true" Data="@this.SpecObjects" TItem="SpecObject">
 	<Columns>
-		<RadzenGridColumn TItem="SpecObject" Title="Name">
+		<RadzenDataGridColumn TItem="SpecObject" Title="Name">
 			<Template Context="specObject">
 				<a href="reqif/@this.reqifIdentifier/specobject/@specObject?.Identifier">
 					@(new MarkupString(specObject?.ExtractDisplayName().ToString()))
 				</a>
 			</Template>
-		</RadzenGridColumn>
-		<RadzenGridColumn TItem="SpecObject" Title="Spec Object Type">
+		</RadzenDataGridColumn>
+		<RadzenDataGridColumn TItem="SpecObject" Title="Spec Object Type">
 			<Template Context="specObject">
 				<a href="reqif/@this.reqifIdentifier/spectype/@specObject?.SpecType?.Identifier">@specObject?.SpecType?.LongName</a>
 			</Template>
-		</RadzenGridColumn>
-		<RadzenGridColumn TItem="SpecObject" Property="Identifier" Title="Identifier">
+		</RadzenDataGridColumn>
+		<RadzenDataGridColumn TItem="SpecObject" Property="Identifier" Title="Identifier">
 			<Template Context="specObject">
 				<a href="reqif/@this.reqifIdentifier/specobject/@specObject?.Identifier">@specObject?.Identifier</a>
 			</Template>
-		</RadzenGridColumn>
-		<RadzenGridColumn TItem="SpecObject" Property="Description" Title="Description" />
-		<RadzenGridColumn TItem="SpecObject" Property="LastChange" Title="Last Change" />
+		</RadzenDataGridColumn>
+		<RadzenDataGridColumn TItem="SpecObject" Property="Description" Title="Description" />
+		<RadzenDataGridColumn TItem="SpecObject" Property="LastChange" Title="Last Change" />
 		<RadzenDataGridColumn TItem="SpecObject" Title="Alternative Id">
 			<Template Context="specObject">
 				@specObject?.AlternativeId?.Identifier
 			</Template>
 		</RadzenDataGridColumn>
 	</Columns>
-</RadzenGrid>
+</RadzenDataGrid>
 
 @code {
 

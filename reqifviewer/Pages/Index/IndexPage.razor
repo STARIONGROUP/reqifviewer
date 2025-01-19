@@ -46,34 +46,34 @@ else
 {
     if (this.reqIfs != null)
     {
-        <RadzenGrid Data="@reqIfs" TItem="ReqIF">
+        <RadzenDataGrid Data="@reqIfs" TItem="ReqIF">
             <Columns>
-                <RadzenGridColumn Sortable="true" TItem="ReqIF" Title="Title">
+                <RadzenDataGridColumn Sortable="true" TItem="ReqIF" Title="Title">
                     <Template Context="data">
                         <a href="/reqifstatistics/@data?.TheHeader.Identifier">@data?.TheHeader?.Title</a>
                     </Template>
-                </RadzenGridColumn>
-                <RadzenGridColumn Sortable="true" TItem="ReqIF" Title="ReqIF Version">
+                </RadzenDataGridColumn>
+                <RadzenDataGridColumn Sortable="true" TItem="ReqIF" Title="ReqIF Version">
                     <Template Context="data">
                         @data?.TheHeader?.ReqIFVersion
                     </Template>
-                </RadzenGridColumn>
-                <RadzenGridColumn Sortable="true" TItem="ReqIF" Title="Creation Date">
+                </RadzenDataGridColumn>
+                <RadzenDataGridColumn Sortable="true" TItem="ReqIF" Title="Creation Date">
                     <Template Context="data">
                         <div>@data?.TheHeader?.CreationTime.ToString("yyyy-MM-dd, HH:mm:ss", CultureInfo.InvariantCulture)</div>
                     </Template>
-                </RadzenGridColumn>
-                <RadzenGridColumn Sortable="true" TItem="ReqIF" Title="Comment">
+                </RadzenDataGridColumn>
+                <RadzenDataGridColumn Sortable="true" TItem="ReqIF" Title="Comment">
                     <Template Context="data">
                         <div>@data?.TheHeader?.Comment</div>
                     </Template>
-                </RadzenGridColumn>
-                <RadzenGridColumn Sortable="true" TItem="ReqIF" Title="Tool">
+                </RadzenDataGridColumn>
+                <RadzenDataGridColumn Sortable="true" TItem="ReqIF" Title="Tool">
                     <Template Context="data">
                         <div>@data?.TheHeader?.ReqIFToolId</div>
                     </Template>
-                </RadzenGridColumn>
+                </RadzenDataGridColumn>
             </Columns>
-        </RadzenGrid>
+        </RadzenDataGrid>
     }
 }

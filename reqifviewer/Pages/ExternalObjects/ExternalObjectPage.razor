@@ -34,25 +34,25 @@ else
 {
     <RadzenHeading Size="H1" style="display: inline-block" Text="@($"{reqIf?.TheHeader.Title} - External Objects")"></RadzenHeading>
 
-    <RadzenGrid Count="@count" PageSize="10" AllowPaging="true" AllowColumnResize="true" Data="@this.externalObjects" TItem="ExternalObject">
+    <RadzenDataGrid Count="@count" PageSize="10" AllowPaging="true" AllowColumnResize="true" Data="@this.externalObjects" TItem="ExternalObject">
         <Columns>
-            <RadzenGridColumn TItem="ExternalObject" Title="Name">
+            <RadzenDataGridColumn TItem="ExternalObject" Title="Name">
                 <Template Context="externalObject">
                     <a href="@externalObject?.CreateUrl()">@externalObject?.Owner?.ExtractUnformattedTextFromValue()</a>
                 </Template>
-            </RadzenGridColumn>
-            <RadzenGridColumn TItem="ExternalObject" Title="Owner">
+            </RadzenDataGridColumn>
+            <RadzenDataGridColumn TItem="ExternalObject" Title="Owner">
                 <Template Context="externalObject">
                     <a href="@externalObject?.Owner?.SpecElAt?.CreateUrl()">@externalObject?.Owner?.SpecElAt?.ExtractDisplayName()</a>
                 </Template>
-            </RadzenGridColumn>
-            <RadzenGridColumn TItem="ExternalObject" Title="Owner Type">
+            </RadzenDataGridColumn>
+            <RadzenDataGridColumn TItem="ExternalObject" Title="Owner Type">
                 <Template Context="externalObject">
                     <a href="@externalObject?.Owner?.SpecElAt?.SpecType?.CreateUrl()">@externalObject?.Owner?.SpecElAt?.QueryTypeDisplayName()</a>
                 </Template>
-            </RadzenGridColumn>
+            </RadzenDataGridColumn>
         </Columns>
-    </RadzenGrid>
+    </RadzenDataGrid>
 }
 
 @code {

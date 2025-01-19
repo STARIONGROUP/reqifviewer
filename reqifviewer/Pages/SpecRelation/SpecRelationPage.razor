@@ -33,38 +33,38 @@ else
 {
     <RadzenHeading Size="H1" style="display: inline-block" Text="@($"Spec Relations - {reqIf?.TheHeader.Title}")"></RadzenHeading>
 
-    <RadzenGrid Count="@count" PageSize="10" AllowPaging="true" AllowColumnResize="true" Data="@this.specRelations" TItem="SpecRelation">
+    <RadzenDataGrid Count="@count" PageSize="10" AllowPaging="true" AllowColumnResize="true" Data="@this.specRelations" TItem="SpecRelation">
         <Columns>
-            <RadzenGridColumn TItem="SpecRelation" Title="Spec Relation">
+            <RadzenDataGridColumn TItem="SpecRelation" Title="Spec Relation">
                 <Template Context="specRelation">
                     <a href="reqif/@this.Identifier/specrelation/@specRelation?.Identifier">
                         @(new MarkupString(specRelation?.ExtractDisplayName().ToString()))
                     </a>
                 </Template>
-            </RadzenGridColumn>
-            <RadzenGridColumn TItem="SpecRelation" Title="Source">
+            </RadzenDataGridColumn>
+            <RadzenDataGridColumn TItem="SpecRelation" Title="Source">
                 <Template Context="specRelation">
                     <a href="reqif/@this.Identifier/specobject/@specRelation?.Source?.Identifier">
                         @(new MarkupString(specRelation?.Source?.ExtractDisplayName().ToString()))
                     </a>
                 </Template>
-            </RadzenGridColumn>
-            <RadzenGridColumn TItem="SpecRelation" Title="Target">
+            </RadzenDataGridColumn>
+            <RadzenDataGridColumn TItem="SpecRelation" Title="Target">
                 <Template Context="specRelation">
                     <a href="reqif/@this.Identifier/specobject/@specRelation?.Source?.Identifier">
                         @(new MarkupString(specRelation?.Target?.ExtractDisplayName().ToString()))
                     </a>
                 </Template>
-            </RadzenGridColumn>
-            <RadzenGridColumn TItem="SpecRelation" Property="Description" Title="Description" />
-            <RadzenGridColumn TItem="SpecRelation" Property="LastChange" Title="Last Change" />
+            </RadzenDataGridColumn>
+            <RadzenDataGridColumn TItem="SpecRelation" Property="Description" Title="Description" />
+            <RadzenDataGridColumn TItem="SpecRelation" Property="LastChange" Title="Last Change" />
             <RadzenDataGridColumn TItem="SpecRelation" Title="Alternative Id">
                 <Template Context="specRelation">
                     @specRelation?.AlternativeId?.Identifier
                 </Template>
             </RadzenDataGridColumn>
         </Columns>
-    </RadzenGrid>
+    </RadzenDataGrid>
 }
 
 @code {
