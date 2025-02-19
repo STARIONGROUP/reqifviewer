@@ -34,7 +34,7 @@
 	<ItemGroup>
 		<PackageReference Include="Blazor-Analytics" Version="3.12.0" />
 		<PackageReference Include="Microsoft.AspNetCore.WebUtilities" Version="9.0.2" />
-		<PackageReference Include="Radzen.Blazor" Version="5.7.9" />
+		<PackageReference Include="Radzen.Blazor" Version="6.0.15" />
 		<PackageReference Include="BlazorStrap.V5" Version="5.2.103.122024" />
 		<PackageReference Include="ReqIFSharp.Extensions" Version="4.1.0" />
         <PackageReference Include="Serilog.AspNetCore" Version="9.0.0" />
