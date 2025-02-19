@@ -23,7 +23,7 @@ The reqifviewer SPA is built using docker and the result is a Docker container r
 
 ```
 $ ./solutionfolder# docker build -f reqifviewer/Dockerfile -t stariongroup/reqifviewer:latest .
-$ ./solutionfolder# docker run -p 8080:80 --name reqifviewer stariongroup/reqifviewer:latest
+$ ./solutionfolder# docker run -p 8080:8080 --name reqifviewer stariongroup/reqifviewer:latest
 ```
 
 Push to docker hub
