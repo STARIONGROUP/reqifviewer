@@ -1,48 +1,48 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
-	<PropertyGroup Label="Application">
-		<Title>reqifviewer</Title>
-		<Version>3.1.0</Version>
-		<Description>Web Application to inspect ReqIF files</Description>
-		<TargetFramework>net9.0</TargetFramework>
-	</PropertyGroup>
+    <PropertyGroup Label="Application">
+        <Title>reqifviewer</Title>
+        <Version>4.0.0</Version>
+        <Description>Web Application to inspect ReqIF files</Description>
+        <TargetFramework>net9.0</TargetFramework>
+    </PropertyGroup>
 
-	<PropertyGroup Label="Copyright">
-		<Company>Starion Group S.A.</Company>
-		<Copyright>Copyright 2022-2025 Starion Group S.A.</Copyright>
-		<Authors>Sam Gerené</Authors>
-	</PropertyGroup>
+    <PropertyGroup Label="Copyright">
+        <Company>Starion Group S.A.</Company>
+        <Copyright>Copyright 2022-2025 Starion Group S.A.</Copyright>
+        <Authors>Sam Gerené</Authors>
+    </PropertyGroup>
 
-	<PropertyGroup Label="Repository">
-		<RepositoryType>Git</RepositoryType>
-		<RepositoryUrl>https://github.com/STARIONGROUP/reqifviewer.git</RepositoryUrl>
-	</PropertyGroup>
+    <PropertyGroup Label="Repository">
+        <RepositoryType>Git</RepositoryType>
+        <RepositoryUrl>https://github.com/STARIONGROUP/reqifviewer.git</RepositoryUrl>
+    </PropertyGroup>
 
-	<ItemGroup>
-		<None Remove="Dockerfile" />
-		<None Remove="Resources\ascii-art.txt" />
-	</ItemGroup>
+    <ItemGroup>
+        <None Remove="Dockerfile" />
+        <None Remove="Resources\ascii-art.txt" />
+    </ItemGroup>
 
-	<ItemGroup>
-		<Content Include="Dockerfile" />
-	</ItemGroup>
+    <ItemGroup>
+        <Content Include="Dockerfile" />
+    </ItemGroup>
 
-	<ItemGroup>
-	  <EmbeddedResource Include="Resources\ascii-art.txt" />
-	</ItemGroup>
+    <ItemGroup>
+      <EmbeddedResource Include="Resources\ascii-art.txt" />
+    </ItemGroup>
 
-	<ItemGroup>
-		<PackageReference Include="Blazor-Analytics" Version="4.0.0" />
-		<PackageReference Include="Microsoft.AspNetCore.WebUtilities" Version="9.0.8" />
-		<PackageReference Include="Radzen.Blazor" Version="7.1.7" />
-		<PackageReference Include="BlazorStrap.V5" Version="5.2.104" />
-		<PackageReference Include="ReqIFSharp.Extensions" Version="4.2.1" />
+    <ItemGroup>
+        <PackageReference Include="Blazor-Analytics" Version="4.0.0" />
+        <PackageReference Include="Microsoft.AspNetCore.WebUtilities" Version="9.0.8" />
+        <PackageReference Include="Radzen.Blazor" Version="7.1.7" />
+        <PackageReference Include="BlazorStrap.V5" Version="5.2.104" />
+        <PackageReference Include="ReqIFSharp.Extensions" Version="4.2.1" />
         <PackageReference Include="Serilog.AspNetCore" Version="9.0.0" />
         <PackageReference Include="Serilog.Sinks.Async" Version="2.1.0" />
-	</ItemGroup>
+    </ItemGroup>
 
-	<ItemGroup>
-		<Folder Include="wwwroot\images\" />
-	</ItemGroup>
+    <ItemGroup>
+        <Folder Include="wwwroot\images\" />
+    </ItemGroup>
 
 </Project>

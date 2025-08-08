@@ -1,5 +1,3 @@
-# syntax=docker/dockerfile:1.4
-
 FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 
 COPY Nuget.Config .
@@ -12,7 +10,7 @@ RUN dotnet build "reqifviewer/reqifviewer.csproj" -c Release -o /app/build --no-
 FROM build AS publish
 RUN dotnet publish reqifviewer -c Release -o /app/publish
 
-FROM mcr.microsoft.com/dotnet/aspnet:9.0.2-alpine3.21 AS final
+FROM mcr.microsoft.com/dotnet/aspnet:9.0.8-alpine3.22 AS final
 
 WORKDIR /app
 RUN mkdir /app/logs

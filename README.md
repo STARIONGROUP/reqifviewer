@@ -19,18 +19,11 @@ The reqifviewer is a web application to inspect and navigate [ReqIF](https://www
 
 The reqifviewer SPA is built using docker and the result is a Docker container ready to be deployed (or pushed to Docker Hub). The Docker file is located in the reqifviewer project folder.
 
-> The Docker command needs to be executed from the commandline in the **solution** folder.
+Two scripts are provided to create a docker image:
+  - `docker-build-local.sh`: creates an image that can be run locally with `docker run -p 8080:80 --name reqifviewer stariongroup/reqifviewer:latest`
+  - `docker-build-attested.sh`: creates an image that is attested and includes an SBOM. This is immediately pushed to docker hub
 
-```
-$ ./solutionfolder# docker build -f reqifviewer/Dockerfile -t stariongroup/reqifviewer:latest .
-$ ./solutionfolder# docker run -p 8080:8080 --name reqifviewer stariongroup/reqifviewer:latest
-```
-
-Push to docker hub
-
-```
-$ ./solutionfolder# docker push stariongroup/reqifviewer:latest
-```
+> both scripts need to be run from a linux command line (like the console in GitExtensions)
 
 ## Autodeployment
 
@@ -44,6 +37,29 @@ Branch | Build Status
 ------- | :------------
 Master | ![Build Status](https://github.com/STARIONGROUP/reqifviewer/actions/workflows/CodeQuality.yml/badge.svg?branch=master)
 Development | ![Build Status](https://github.com/STARIONGROUP/reqifviewer/actions/workflows/CodeQuality.yml/badge.svg?branch=development)
+
+## Software Bill of Materials (SBOM) and Provenance
+
+As part of our commitment to security, transparency, and traceability, this Docker image includes a Software Bill of Materials (SBOM) and Provenance information. These are automatically generated during the build process, providing detailed insights into the components, their licenses, versions, and the integrity of the image itself.
+What is Included:
+
+### SBOM (Software Bill of Materials):
+
+  - A comprehensive list of all open-source and third-party components included in this Docker image.
+  - Tracks software dependencies, licenses, and versions.
+  - Helps with vulnerability management by allowing users to quickly identify potential risks tied to specific components.
+
+### Provenance:
+
+  - A record of the image's origin and build process, providing traceability and assurance regarding the integrity of the image.
+  - This ensures that the image was built using the declared sources and under the specified conditions, helping verify its authenticity and consistency.
+
+### Why SBOM and Provenance?
+
+  - Improved Transparency: Provides full visibility into the open-source and third-party components included in the image.
+  - Security Assurance: Enables easier tracking of vulnerabilities associated with specific components, promoting proactive security measures.
+  - Compliance: Ensures adherence to licensing requirements and simplifies audits of dependencies and build processes.
+  - Image Integrity: Provenance guarantees that the image is built as expected, without unauthorized modifications.
 
 # License
 
