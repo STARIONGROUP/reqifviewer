@@ -31,4 +31,4 @@ jobs:
           -t stariongroup/reqifviewer:${{ steps.vars.outputs.tag }} \
           --sbom=true \
           --provenance=true \
-          --push
+          --push .
