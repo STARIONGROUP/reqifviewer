@@ -20,7 +20,7 @@ The reqifviewer is a web application to inspect and navigate [ReqIF](https://www
 The reqifviewer SPA is built using docker and the result is a Docker container ready to be deployed (or pushed to Docker Hub). The Docker file is located in the reqifviewer project folder.
 
 Two scripts are provided to create a docker image:
-  - `docker-build-local.sh`: creates an image that can be run locally with `docker run -p 8080:80 --name reqifviewer stariongroup/reqifviewer:latest`
+  - `docker-build-local.sh`: creates an image that can be run locally with `docker run -p 8080:8080 --name reqifviewer stariongroup/reqifviewer:latest`
   - `docker-build-attested.sh`: creates an image that is attested and includes an SBOM. This is immediately pushed to docker hub
 
 > both scripts need to be run from a linux command line (like the console in GitExtensions)
