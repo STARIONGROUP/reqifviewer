@@ -10,7 +10,7 @@ RUN dotnet build "reqifviewer/reqifviewer.csproj" -c Release -o /app/build --no-
 FROM build AS publish
 RUN dotnet publish reqifviewer -c Release -o /app/publish
 
-FROM mcr.microsoft.com/dotnet/aspnet:9.0.8-alpine3.22 AS final
+FROM mcr.microsoft.com/dotnet/aspnet:9.0.9-alpine3.22 AS final
 
 WORKDIR /app
 RUN mkdir /app/logs
