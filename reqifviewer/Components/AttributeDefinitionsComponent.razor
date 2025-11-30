@@ -61,17 +61,17 @@
     /// </summary>
     private string reqifIdentifier;
 
-	/// <summary>
-	/// Method invoked when the component has received parameters from its parent in the render tree,
-	/// and the incoming values have been assigned to properties.
-	/// </summary>
+    /// <summary>
+    /// Method invoked when the component has received parameters from its parent in the render tree,
+    /// and the incoming values have been assigned to properties.
+    /// </summary>
     protected override void OnParametersSet()
     {
         var attributeDefinition = this.AttributeDefinitions.FirstOrDefault();
 
         try
         {
-            this.reqifIdentifier = attributeDefinition.SpecType.ReqIFContent.DocumentRoot.TheHeader.Identifier;
+            this.reqifIdentifier = attributeDefinition?.SpecType.ReqIFContent.DocumentRoot.TheHeader.Identifier;
         }
         catch (Exception e)
         {

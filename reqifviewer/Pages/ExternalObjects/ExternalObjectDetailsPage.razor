@@ -95,11 +95,11 @@ else
 
             var reqIf = this.ReqIfLoaderService.ReqIFData.SingleOrDefault(x => x.TheHeader.Identifier == this.ReqIF);
 
-            var externalObjects = reqIf.CoreContent.QueryExternalObjects().ToList();
+            var externalObjects = reqIf?.CoreContent.QueryExternalObjects().ToList();
 
-            var externalObjectUri = Identifier.Base64Decode();
+            var externalObjectUri = this.Identifier.Base64Decode();
 
-            this.externalObject = externalObjects.SingleOrDefault(x => x.Uri == externalObjectUri);
+            this.externalObject = externalObjects?.SingleOrDefault(x => x.Uri == externalObjectUri);
 
             this.base64Payload = await this.QueryExternalObjectPayloadData();
         }

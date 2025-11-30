@@ -122,9 +122,9 @@ else
 
             var reqIf = this.ReqIfLoaderService.ReqIFData.SingleOrDefault(x => x.TheHeader.Identifier == this.ReqIF);
 
-            this.specification = reqIf.CoreContent.Specifications.SingleOrDefault(x => x.Identifier == Specification);
+            this.specification = reqIf?.CoreContent.Specifications.SingleOrDefault(x => x.Identifier == Specification);
 
-            this.selectedSpecHierarchy = this.specification.Children.FirstOrDefault();
+            this.selectedSpecHierarchy = this.specification?.Children.FirstOrDefault();
         }
         catch (Exception e)
         {
@@ -136,7 +136,10 @@ else
             StateHasChanged();
         }
     }
-    
+
+    /// <summary>
+    /// loads the child spec hierarchies
+    /// </summary>
     private void LoadChildSpecHierarchies(TreeExpandEventArgs args)
     {
         if (args.Value is SpecHierarchy specHierarchy)

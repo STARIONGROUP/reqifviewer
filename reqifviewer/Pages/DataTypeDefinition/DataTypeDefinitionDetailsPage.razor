@@ -213,7 +213,7 @@ else
 
             var reqIf = this.ReqIfLoaderService.ReqIFData.SingleOrDefault(x => x.TheHeader.Identifier == this.ReqIF);
 
-            this.datatypeDefinition = reqIf.CoreContent.DataTypes.SingleOrDefault(x => x.Identifier == DatatypeDefinition);
+            this.datatypeDefinition = reqIf?.CoreContent.DataTypes.SingleOrDefault(x => x.Identifier == DatatypeDefinition);
         }
         catch (Exception e)
         {

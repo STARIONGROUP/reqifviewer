@@ -31,9 +31,9 @@
 }
 else
 {
-	<RadzenHeading Size="H1" style="display: inline-block" Text="@($"{reqIf?.TheHeader.Title} - Spec Objects")"></RadzenHeading>
+    <RadzenHeading Size="H1" style="display: inline-block" Text="@($"{reqIf?.TheHeader.Title} - Spec Objects")"></RadzenHeading>
 
-	<SpecObjectsComponent SpecObjects="@this.specObjects" />
+    <SpecObjectsComponent SpecObjects="@this.specObjects" />
 }
 
 @code {
@@ -54,10 +54,10 @@ else
     /// </summary>
     private IEnumerable<SpecObject> specObjects;
 
-	/// <summary>
-	/// The <see cref="ReqIF"/> object that is loaded on the page
-	/// </summary>
-	private ReqIF reqIf;
+    /// <summary>
+    /// The <see cref="ReqIF"/> object that is loaded on the page
+    /// </summary>
+    private ReqIF reqIf;
     
     /// <summary>
     /// Asynchronous Component initialization
@@ -83,8 +83,7 @@ else
 
             this.reqIf = this.ReqIfLoaderService.ReqIFData.SingleOrDefault(x => x.TheHeader.Identifier == this.Identifier);
 
-            this.specObjects = this.reqIf.CoreContent.SpecObjects;
-            
+            this.specObjects = this.reqIf?.CoreContent.SpecObjects;
         }
         catch (Exception e)
         {

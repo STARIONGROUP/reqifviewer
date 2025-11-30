@@ -149,7 +149,7 @@ else
 
             var reqIf = this.ReqIfLoaderService.ReqIFData.SingleOrDefault(x => x.TheHeader.Identifier == this.ReqIF);
 
-            this.specRelation = reqIf.CoreContent.SpecRelations.SingleOrDefault(x => x.Identifier == SpecRelation);
+            this.specRelation = reqIf?.CoreContent.SpecRelations.SingleOrDefault(x => x.Identifier == SpecRelation);
         }
         catch (Exception e)
         {

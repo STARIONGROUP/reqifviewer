@@ -140,19 +140,19 @@ else
                 {
                     case "RelationGroupType":
                         this.pageTitle = $"Relation Group Types - {reqIf?.TheHeader.Title}";
-                        this.specTypes = reqIf.CoreContent.SpecTypes.OfType<RelationGroupType>();
+                        this.specTypes = this.reqIf?.CoreContent.SpecTypes.OfType<RelationGroupType>();
                         break;
                     case "SpecificationType":
                         this.pageTitle = $"Specification Types - {reqIf?.TheHeader.Title}";
-                        this.specTypes = reqIf.CoreContent.SpecTypes.OfType<SpecificationType>();
+                        this.specTypes = this.reqIf?.CoreContent.SpecTypes.OfType<SpecificationType>();
                         break;
                     case "SpecObjectType":
                         this.pageTitle = $"Spec Object Types - {reqIf?.TheHeader.Title}";
-                        this.specTypes = reqIf.CoreContent.SpecTypes.OfType<SpecObjectType>();
+                        this.specTypes = this.reqIf?.CoreContent.SpecTypes.OfType<SpecObjectType>();
                         break;
                     case "SpecRelationType":
                         this.pageTitle = $"Spec Relation Types - {reqIf?.TheHeader.Title}";
-                        this.specTypes = reqIf.CoreContent.SpecTypes.OfType<SpecRelationType>();
+                        this.specTypes = this.reqIf?.CoreContent.SpecTypes.OfType<SpecRelationType>();
                         break;
                 }
 

@@ -106,9 +106,9 @@ else
 
             this.reqIf = this.ReqIfLoaderService.ReqIFData.SingleOrDefault(x => x.TheHeader.Identifier == this.Identifier);
 
-            this.externalObjects = reqIf.CoreContent.QueryExternalObjects().ToList();
+            this.externalObjects = this.reqIf?.CoreContent.QueryExternalObjects().ToList();
 
-            this.count = this.externalObjects.Count();
+            this.count = this.externalObjects != null ? this.externalObjects.Count() : 0;
         }
         catch (Exception e)
         {

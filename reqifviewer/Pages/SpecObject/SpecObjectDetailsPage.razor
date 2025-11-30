@@ -160,10 +160,10 @@ else
     /// </summary>
     private bool isLoading = true;
 
-	/// <summary>
-	/// Method invoked when the component has received parameters from its parent in the render tree,
-	/// and the incoming values have been assigned to properties.
-	/// </summary>
+    /// <summary>
+    /// Method invoked when the component has received parameters from its parent in the render tree,
+    /// and the incoming values have been assigned to properties.
+    /// </summary>
     protected override async Task OnParametersSetAsync()
     {
         isLoading = false;
@@ -182,7 +182,7 @@ else
 
             var reqIf = this.ReqIfLoaderService.ReqIFData.SingleOrDefault(x => x.TheHeader.Identifier == this.ReqIF);
 
-            this.specObject = reqIf.CoreContent.SpecObjects.SingleOrDefault(x => x.Identifier == SpecObject);
+            this.specObject = reqIf?.CoreContent.SpecObjects.SingleOrDefault(x => x.Identifier == SpecObject);
 
             this.externalObjectPayloads = await this.specObject.QueryBase64PayloadsAsync(this.ReqIfLoaderService);
 

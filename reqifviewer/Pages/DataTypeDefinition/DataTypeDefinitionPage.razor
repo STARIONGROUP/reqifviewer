@@ -113,9 +113,9 @@ else
 
             this.reqIf = this.ReqIfLoaderService.ReqIFData.SingleOrDefault(x => x.TheHeader.Identifier == this.Identifier);
 
-            this.datatypeDefinitions = reqIf.CoreContent.DataTypes;
+            this.datatypeDefinitions = this.reqIf?.CoreContent.DataTypes;
 
-            this.count = this.datatypeDefinitions.Count();
+            this.count = this.datatypeDefinitions != null ? this.datatypeDefinitions.Count() : 0;
         }
         catch (Exception e)
         {

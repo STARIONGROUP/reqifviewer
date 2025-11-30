@@ -19,74 +19,74 @@ limitations under the License.
 @using Serilog
 
 <RadzenDataGrid Count="@count" PageSize="10" AllowPaging="true" AllowColumnResize="true" Data="@this.SpecObjects" TItem="SpecObject">
-	<Columns>
-		<RadzenDataGridColumn TItem="SpecObject" Title="Name">
-			<Template Context="specObject">
-				<a href="reqif/@this.reqifIdentifier/specobject/@specObject?.Identifier">
-					@(new MarkupString(specObject?.ExtractDisplayName().ToString()))
-				</a>
-			</Template>
-		</RadzenDataGridColumn>
-		<RadzenDataGridColumn TItem="SpecObject" Title="Spec Object Type">
-			<Template Context="specObject">
-				<a href="reqif/@this.reqifIdentifier/spectype/@specObject?.SpecType?.Identifier">@specObject?.SpecType?.LongName</a>
-			</Template>
-		</RadzenDataGridColumn>
-		<RadzenDataGridColumn TItem="SpecObject" Property="Identifier" Title="Identifier">
-			<Template Context="specObject">
-				<a href="reqif/@this.reqifIdentifier/specobject/@specObject?.Identifier">@specObject?.Identifier</a>
-			</Template>
-		</RadzenDataGridColumn>
-		<RadzenDataGridColumn TItem="SpecObject" Property="Description" Title="Description" />
-		<RadzenDataGridColumn TItem="SpecObject" Property="LastChange" Title="Last Change" />
-		<RadzenDataGridColumn TItem="SpecObject" Title="Alternative Id">
-			<Template Context="specObject">
-				@specObject?.AlternativeId?.Identifier
-			</Template>
-		</RadzenDataGridColumn>
-	</Columns>
+    <Columns>
+        <RadzenDataGridColumn TItem="SpecObject" Title="Name">
+            <Template Context="specObject">
+                <a href="reqif/@this.reqifIdentifier/specobject/@specObject?.Identifier">
+                    @(new MarkupString(specObject?.ExtractDisplayName().ToString()))
+                </a>
+            </Template>
+        </RadzenDataGridColumn>
+        <RadzenDataGridColumn TItem="SpecObject" Title="Spec Object Type">
+            <Template Context="specObject">
+                <a href="reqif/@this.reqifIdentifier/spectype/@specObject?.SpecType?.Identifier">@specObject?.SpecType?.LongName</a>
+            </Template>
+        </RadzenDataGridColumn>
+        <RadzenDataGridColumn TItem="SpecObject" Property="Identifier" Title="Identifier">
+            <Template Context="specObject">
+                <a href="reqif/@this.reqifIdentifier/specobject/@specObject?.Identifier">@specObject?.Identifier</a>
+            </Template>
+        </RadzenDataGridColumn>
+        <RadzenDataGridColumn TItem="SpecObject" Property="Description" Title="Description" />
+        <RadzenDataGridColumn TItem="SpecObject" Property="LastChange" Title="Last Change" />
+        <RadzenDataGridColumn TItem="SpecObject" Title="Alternative Id">
+            <Template Context="specObject">
+                @specObject?.AlternativeId?.Identifier
+            </Template>
+        </RadzenDataGridColumn>
+    </Columns>
 </RadzenDataGrid>
 
 @code {
 
-	/// <summary>
-	/// Gets or sets the <see cref="IEnumerable{SpecObject}"/>
-	/// </summary>
-	[Parameter]
-	public IEnumerable<SpecObject> SpecObjects { get; set; }
+    /// <summary>
+    /// Gets or sets the <see cref="IEnumerable{SpecObject}"/>
+    /// </summary>
+    [Parameter]
+    public IEnumerable<SpecObject> SpecObjects { get; set; }
 
-	/// <summary>
-	/// a value that states the total amount of <see cref="SpecObject"/>s in the reqif file
-	/// </summary>
-	private int count;
+    /// <summary>
+    /// a value that states the total amount of <see cref="SpecObject"/>s in the reqif file
+    /// </summary>
+    private int count;
 
-	/// <summary>
-	/// The unique identifier of the container ReqIF document
-	/// </summary>
-	private string reqifIdentifier;
+    /// <summary>
+    /// The unique identifier of the container ReqIF document
+    /// </summary>
+    private string reqifIdentifier;
 
-	/// <summary>
-	/// The Title of the ReqIF document
-	/// </summary>
-	private string title;
+    /// <summary>
+    /// The Title of the ReqIF document
+    /// </summary>
+    private string title;
 
-	/// <summary>
-	/// Method invoked when the component has received parameters from its parent in the render tree,
-	/// and the incoming values have been assigned to properties.
-	/// </summary>
-	protected override void OnParametersSet()
-	{
-		this.count = this.SpecObjects.Count();
-		var specObject = this.SpecObjects.FirstOrDefault();
-		
-		try
-		{
-			this.reqifIdentifier = specObject.SpecType.ReqIFContent.DocumentRoot.TheHeader.Identifier;
-			this.title = specObject.SpecType.ReqIFContent.DocumentRoot.TheHeader.Title;
-		}
-		catch (Exception e)
-		{
-			Log.ForContext<SpecObjectsComponent>().Error(e, "OnParametersSet Failed");
-		}
-	}
+    /// <summary>
+    /// Method invoked when the component has received parameters from its parent in the render tree,
+    /// and the incoming values have been assigned to properties.
+    /// </summary>
+    protected override void OnParametersSet()
+    {
+        this.count = this.SpecObjects.Count();
+        var specObject = this.SpecObjects.FirstOrDefault();
+        
+        try
+        {
+            this.reqifIdentifier = specObject?.SpecType.ReqIFContent.DocumentRoot.TheHeader.Identifier;
+            this.title = specObject?.SpecType.ReqIFContent.DocumentRoot.TheHeader.Title;
+        }
+        catch (Exception e)
+        {
+            Log.ForContext<SpecObjectsComponent>().Error(e, "OnParametersSet Failed");
+        }
+    }
 }

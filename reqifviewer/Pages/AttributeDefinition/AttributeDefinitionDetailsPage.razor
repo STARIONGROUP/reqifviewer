@@ -137,9 +137,9 @@ else
 
             var reqIf = this.ReqIfLoaderService.ReqIFData.SingleOrDefault(x => x.TheHeader.Identifier == this.ReqIF);
 
-            var spectType = reqIf.CoreContent.SpecTypes.SingleOrDefault(x => x.Identifier == this.SpecType);
+            var spectType = reqIf?.CoreContent.SpecTypes.SingleOrDefault(x => x.Identifier == this.SpecType);
 
-            this.attributeDefinition = this.attributeDefinition = spectType.SpecAttributes.SingleOrDefault(x => x.Identifier == this.Identifier);
+            this.attributeDefinition = this.attributeDefinition = spectType?.SpecAttributes.SingleOrDefault(x => x.Identifier == this.Identifier);
         }
         catch (Exception e)
         {
