@@ -116,13 +116,13 @@ else
 
     private async Task<string> QueryExternalObjectPayloadData()
     {
-        if (this.externalObject != null)
+        if (this.externalObject is null)
         {
-            var cts = new CancellationTokenSource();
-
-            return await this.ReqIfLoaderService.QueryDataAsync(this.externalObject, cts.Token);
+            return string.Empty;
         }
 
-        return "";
+        using var cts = new CancellationTokenSource();
+
+        return await this.ReqIfLoaderService.QueryDataAsync(this.externalObject, cts.Token);
     }
 }
