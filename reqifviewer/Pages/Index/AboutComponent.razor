@@ -97,6 +97,6 @@ limitations under the License.
         var assemblyVersion = typeof(ReqIF).Assembly.GetName().Version;
         this.reqifSharpVersion = $"{assemblyVersion.Major}.{assemblyVersion.Minor}.{assemblyVersion.Revision}";
         
-        license = await HttpClient.GetStringAsync("https://raw.githubusercontent.com/STARIONGROUP/reqifviewer/development/LICENSE");
+        license = await HttpClient.GetStringAsync("https://raw.githubusercontent.com/STARIONGROUP/reqifviewer/development/NOTICE");
     }
 }
