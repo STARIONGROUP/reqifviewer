@@ -111,9 +111,15 @@ else
 
             this.reqIf = this.ReqIfLoaderService.ReqIFData.SingleOrDefault(x => x.TheHeader.Identifier == this.Identifier);
 
-            this.specifications = reqIf.CoreContent.Specifications;
-
-            this.count = this.specifications.Count();
+            if (this.reqIf != null)
+            {
+                this.specifications = this.reqIf.CoreContent.Specifications;
+                this.count = this.specifications.Count();
+            }
+            else
+            {
+                this.count = 0;
+            }
         }
         catch (Exception e)
         {
