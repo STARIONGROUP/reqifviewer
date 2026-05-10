@@ -12,9 +12,9 @@ fi
 
 VERSION="$1"
 
-ECHO "Pull latest version of mcr.microsoft.com/dotnet/sdk:9.0"
+ECHO "Pull latest version of mcr.microsoft.com/dotnet/sdk:10.0"
 
-docker pull mcr.microsoft.com/dotnet/sdk:9.0
+docker pull mcr.microsoft.com/dotnet/sdk:10.0
 
 echo "Building local Docker image for version: $VERSION"
 
