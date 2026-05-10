@@ -1,0 +1,88 @@
+@*------------------------------------------------------------------------------
+  Copyright 2021-2026 Starion Group S.A.
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+------------------------------------------------------------------------------*@
+
+@using Microsoft.AspNetCore.Components.Web.Virtualization
+@using ReqIFSharp
+
+@if (this.IsBusy)
+{
+    <div class="matrix-busy-row">
+        <RadzenProgressBar Value="100" ShowValue="false" Mode="ProgressBarMode.Indeterminate"
+                           aria-label="Computing matrix" />
+        <RadzenButton Icon="cancel" Text="Cancel" ButtonStyle="ButtonStyle.Light"
+                      Click="@this.OnCancel" title="Cancel the in-flight matrix computation" />
+    </div>
+}
+
+@if (this.matrix == null || this.RowType == null || this.ColumnType == null || this.RelationType == null)
+{
+    <p>Pick a row Spec Object Type, a column Spec Object Type and a Spec Relation Type to view the matrix.</p>
+}
+else if (this.VisibleRows.Count == 0 || this.VisibleColumns.Count == 0)
+{
+    <p>No SpecObjects match the current selection@(this.ShowOnlyRelated ? " with at least one relation" : "").</p>
+}
+else
+{
+    @if (this.ShowLargeMatrixHint)
+    {
+        <RadzenAlert AlertStyle="AlertStyle.Info" ShowIcon="true" AllowClose="true"
+                     Close="@this.OnDismissLargeMatrixHint" Style="margin-bottom: 12px">
+            Rendering @(this.VisibleRows.Count) × @(this.VisibleColumns.Count) cells. Tip: enable
+            <strong>Show only related</strong> to focus on the cells that actually carry a relation.
+        </RadzenAlert>
+    }
+
+    var gridTemplate = $"var(--row-header-width) repeat({this.VisibleColumns.Count}, var(--cell-width))";
+    <div @ref="this.wrapperRef" class="relation-matrix-wrapper">
+        <div class="matrix-header-row" style="grid-template-columns: @gridTemplate">
+            <div class="corner"></div>
+            @foreach (var column in this.VisibleColumns)
+            {
+                <div class="col-header" title="@column.Identifier">
+                    <a href="@this.ColumnUrls[column.Identifier]">@this.ColumnLabels[column.Identifier]</a>
+                </div>
+            }
+        </div>
+        <Virtualize TItem="SpecObject" Items="this.VisibleRows" Context="row" ItemSize="32" OverscanCount="6">
+            <div class="matrix-row" style="grid-template-columns: @gridTemplate">
+                <div class="row-header" title="@row.Identifier">
+                    <a href="@this.RowUrls[row.Identifier]">@this.RowLabels[row.Identifier]</a>
+                </div>
+                @foreach (var column in this.VisibleColumns)
+                {
+                    if (this.RenderedCells.TryGetValue((row.Identifier, column.Identifier), out var rendered))
+                    {
+                        <div class="@rendered.CssClass" title="@rendered.Tooltip">
+                            @if (rendered.TargetUrl != null)
+                            {
+                                <a href="@rendered.TargetUrl">@rendered.Glyph</a>
+                            }
+                            else
+                            {
+                                <span>@rendered.Glyph</span>
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="matrix-cell empty"></div>
+                    }
+                }
+            </div>
+        </Virtualize>
+    </div>
+}

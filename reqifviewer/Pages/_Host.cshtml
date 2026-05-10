@@ -36,8 +36,8 @@
     <title>ReqIF Viewer</title>
     <base href="~/" />
     <link rel="stylesheet" type="text/css" href="css/bootstrap/bootstrap.min.css" />
-    <link rel="stylesheet" type="text/css" href="css/app.css" />
-    <link rel="stylesheet" type="text/css" href="reqifviewer.styles.css" />
+    <link rel="stylesheet" type="text/css" href="css/app.css" asp-append-version="true" />
+    <link rel="stylesheet" type="text/css" href="reqifviewer.styles.css" asp-append-version="true" />
     <link rel="stylesheet" type="text/css" href="_content/Radzen.Blazor/css/default-base.css" />
     <link rel="stylesheet" type="text/css" href="_content/Radzen.Blazor/css/default.css" />
     <component type="typeof(HeadOutlet)" render-mode="ServerPrerendered"/>
@@ -56,6 +56,7 @@
     <script src="_content/Blazor-Analytics/blazor-analytics.js"></script>
     <script src="_content/BlazorStrap/popper.min.js"></script>
     <script src="_content/BlazorStrap/blazorstrap.js"></script>
+    <script src="js/matrix-scroll.js" asp-append-version="true"></script>
 </body>
 
 </html>
