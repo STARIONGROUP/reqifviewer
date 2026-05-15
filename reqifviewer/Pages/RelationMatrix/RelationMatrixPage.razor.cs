@@ -41,7 +41,7 @@ namespace reqifviewer.Pages.RelationMatrix
     /// tip — lives in <see cref="reqifviewer.Components.RelationMatrixComponent"/>, which receives
     /// the selectors as parameters and rebuilds whenever they change.
     /// </summary>
-    public partial class RelationMatrixPage : ComponentBase, IDisposable
+    public sealed partial class RelationMatrixPage : ComponentBase, IDisposable
     {
         /// <summary>The ReqIF header identifier from the route; selects which loaded document to show.</summary>
         [Parameter]

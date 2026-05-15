@@ -41,7 +41,7 @@ namespace reqifviewer.Components
     /// indicator, the render caches, the scroll-restoration JS interop, and the dismissible
     /// large-matrix tip. The hosting page just supplies parameters and re-renders on changes.
     /// </summary>
-    public partial class RelationMatrixComponent : ComponentBase, IDisposable
+    public sealed partial class RelationMatrixComponent : ComponentBase, IDisposable
     {
         /// <summary>Soft cap for the cell count above which the user is nudged toward "Show only related".</summary>
         private const int LargeMatrixCellCount = 5_000;
