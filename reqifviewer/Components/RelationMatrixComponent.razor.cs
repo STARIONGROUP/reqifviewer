@@ -58,57 +58,80 @@ namespace reqifviewer.Components
         /// <summary>The scrollable matrix wrapper element, handed to the matrixScroll JS module so attach/detach are scoped to this component instance rather than a shared selector.</summary>
         private ElementReference wrapperRef;
 
+        /// <summary>The JS runtime used to drive the matrixScroll module (viewport fit + scroll-anchor restore).</summary>
         [Inject]
         public IJSRuntime JSRuntime { get; set; }
 
+        /// <summary>The loaded ReqIF whose <see cref="ReqIFContent"/> the matrix is built from.</summary>
         [Parameter]
         public ReqIF ReqIf { get; set; }
 
+        /// <summary>The <see cref="SpecObjectType"/> whose <see cref="SpecObject"/>s form the matrix rows.</summary>
         [Parameter]
         public SpecObjectType RowType { get; set; }
 
+        /// <summary>The <see cref="SpecObjectType"/> whose <see cref="SpecObject"/>s form the matrix columns.</summary>
         [Parameter]
         public SpecObjectType ColumnType { get; set; }
 
+        /// <summary>The <see cref="SpecRelationType"/> whose relations populate the matrix cells.</summary>
         [Parameter]
         public SpecRelationType RelationType { get; set; }
 
+        /// <summary>When true, rows/columns with no relation in the current selection are hidden.</summary>
         [Parameter]
         public bool ShowOnlyRelated { get; set; }
 
+        /// <summary>Per-picker-view identity supplied by the host page; used to wire the scroll/fit JS interop exactly once per distinct selection.</summary>
         [Parameter]
         public string ScrollKey { get; set; }
 
+        /// <summary>True while a build is running on the threadpool; drives the progress bar + Cancel button.</summary>
         public bool IsBusy { get; private set; }
 
+        /// <summary>The most recently committed build output, or null before the first successful build.</summary>
         private RelationMatrixData matrix;
 
+        /// <summary>The row <see cref="SpecObject"/>s actually rendered (after the show-only-related filter), in display order.</summary>
         public ICollection<SpecObject> VisibleRows { get; private set; } = Array.Empty<SpecObject>();
 
+        /// <summary>The column <see cref="SpecObject"/>s actually rendered (after the show-only-related filter), in display order.</summary>
         public ICollection<SpecObject> VisibleColumns { get; private set; } = Array.Empty<SpecObject>();
 
+        /// <summary>Cache of row <see cref="SpecObject.Identifier"/> → display label.</summary>
         public Dictionary<string, string> RowLabels { get; private set; } = new();
 
+        /// <summary>Cache of column <see cref="SpecObject.Identifier"/> → display label.</summary>
         public Dictionary<string, string> ColumnLabels { get; private set; } = new();
 
+        /// <summary>Cache of row <see cref="SpecObject.Identifier"/> → drill-down URL.</summary>
         public Dictionary<string, string> RowUrls { get; private set; } = new();
 
+        /// <summary>Cache of column <see cref="SpecObject.Identifier"/> → drill-down URL.</summary>
         public Dictionary<string, string> ColumnUrls { get; private set; } = new();
 
+        /// <summary>Cache of (rowId, columnId) → the pre-rendered cell bundle; absence means an empty cell.</summary>
         public Dictionary<(string rowId, string columnId), RenderedCell> RenderedCells { get; private set; } = new();
 
         /// <summary>Set to true once the user clicks the X on the large-matrix tip. Per-mount only — resets when the component is remounted.</summary>
         private bool isLargeMatrixHintDismissed;
 
+        /// <summary>Cancellation source for the in-flight build; its reference identity is the build "generation" used to gate commits.</summary>
         private CancellationTokenSource cts;
 
         /// <summary>The <see cref="ScrollKey"/> the matrixScroll JS module was last wired for. Gates the (potentially large) identifier-array interop to once per matrix view rather than once per render.</summary>
         private string attachedScrollKey;
 
+        /// <summary>True when the matrix is large enough to nudge the user toward "Show only related" and the tip has not been dismissed.</summary>
         public bool ShowLargeMatrixHint => !this.ShowOnlyRelated
             && !this.isLargeMatrixHintDismissed
             && (long)this.VisibleRows.Count * this.VisibleColumns.Count > LargeMatrixCellCount;
 
+        /// <summary>
+        /// On any parameter change: snapshots the inputs, cancels any in-flight build, runs a
+        /// fresh build on the threadpool, and commits it only if this run still owns the current
+        /// generation (so a superseded build never clobbers newer state or the busy indicator).
+        /// </summary>
         protected override async Task OnParametersSetAsync()
         {
             // Snapshot inputs — the build runs on the threadpool and must not race a fresh
@@ -163,6 +186,11 @@ namespace reqifviewer.Components
             }
         }
 
+        /// <summary>
+        /// Once a matrix has rendered for a new <see cref="ScrollKey"/>, wires the matrixScroll
+        /// JS module: fits the wrapper to the viewport, then attaches scroll-anchor restoration
+        /// (passing the ordered identifier arrays). Runs at most once per distinct view.
+        /// </summary>
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
             if (this.matrix != null
@@ -199,12 +227,14 @@ namespace reqifviewer.Components
             }
         }
 
+        /// <summary>Cancels the in-flight build in response to the user clicking the Cancel button.</summary>
         private void OnCancel()
         {
             Log.ForContext<RelationMatrixComponent>().Information("Cancel clicked");
             this.cts?.Cancel();
         }
 
+        /// <summary>Permanently hides the large-matrix tip for this component mount.</summary>
         private void OnDismissLargeMatrixHint()
         {
             this.isLargeMatrixHintDismissed = true;
@@ -360,6 +390,10 @@ namespace reqifviewer.Components
             this.RenderedCells = result.RenderedCells;
         }
 
+        /// <summary>
+        /// Cancels any in-flight build and tears down the matrixScroll JS wiring (scroll listener
+        /// + viewport-fit observers) for this component's wrapper element.
+        /// </summary>
         public void Dispose()
         {
             this.cts?.Cancel();
@@ -377,6 +411,7 @@ namespace reqifviewer.Components
             }
         }
 
+        /// <summary>Resolves a <see cref="SpecObject"/>'s display label, falling back to its identifier.</summary>
         private static string ExtractDisplayNameOf(SpecObject specObject)
         {
             return specObject.ExtractDisplayName()?.ToString() ?? specObject.Identifier;
@@ -403,6 +438,7 @@ namespace reqifviewer.Components
             Dictionary<string, string> ColumnUrls,
             Dictionary<(string rowId, string columnId), RenderedCell> RenderedCells)
         {
+            /// <summary>The committed-empty result used when inputs are incomplete (no rows/columns/cells).</summary>
             public static MatrixBuildResult Empty { get; } = new(
                 null,
                 Array.Empty<SpecObject>(),
