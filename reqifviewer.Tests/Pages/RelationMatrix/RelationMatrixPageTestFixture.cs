@@ -104,6 +104,50 @@ namespace ReqifViewer.Tests.Pages.RelationMatrix
         }
 
         [Test]
+        public void Verify_that_changing_the_ReqIF_identifier_resets_the_picker_selectors()
+        {
+            // Blazor reuses the page instance across /reqif/A/... -> /reqif/B/...; the
+            // selectors must follow the new document, not keep A's type instances
+            // (the builder compares SpecObject.Type by reference).
+            var reqIfA = this.reqIf;
+            var reqIfB = new ReqIFDeserializer().Deserialize(
+                Path.Combine(NUnit.Framework.TestContext.CurrentContext.TestDirectory, "TestData", "ProR_Traceability-Template-v1.0.reqif")).Single();
+            reqIfB.TheHeader.Identifier = "reqif-switch-B";
+
+            this.reqIfLoaderService.Setup(x => x.ReqIFData).Returns(new[] { reqIfA, reqIfB });
+
+            var aObjectTypes = reqIfA.CoreContent.SpecTypes.OfType<SpecObjectType>().ToList();
+            var bObjectTypes = reqIfB.CoreContent.SpecTypes.OfType<SpecObjectType>().ToList();
+            var bRelationTypes = reqIfB.CoreContent.SpecTypes.OfType<SpecRelationType>().ToList();
+
+            var renderer = this.context.RenderComponent<RelationMatrixPage>(p =>
+                p.Add(x => x.Identifier, reqIfA.TheHeader.Identifier));
+
+            const BindingFlags flags = BindingFlags.Instance | BindingFlags.NonPublic;
+            var pageType = typeof(RelationMatrixPage);
+            var rowProp = pageType.GetProperty("RowType", flags)!;
+            var colProp = pageType.GetProperty("ColumnType", flags)!;
+            var relProp = pageType.GetProperty("RelationType", flags)!;
+
+            Assert.That(rowProp.GetValue(renderer.Instance), Is.SameAs(aObjectTypes.First()),
+                "Pre-condition: page initially selects the first SpecObjectType of ReqIF A");
+
+            renderer.SetParametersAndRender(p => p.Add(x => x.Identifier, reqIfB.TheHeader.Identifier));
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(bObjectTypes, Has.Member(rowProp.GetValue(renderer.Instance)),
+                    "RowType must be reset to an instance from ReqIF B after the identifier changed");
+                Assert.That(bObjectTypes, Has.Member(colProp.GetValue(renderer.Instance)),
+                    "ColumnType must be reset to an instance from ReqIF B");
+                Assert.That(bRelationTypes, Has.Member(relProp.GetValue(renderer.Instance)),
+                    "RelationType must be reset to an instance from ReqIF B");
+                Assert.That(aObjectTypes, Has.No.Member(rowProp.GetValue(renderer.Instance)),
+                    "RowType must no longer reference a type instance from the previous ReqIF A");
+            });
+        }
+
+        [Test]
         public void Verify_that_page_shows_a_friendly_message_when_the_ReqIF_identifier_is_unknown()
         {
             var renderer = this.context.RenderComponent<RelationMatrixPage>(p =>

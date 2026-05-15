@@ -56,6 +56,8 @@ namespace reqifviewer.Pages.RelationMatrix
 
         private ReqIF reqIf;
 
+        private ReqIF previousReqIf;
+
         private IReadOnlyList<SpecObjectType> specObjectTypes = Array.Empty<SpecObjectType>();
 
         private IReadOnlyList<SpecRelationType> specRelationTypes = Array.Empty<SpecRelationType>();
@@ -92,6 +94,14 @@ namespace reqifviewer.Pages.RelationMatrix
 
                 this.specRelationTypes = this.reqIf.CoreContent.SpecTypes
                     .OfType<SpecRelationType>().ToList();
+
+                if (!ReferenceEquals(this.reqIf, this.previousReqIf))
+                {
+                    this.previousReqIf = this.reqIf;
+                    this.RowType = null;
+                    this.ColumnType = null;
+                    this.RelationType = null;
+                }
 
                 this.RowType ??= this.specObjectTypes.FirstOrDefault();
                 this.ColumnType ??= this.specObjectTypes.FirstOrDefault();

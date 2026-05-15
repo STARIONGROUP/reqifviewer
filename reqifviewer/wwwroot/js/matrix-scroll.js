@@ -5,9 +5,9 @@ window.matrixScroll = (() => {
     // ReqIF), so the container is not tall enough to honor a large scrollTop right
     // away. We keep re-asserting until it is, bounded so we never loop forever.
     const restoreBudgetMs = 4000;
-    const handlers = new Map(); // element -> { listener, key }
+    const handlers = new Map(); // element -> { key, listener, timer }
 
-    function restore(element, targetTop, targetLeft) {
+    function restore(element, targetTop, targetLeft, entry) {
         if (targetTop === 0 && targetLeft === 0) {
             return;
         }
@@ -16,6 +16,12 @@ window.matrixScroll = (() => {
         let goodFrames = 0;
 
         const step = () => {
+            // Bail if this view was detached or superseded by a newer attach
+            // (entry-object identity is the generation token).
+            if (handlers.get(element) !== entry) {
+                return;
+            }
+
             const maxTop = Math.max(0, element.scrollHeight - element.clientHeight);
             const maxLeft = Math.max(0, element.scrollWidth - element.clientWidth);
 
@@ -59,23 +65,33 @@ window.matrixScroll = (() => {
                 return;
             }
             element.removeEventListener('scroll', previous.listener);
+            if (previous.timer) {
+                clearTimeout(previous.timer);
+            }
         }
 
         const rows = rowIds || [];
         const cols = colIds || [];
 
+        // Create + register the entry before restore so its identity is the
+        // generation token a stale restore loop / debounce checks against.
+        const entry = { key, listener: null, timer: null };
+        handlers.set(element, entry);
+
         const params = new URL(window.location.href).searchParams;
         const savedRow = Math.max(0, rows.indexOf(params.get('anchorRow')));
         const savedCol = Math.max(0, cols.indexOf(params.get('anchorCol')));
-        restore(element, savedRow * rowHeight, savedCol * cellWidth);
+        restore(element, savedRow * rowHeight, savedCol * cellWidth, entry);
 
-        let timer = null;
         const listener = () => {
-            if (timer) {
-                clearTimeout(timer);
+            if (entry.timer) {
+                clearTimeout(entry.timer);
             }
-            timer = setTimeout(() => {
-                if (rows.length === 0 || cols.length === 0) {
+            entry.timer = setTimeout(() => {
+                entry.timer = null;
+
+                // Superseded/detached: do not touch the URL for an obsolete view.
+                if (handlers.get(element) !== entry || rows.length === 0 || cols.length === 0) {
                     return;
                 }
 
@@ -90,8 +106,8 @@ window.matrixScroll = (() => {
                 history.replaceState(history.state, '', url);
             }, debounceMs);
         };
+        entry.listener = listener;
         element.addEventListener('scroll', listener, { passive: true });
-        handlers.set(element, { listener, key });
     }
 
     function detach(element) {
@@ -100,6 +116,9 @@ window.matrixScroll = (() => {
             return;
         }
         element.removeEventListener('scroll', previous.listener);
+        if (previous.timer) {
+            clearTimeout(previous.timer);
+        }
         handlers.delete(element);
     }
 

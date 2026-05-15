@@ -107,7 +107,7 @@ namespace reqifviewer.Components
 
         public bool ShowLargeMatrixHint => !this.ShowOnlyRelated
             && !this.isLargeMatrixHintDismissed
-            && this.VisibleRows.Count * this.VisibleColumns.Count > LargeMatrixCellCount;
+            && (long)this.VisibleRows.Count * this.VisibleColumns.Count > LargeMatrixCellCount;
 
         protected override async Task OnParametersSetAsync()
         {
@@ -170,8 +170,6 @@ namespace reqifviewer.Components
                 && !string.IsNullOrEmpty(this.ScrollKey)
                 && this.ScrollKey != this.attachedScrollKey)
             {
-                this.attachedScrollKey = this.ScrollKey;
-
                 var rowIds = this.VisibleRows.Select(o => o.Identifier).ToArray();
                 var colIds = this.VisibleColumns.Select(o => o.Identifier).ToArray();
 
@@ -189,6 +187,10 @@ namespace reqifviewer.Components
                         CellWidthPx,
                         rowIds,
                         colIds);
+
+                    // Only mark the key wired once both interop calls succeeded, so a
+                    // failed setup is retried on the next render rather than suppressed.
+                    this.attachedScrollKey = this.ScrollKey;
                 }
                 catch (Exception e)
                 {
@@ -249,7 +251,17 @@ namespace reqifviewer.Components
             HashSet<string> connected = null;
             if (showOnlyRelated)
             {
-                connected = new HashSet<string>(cellKeys.Select(idSelector));
+                connected = new HashSet<string>();
+                var keyIndex = 0;
+                foreach (var key in cellKeys)
+                {
+                    if ((++keyIndex & (BuilderCancellationCheckEvery - 1)) == 0)
+                    {
+                        ct.ThrowIfCancellationRequested();
+                    }
+
+                    connected.Add(idSelector(key));
+                }
             }
 
             var result = new List<SpecObject>(all.Count);

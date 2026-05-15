@@ -21,7 +21,6 @@
 namespace ReqifViewer.ReqIFExtensions
 {
     using System.Collections.Generic;
-    using System.Linq;
     using System.Threading;
 
     using ReqIFSharp;
@@ -106,13 +105,30 @@ namespace ReqifViewer.ReqIFExtensions
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            var rows = (rowType == null
-                ? Enumerable.Empty<SpecObject>()
-                : content.SpecObjects.Where(o => o.Type == rowType)).ToList();
+            var rows = new List<SpecObject>();
+            var columns = new List<SpecObject>();
 
-            var columns = (columnType == null
-                ? Enumerable.Empty<SpecObject>()
-                : content.SpecObjects.Where(o => o.Type == columnType)).ToList();
+            if (rowType != null || columnType != null)
+            {
+                var objectIndex = 0;
+                foreach (var o in content.SpecObjects)
+                {
+                    if ((++objectIndex & (CancellationCheckEvery - 1)) == 0)
+                    {
+                        cancellationToken.ThrowIfCancellationRequested();
+                    }
+
+                    if (rowType != null && o.Type == rowType)
+                    {
+                        rows.Add(o);
+                    }
+
+                    if (columnType != null && o.Type == columnType)
+                    {
+                        columns.Add(o);
+                    }
+                }
+            }
 
             var cells = new Dictionary<(string, string), MatrixCell>();
 
@@ -126,15 +142,40 @@ namespace ReqifViewer.ReqIFExtensions
                 };
             }
 
-            var rowIds = new HashSet<string>(rows.Select(r => r.Identifier));
-            var columnIds = new HashSet<string>(columns.Select(c => c.Identifier));
+            var rowIds = new HashSet<string>();
+            var idIndex = 0;
+            foreach (var r in rows)
+            {
+                if ((++idIndex & (CancellationCheckEvery - 1)) == 0)
+                {
+                    cancellationToken.ThrowIfCancellationRequested();
+                }
+
+                rowIds.Add(r.Identifier);
+            }
+
+            var columnIds = new HashSet<string>();
+            foreach (var c in columns)
+            {
+                if ((++idIndex & (CancellationCheckEvery - 1)) == 0)
+                {
+                    cancellationToken.ThrowIfCancellationRequested();
+                }
+
+                columnIds.Add(c.Identifier);
+            }
 
             var index = 0;
-            foreach (var relation in content.SpecRelations.Where(r => r.Type == relationType))
+            foreach (var relation in content.SpecRelations)
             {
                 if ((++index & (CancellationCheckEvery - 1)) == 0)
                 {
                     cancellationToken.ThrowIfCancellationRequested();
+                }
+
+                if (relation.Type != relationType)
+                {
+                    continue;
                 }
 
                 var sourceId = relation.Source?.Identifier;
