@@ -48,3 +48,14 @@ a, .btn-link {
         right: 0.75rem;
         top: 0.5rem;
     }
+
+.rz-footer {
+    min-height: 0;
+    padding: 4px 16px;
+}
+
+.rz-footer p {
+    margin: 0;
+    font-size: 0.75rem;
+    line-height: 1.3;
+}

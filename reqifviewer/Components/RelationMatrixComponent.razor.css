@@ -1,0 +1,108 @@
+.matrix-busy-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
+.matrix-busy-row > :first-child {
+    flex: 1;
+}
+
+.relation-matrix-wrapper {
+    overflow: auto;
+    /* Precise height is set at runtime by matrixScroll.fit (component-local JS,
+       measured against the viewport & footer). This calc is only a pre-JS
+       fallback so the grid is roughly sized before the first frame. */
+    height: calc(100dvh - 220px);
+    border: 1px solid var(--rz-border-color, #dee2e6);
+    border-radius: var(--rz-border-radius, 4px);
+    background: var(--rz-base-50, #fff);
+    font-size: 0.85rem;
+    --row-header-width: 320px;
+    --cell-width: 36px;
+    --row-height: 32px;
+}
+
+.matrix-header-row,
+.matrix-row {
+    display: grid;
+}
+
+.matrix-header-row {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    height: var(--row-height);
+}
+
+.matrix-row {
+    height: var(--row-height);
+}
+
+.col-header,
+.row-header,
+.corner,
+.matrix-cell {
+    border-right: 1px solid var(--rz-border-color, #dee2e6);
+    border-bottom: 1px solid var(--rz-border-color, #dee2e6);
+    background: var(--rz-base-50, #fff);
+    box-sizing: border-box;
+    height: var(--row-height);
+    overflow: hidden;
+}
+
+.col-header,
+.row-header {
+    background: var(--rz-base-100, #f6f8fa);
+    font-weight: 600;
+    text-align: left;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    padding: 4px 8px;
+    display: flex;
+    align-items: center;
+}
+
+.row-header {
+    position: sticky;
+    left: 0;
+    z-index: 1;
+}
+
+.corner {
+    position: sticky;
+    top: 0;
+    left: 0;
+    z-index: 3;
+    background: var(--rz-base-200, #e9ecef);
+}
+
+.matrix-cell {
+    text-align: center;
+    font-size: 1.1rem;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    content-visibility: auto;
+    contain-intrinsic-size: var(--row-height) var(--cell-width);
+}
+
+.matrix-cell.forward { color: #1b6ec2; }
+.matrix-cell.backward { color: #b35900; }
+.matrix-cell.both { color: #2e7d32; font-weight: 700; }
+.matrix-cell.empty { color: var(--rz-base-400, #adb5bd); }
+
+.matrix-header-row a,
+.matrix-row a {
+    color: inherit;
+    text-decoration: none;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.matrix-header-row a:hover,
+.matrix-row a:hover {
+    text-decoration: underline;
+}
