@@ -121,9 +121,9 @@ namespace reqifviewer.Pages.RelationMatrix
                     this.RelationType = null;
                 }
 
-                this.RowType ??= this.specObjectTypes.FirstOrDefault();
-                this.ColumnType ??= this.specObjectTypes.FirstOrDefault();
-                this.RelationType ??= this.specRelationTypes.FirstOrDefault();
+                this.RowType ??= this.specObjectTypes.Count > 0 ? this.specObjectTypes[0] : null;
+                this.ColumnType ??= this.specObjectTypes.Count > 0 ? this.specObjectTypes[0] : null;
+                this.RelationType ??= this.specRelationTypes.Count > 0 ? this.specRelationTypes[0] : null;
 
                 this.ApplyPickerStateFromQueryString();
             }

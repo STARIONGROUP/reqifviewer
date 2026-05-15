@@ -143,8 +143,12 @@ namespace reqifviewer.Components
             var showOnlyRelated = this.ShowOnlyRelated;
 
             // Cancel any in-flight build and start a new generation we own a handle to.
-            this.cts?.Cancel();
-            this.cts?.Dispose();
+            if (this.cts != null)
+            {
+                await this.cts.CancelAsync();
+                this.cts.Dispose();
+            }
+
             var operationCts = new CancellationTokenSource();
             this.cts = operationCts;
             var ct = operationCts.Token;
