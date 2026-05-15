@@ -4,7 +4,7 @@
 set -e
 
 # Ensure version is passed
-if [ -z "$1" ]; then
+if [[ -z "$1" ]]; then
   echo "Usage: $0 <version>"
   echo "Example: $0 x.y.z"
   exit 1
@@ -22,7 +22,7 @@ else
   docker buildx use "$BUILDER"
 fi
 
-ECHO "Pull latest version of mcr.microsoft.com/dotnet/sdk:10.0"
+echo "Pull latest version of mcr.microsoft.com/dotnet/sdk:10.0"
 
 docker pull mcr.microsoft.com/dotnet/sdk:10.0
 
