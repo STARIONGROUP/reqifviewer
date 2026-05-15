@@ -202,9 +202,11 @@ namespace reqifviewer.Pages.RelationMatrix
         }
 
         /// <summary>
-        /// Builds the sessionStorage key under which this picker view's top-left-corner anchor
-        /// (row + column index) is remembered. Mirrors <see cref="BuildMatrixUrl"/>'s key set so
-        /// switching the picker gives each view its own remembered anchor.
+        /// Builds a per-picker-view attachment identity for the matrix component. It is not a
+        /// storage key — the top-left-corner anchor itself lives in the URL query string
+        /// (<c>anchorRow</c>/<c>anchorCol</c>, written by the matrixScroll JS module). The
+        /// component uses this string only to decide whether the current view is already
+        /// wired (re-attaching scroll/fit once per distinct picker selection).
         /// </summary>
         private string BuildScrollKey()
         {

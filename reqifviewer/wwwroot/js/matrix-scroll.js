@@ -127,9 +127,15 @@ window.matrixScroll = (() => {
     // the bottom of the viewport (above the Radzen footer). Component-local:
     // no global CSS / body class. Recomputed on resize + parent reflow.
     const fitGap = 8;
-    const fitters = new Map(); // element -> { onResize, ro }
+    const fitters = new Map(); // element -> { onResize, ro, rafId, timeoutId }
 
     function applyHeight(element) {
+        // Bail if the component was disposed (unfit ran) before this
+        // scheduled callback fired — don't touch a detached element.
+        if (!fitters.has(element)) {
+            return;
+        }
+
         const rect = element.getBoundingClientRect();
         // Distance from the document top — stable regardless of any current
         // page scroll, so the value converges (no measurement feedback loop).
@@ -162,9 +168,9 @@ window.matrixScroll = (() => {
             });
         };
 
-        requestAnimationFrame(() => applyHeight(element));
+        const rafId = requestAnimationFrame(() => applyHeight(element));
         // Catch late Radzen / web-font layout shifts.
-        setTimeout(() => applyHeight(element), 100);
+        const timeoutId = setTimeout(() => applyHeight(element), 100);
 
         window.addEventListener('resize', onResize, { passive: true });
 
@@ -174,7 +180,7 @@ window.matrixScroll = (() => {
             ro.observe(element.parentElement);
         }
 
-        fitters.set(element, { onResize, ro });
+        fitters.set(element, { onResize, ro, rafId, timeoutId });
     }
 
     function unfit(element) {
@@ -182,6 +188,8 @@ window.matrixScroll = (() => {
         if (!entry) {
             return;
         }
+        cancelAnimationFrame(entry.rafId);
+        clearTimeout(entry.timeoutId);
         window.removeEventListener('resize', entry.onResize);
         if (entry.ro) {
             entry.ro.disconnect();
