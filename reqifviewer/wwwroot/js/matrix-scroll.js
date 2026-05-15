@@ -1,4 +1,4 @@
-window.matrixScroll = (() => {
+globalThis.matrixScroll = (() => {
     const debounceMs = 250;
     // Wall-clock budget for the restore retry. The matrix builds asynchronously and
     // Virtualize sizes its scroll spacers lazily over several frames (longer on a big
@@ -78,7 +78,7 @@ window.matrixScroll = (() => {
         const entry = { key, listener: null, timer: null };
         handlers.set(element, entry);
 
-        const params = new URL(window.location.href).searchParams;
+        const params = new URL(globalThis.location.href).searchParams;
         const savedRow = Math.max(0, rows.indexOf(params.get('anchorRow')));
         const savedCol = Math.max(0, cols.indexOf(params.get('anchorCol')));
         restore(element, savedRow * rowHeight, savedCol * cellWidth, entry);
@@ -98,7 +98,7 @@ window.matrixScroll = (() => {
                 const row = Math.min(rows.length - 1, Math.max(0, Math.floor(element.scrollTop / rowHeight)));
                 const col = Math.min(cols.length - 1, Math.max(0, Math.floor(element.scrollLeft / cellWidth)));
 
-                const url = new URL(window.location.href);
+                const url = new URL(globalThis.location.href);
                 url.searchParams.set('anchorRow', rows[row]);
                 url.searchParams.set('anchorCol', cols[col]);
                 // replaceState (not pushState) so scrolling adds no history entries;
@@ -139,10 +139,10 @@ window.matrixScroll = (() => {
         const rect = element.getBoundingClientRect();
         // Distance from the document top — stable regardless of any current
         // page scroll, so the value converges (no measurement feedback loop).
-        const absoluteTop = rect.top + window.scrollY;
+        const absoluteTop = rect.top + globalThis.scrollY;
         const footer = document.querySelector('.rz-footer');
         const footerH = footer ? footer.getBoundingClientRect().height : 0;
-        const height = Math.max(120, window.innerHeight - absoluteTop - footerH - fitGap);
+        const height = Math.max(120, globalThis.innerHeight - absoluteTop - footerH - fitGap);
         element.style.height = height + 'px';
     }
 
@@ -172,7 +172,7 @@ window.matrixScroll = (() => {
         // Catch late Radzen / web-font layout shifts.
         const timeoutId = setTimeout(() => applyHeight(element), 100);
 
-        window.addEventListener('resize', onResize, { passive: true });
+        globalThis.addEventListener('resize', onResize, { passive: true });
 
         let ro = null;
         if (typeof ResizeObserver !== 'undefined' && element.parentElement) {
@@ -190,7 +190,7 @@ window.matrixScroll = (() => {
         }
         cancelAnimationFrame(entry.rafId);
         clearTimeout(entry.timeoutId);
-        window.removeEventListener('resize', entry.onResize);
+        globalThis.removeEventListener('resize', entry.onResize);
         if (entry.ro) {
             entry.ro.disconnect();
         }

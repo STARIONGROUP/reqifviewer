@@ -170,9 +170,9 @@ namespace reqifviewer.Components
                     this.ApplyResult(result);
                 }
             }
-            catch (OperationCanceledException)
+            catch (OperationCanceledException e)
             {
-                Log.ForContext<RelationMatrixComponent>().Information("Matrix build cancelled (parameters changed or user clicked Cancel)");
+                Log.ForContext<RelationMatrixComponent>().Information(e,"Matrix build cancelled (parameters changed or user clicked Cancel)");
             }
             catch (Exception e)
             {
