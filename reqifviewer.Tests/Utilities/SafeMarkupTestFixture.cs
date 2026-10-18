@@ -74,6 +74,11 @@ namespace ReqifViewer.Tests.Utilities
         [TestCase("<xhtml:a href=\"data:text/html;base64,PHNjcmlwdD5hbGVydCgxKTwvc2NyaXB0Pg==\">link</xhtml:a>")]
         [TestCase("<xhtml:span style=\"background-image: url(javascript:alert(1))\">text</xhtml:span>")]
         [TestCase("<xhtml:form action=\"https://example.com\"><xhtml:input name=\"password\" /></xhtml:form>")]
+        [TestCase("<xhtml:span style=\"color: expression(alert(1))\">text</xhtml:span>")]
+        [TestCase("<xhtml:span style=\"background-color: url(javascript:alert(1))\">text</xhtml:span>")]
+        [TestCase("<xhtml:a href=\"&#106;avascript:alert(1)\">entity encoded</xhtml:a>")]
+        [TestCase("<xhtml:a href=\" javascript:alert(1)\">leading space</xhtml:a>")]
+        [TestCase("<xhtml:blockquote cite=\"javascript:alert(1)\">quote</xhtml:blockquote>")]
         public void Verify_that_executable_content_is_removed(string attack)
         {
             var value = SafeMarkup.FromXhtml($"<xhtml:div {Xhtml}>{attack}</xhtml:div>").Value.ToLowerInvariant();
@@ -88,6 +93,8 @@ namespace ReqifViewer.Tests.Utilities
             Assert.That(value, Does.Not.Contain("<img"));
             Assert.That(value, Does.Not.Contain("<form"));
             Assert.That(value, Does.Not.Contain("<input"));
+            Assert.That(value, Does.Not.Contain("expression("));
+            Assert.That(value, Does.Not.Contain("url("));
         }
 
         [Test]
@@ -141,6 +148,60 @@ namespace ReqifViewer.Tests.Utilities
         public void Verify_that_text_is_encoded(string text, string expected)
         {
             Assert.That(SafeMarkup.FromText(text).Value, Is.EqualTo(expected));
+        }
+
+        [TestCase("style", "body { display: none }")]
+        [TestCase("noscript", "<xhtml:p>no script</xhtml:p>")]
+        [TestCase("textarea", "typed text")]
+        [TestCase("title", "a title")]
+        [TestCase("button", "Click")]
+        [TestCase("svg", "<xhtml:text>drawing text</xhtml:text>")]
+        public void Verify_that_non_text_elements_are_removed_with_their_content(string element, string content)
+        {
+            var markup = SafeMarkup.FromXhtml($"<xhtml:div {Xhtml}>before<xhtml:{element}>{content}</xhtml:{element}>after</xhtml:div>");
+
+            Assert.That(markup.Value, Is.EqualTo("<div>beforeafter</div>"));
+        }
+
+        [TestCase("<xhtml:ol start=\"3\"><xhtml:li>x</xhtml:li></xhtml:ol>", "<ol start=\"3\"><li>x</li></ol>")]
+        [TestCase("<xhtml:pre>a  b</xhtml:pre>", "<pre>a  b</pre>")]
+        [TestCase("<xhtml:code>x = 1</xhtml:code>", "<code>x = 1</code>")]
+        [TestCase("<xhtml:p>H<xhtml:sub>2</xhtml:sub>O and x<xhtml:sup>2</xhtml:sup></xhtml:p>", "<p>H<sub>2</sub>O and x<sup>2</sup></p>")]
+        [TestCase("<xhtml:p><xhtml:u>u</xhtml:u><xhtml:s>s</xhtml:s><xhtml:del>del</xhtml:del><xhtml:ins>ins</xhtml:ins></xhtml:p>", "<p><u>u</u><s>s</s><del>del</del><ins>ins</ins></p>")]
+        [TestCase("<xhtml:h1>Chapter</xhtml:h1>", "<h1>Chapter</h1>")]
+        [TestCase("<xhtml:dl><xhtml:dt>term</xhtml:dt><xhtml:dd>definition</xhtml:dd></xhtml:dl>", "<dl><dt>term</dt><dd>definition</dd></dl>")]
+        [TestCase("<xhtml:table><xhtml:tr><xhtml:td rowspan=\"2\">a</xhtml:td></xhtml:tr></xhtml:table>", "<table><tbody><tr><td rowspan=\"2\">a</td></tr></tbody></table>")]
+        [TestCase("<xhtml:blockquote cite=\"https://example.com\">quote</xhtml:blockquote>", "<blockquote cite=\"https://example.com\">quote</blockquote>")]
+        public void Verify_that_allowed_XHTML_elements_are_kept(string xhtml, string expected)
+        {
+            var markup = SafeMarkup.FromXhtml($"<xhtml:div {Xhtml}>{xhtml}</xhtml:div>");
+
+            Assert.That(markup.Value, Is.EqualTo($"<div>{expected}</div>"));
+        }
+
+        [TestCase("mailto:a@b.c")]
+        [TestCase("#section-2")]
+        [TestCase("other.html")]
+        [TestCase("/reqif/doc/specobject/req-1")]
+        public void Verify_that_mailto_and_relative_links_are_kept(string href)
+        {
+            // Relative links stay within the viewer: an unknown address shows the not-found page
+            var markup = SafeMarkup.FromXhtml($"<xhtml:a {Xhtml} href=\"{href}\">link</xhtml:a>");
+
+            Assert.That(markup.Value, Is.EqualTo($"<a href=\"{href}\">link</a>"));
+        }
+
+        [TestCase("plain text without an element", "plain text without an element")]
+        [TestCase("<xhtml:p " + Xhtml + ">first</xhtml:p><xhtml:p " + Xhtml + ">second</xhtml:p>", "first second")]
+        [TestCase("<xhtml:div " + Xhtml + ">brew a cup in <xhtml:b>under 30 seconds</xhtml:b>.</xhtml:div>", "brew a cup in under 30 seconds.")]
+        [TestCase("<xhtml:div " + Xhtml + ">\n  First   line\n  <xhtml:br />second &amp; third\n</xhtml:div>", "First line second & third")]
+        [TestCase("<xhtml:div " + Xhtml + ">a<xhtml:script>alert(1)</xhtml:script>b</xhtml:div>", "ab")]
+        [TestCase("<xhtml:div " + Xhtml + "><xhtml:object data=\"f.png\" type=\"image/png\">Figure 1</xhtml:object></xhtml:div>", "Figure 1")]
+        [TestCase("<xhtml:div " + Xhtml + "><xhtml:script>alert(1)</xhtml:script></xhtml:div>", "")]
+        [TestCase(null, "")]
+        public void Verify_that_ToPlainText_returns_the_visible_text(string xhtml, string expected)
+        {
+            Assert.That(SafeMarkup.ToPlainText(xhtml), Is.EqualTo(expected));
         }
     }
 }

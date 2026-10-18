@@ -205,5 +205,45 @@ namespace ReqifViewer.Tests.Components
             Assert.That(fit.Arguments[0], Is.InstanceOf<ElementReference>(),
                 "fit must target the component's wrapper ElementReference");
         }
+
+        private IRenderedComponent<RelationMatrixComponent> RenderMatrixFor(SpecObject rowObject)
+        {
+            var relation = this.reqIf.CoreContent.SpecRelations.First(r => r.Source != null && r.Target != null && r.Source.Type == rowObject.Type);
+
+            var renderer = this.context.RenderComponent<RelationMatrixComponent>(p => p
+                .Add(x => x.ReqIf, this.reqIf)
+                .Add(x => x.RowType, rowObject.Type)
+                .Add(x => x.ColumnType, relation.Target.Type)
+                .Add(x => x.RelationType, relation.Type)
+                .Add(x => x.ShowOnlyRelated, false));
+
+            renderer.WaitForState(() => !renderer.Instance.IsBusy && renderer.Instance.VisibleRows.Count > 0);
+            return renderer;
+        }
+
+        [Test]
+        public void Verify_that_labels_show_plain_text_for_objects_named_by_an_XHTML_value()
+        {
+            // No long name; its first value is XHTML: "Stakeholder Requirements"
+            var specObject = this.reqIf.CoreContent.SpecObjects.Single(x => x.Identifier == "_o7scQ6dbEeafNduaIhMwQg");
+
+            var renderer = this.RenderMatrixFor(specObject);
+
+            Assert.That(renderer.Instance.RowLabels[specObject.Identifier], Is.EqualTo("Stakeholder Requirements"));
+            Assert.That(renderer.Instance.RowLabels.Values, Has.None.Contains("xhtml:"));
+            Assert.That(renderer.Instance.ColumnLabels.Values, Has.None.Contains("xhtml:"));
+        }
+
+        [Test]
+        public void Verify_that_a_text_only_XHTML_value_does_not_break_the_matrix()
+        {
+            var specObject = this.reqIf.CoreContent.SpecObjects.Single(x => x.Identifier == "_o7scQ6dbEeafNduaIhMwQg");
+            var xhtmlValue = specObject.Values.OfType<AttributeValueXHTML>().First();
+            xhtmlValue.TheValue = "plain text without an element";
+
+            var renderer = this.RenderMatrixFor(specObject);
+
+            Assert.That(renderer.Instance.RowLabels[specObject.Identifier], Is.EqualTo("plain text without an element"));
+        }
     }
 }

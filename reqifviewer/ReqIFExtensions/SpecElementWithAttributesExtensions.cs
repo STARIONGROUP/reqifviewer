@@ -56,12 +56,18 @@ namespace ReqifViewer.ReqIFExtensions
                 return SafeMarkup.FromText(specElementWithAttributes.LongName);
             }
 
-            return specElementWithAttributes.Values.FirstOrDefault() switch
+            var attributeValue = specElementWithAttributes.Values.FirstOrDefault();
+
+            // An empty value, or XHTML without visible text (for example only a removed script), would give an
+            // empty, unclickable label: use the identifier instead
+            if (attributeValue is AttributeValueXHTML attributeValueXhtml && SafeMarkup.ToPlainText(attributeValueXhtml.TheValue).Length > 0)
             {
-                null => SafeMarkup.FromText(specElementWithAttributes.Identifier),
-                AttributeValueXHTML attributeValueXhtml => SafeMarkup.FromXhtml(attributeValueXhtml.TheValue),
-                var attributeValue => SafeMarkup.FromText(attributeValue.ObjectValue?.ToString())
-            };
+                return SafeMarkup.FromXhtml(attributeValueXhtml.TheValue);
+            }
+
+            var text = attributeValue is AttributeValueXHTML ? null : attributeValue?.ObjectValue?.ToString();
+
+            return SafeMarkup.FromText(string.IsNullOrWhiteSpace(text) ? specElementWithAttributes.Identifier : text);
         }
         
         /// <summary>
@@ -90,7 +96,7 @@ namespace ReqifViewer.ReqIFExtensions
             var text = attributeValue switch
             {
                 null => null,
-                AttributeValueXHTML attributeValueXhtml => attributeValueXhtml.ExtractUnformattedTextFromValue(),
+                AttributeValueXHTML attributeValueXhtml => SafeMarkup.ToPlainText(attributeValueXhtml.TheValue),
                 _ => attributeValue.ObjectValue?.ToString()
             };
 

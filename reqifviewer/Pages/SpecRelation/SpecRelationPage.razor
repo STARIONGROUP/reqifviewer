@@ -51,7 +51,7 @@ else
             </RadzenDataGridColumn>
             <RadzenDataGridColumn TItem="SpecRelation" Title="Target">
                 <Template Context="specRelation">
-                    <a href="reqif/@this.Identifier/specobject/@specRelation?.Source?.Identifier">
+                    <a href="reqif/@this.Identifier/specobject/@specRelation?.Target?.Identifier">
                         @(specRelation?.Target?.ExtractDisplayName())
                     </a>
                 </Template>

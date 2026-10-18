@@ -128,6 +128,52 @@ namespace reqifviewer.Utilities
         }
 
         /// <summary>
+        /// Extracts the visible text of an XHTML value of a ReqIF file, for labels, menus and other places that
+        /// cannot show formatting
+        /// </summary>
+        /// <param name="xhtml">the XHTML, may be null, plain text or have several top-level elements</param>
+        /// <returns>
+        /// the text without markup: block elements are separated by a space, whitespace is collapsed and the
+        /// content of scripts and other removed elements is left out; an empty string when there is no text
+        /// </returns>
+        /// <remarks>
+        /// Unlike ReqIFSharp's ExtractUnformattedTextFromValue this does not parse the value as XML, so it does
+        /// not throw on values that are not well-formed or have no root element
+        /// </remarks>
+        public static string ToPlainText(string xhtml)
+        {
+            var sanitized = FromXhtml(xhtml).Value;
+
+            if (sanitized.Length == 0)
+            {
+                return string.Empty;
+            }
+
+            var spaced = BlockTag().Replace(sanitized, " ");
+            var text = WebUtility.HtmlDecode(AnyTag().Replace(spaced, string.Empty));
+
+            return Whitespace().Replace(text, " ").Trim();
+        }
+
+        /// <summary>
+        /// Matches the start or end tag of an element that separates text (paragraphs, list items, cells, line breaks)
+        /// </summary>
+        [GeneratedRegex(@"</?(?:p|div|br|hr|li|dt|dd|tr|td|th|caption|table|thead|tbody|tfoot|ul|ol|dl|blockquote|pre|address|h[1-6])\b[^>]*>", RegexOptions.IgnoreCase)]
+        private static partial Regex BlockTag();
+
+        /// <summary>
+        /// Matches any tag of the sanitized markup
+        /// </summary>
+        [GeneratedRegex(@"<[^>]*>")]
+        private static partial Regex AnyTag();
+
+        /// <summary>
+        /// Matches a run of whitespace
+        /// </summary>
+        [GeneratedRegex(@"\s+")]
+        private static partial Regex Whitespace();
+
+        /// <summary>
         /// Matches the namespace prefix of an element name in a start or end tag, for example the "xhtml:" of
         /// &lt;xhtml:p&gt; and &lt;/xhtml:p&gt;
         /// </summary>
