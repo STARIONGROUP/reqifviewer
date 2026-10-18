@@ -15,72 +15,177 @@
 ------------------------------------------------------------------------------->
 
 @using System.Collections.Generic
+@using System.Reflection
 
 @using ReqIFSharp
 @using ReqIFSharp.Extensions.Services
 
-@inject IReqIFLoaderService reqIfLoaderService
+@using ReqifViewer.ReqIFExtensions
 
-<RadzenPanelMenu>
-    <RadzenPanelMenuItem Text="Home" Icon="home" Path="/"></RadzenPanelMenuItem>
+@implements IDisposable
 
-    @if (this.reqifLoaded)
-    {
-        @foreach (var reqif in this.reqIfLoaderService.ReqIFData)
+@inject IReqIFLoaderService ReqIfLoaderService
+
+<BbSidebar>
+    <BbSidebarHeader>
+        <BbSidebarMenu>
+            <BbSidebarMenuItem>
+                @* IsActive is false so only "Open a file" is highlighted on the home page. *@
+                <BbSidebarMenuButton AsChild="SidebarMenuButtonElement.Anchor" Href="/" IsActive="false" Size="SidebarMenuButtonSize.Large" Tooltip="ReqIF Viewer">
+                    <img src="images/reqifsharp-logo-small.png" alt="" class="side-menu-logo" />
+                    <div class="side-menu-brand">
+                        <span class="side-menu-brand-title">ReqIF Viewer</span>
+                        <span class="side-menu-brand-subtitle">powered by ReqIFSharp</span>
+                    </div>
+                </BbSidebarMenuButton>
+            </BbSidebarMenuItem>
+        </BbSidebarMenu>
+    </BbSidebarHeader>
+
+    <BbSidebarContent>
+        <BbSidebarGroup>
+            <BbSidebarMenu>
+                <BbSidebarMenuItem>
+                    @* An empty Href never counts as active, so the home page is "/". *@
+                    <BbSidebarMenuButton AsChild="SidebarMenuButtonElement.Anchor" Href="/" Match="NavLinkMatch.All" Tooltip="Open a ReqIF file">
+                        <LucideIcon Name="upload" Size="16" />
+                        <span>Open a file</span>
+                    </BbSidebarMenuButton>
+                </BbSidebarMenuItem>
+            </BbSidebarMenu>
+        </BbSidebarGroup>
+
+        @foreach (var reqif in this.loadedReqIfs)
         {
-            <RadzenPanelMenuItem Text=@($"ReqIF: {reqif?.TheHeader.Title}")>
-                <RadzenPanelMenuItem Text="Stats" Icon="dashboard" Path="@($"/reqifstatistics/{reqif?.TheHeader.Identifier}")"></RadzenPanelMenuItem>
-                <RadzenPanelMenuItem Text="Specifications">
+            var root = $"reqif/{reqif.TheHeader.Identifier}";
 
-                    @if (reqif != null)
+            <BbSidebarGroup>
+                <BbSidebarGroupLabel>@(string.IsNullOrWhiteSpace(reqif.TheHeader.Title) ? "ReqIF document" : reqif.TheHeader.Title)</BbSidebarGroupLabel>
+                <BbSidebarMenu>
+                    <BbSidebarMenuItem>
+                        <BbSidebarMenuButton AsChild="SidebarMenuButtonElement.Anchor" Href="@($"reqifstatistics/{reqif.TheHeader.Identifier}")" Tooltip="Statistics">
+                            <LucideIcon Name="layout-dashboard" Size="16" />
+                            <span>Statistics</span>
+                        </BbSidebarMenuButton>
+                    </BbSidebarMenuItem>
+
+                    <BbSidebarMenuItem>
+                        <BbCollapsible DefaultOpen="true">
+                            <BbSidebarMenuButton Tooltip="Specifications">
+                                <LucideIcon Name="book-open" Size="16" />
+                                <span>Specifications</span>
+                                <BbSidebarMenuChevron>
+                                    <LucideIcon Name="chevron-right" Size="16" />
+                                </BbSidebarMenuChevron>
+                            </BbSidebarMenuButton>
+                            <BbCollapsibleContent>
+                                <BbSidebarMenuSub>
+                                    @foreach (var specification in reqif.CoreContent.Specifications)
+                                    {
+                                        <BbSidebarMenuSubItem>
+                                            <BbSidebarMenuSubButton AsChild="SidebarMenuButtonElement.Anchor" Href="@specification.CreateUrl()">
+                                                <span>@specification.ExtractDisplayText()</span>
+                                            </BbSidebarMenuSubButton>
+                                        </BbSidebarMenuSubItem>
+                                    }
+                                </BbSidebarMenuSub>
+                            </BbCollapsibleContent>
+                        </BbCollapsible>
+                    </BbSidebarMenuItem>
+
+                    @foreach (var item in ContentItems)
                     {
-                        @foreach (var specification in reqif.CoreContent.Specifications)
-                        {
-                            <RadzenPanelMenuItem Text="@specification.LongName" Icon="flare" Path=@($"/reqif/{reqif.TheHeader.Identifier}/specification/{specification.Identifier}")></RadzenPanelMenuItem>
-                        }
+                        <BbSidebarMenuItem>
+                            <BbSidebarMenuButton AsChild="SidebarMenuButtonElement.Anchor" Href="@($"{root}/{item.Path}")" Tooltip="@item.Text">
+                                <LucideIcon Name="@item.Icon" Size="16" />
+                                <span>@item.Text</span>
+                            </BbSidebarMenuButton>
+                        </BbSidebarMenuItem>
                     }
 
-                </RadzenPanelMenuItem>
-
-                <RadzenPanelMenuItem Text="Spec Objects" Icon="nature" Path="@($"/reqif/{reqif.TheHeader.Identifier}/specobjects")"></RadzenPanelMenuItem>
-                <RadzenPanelMenuItem Text="Spec Relations" Icon="link" Path="@($"/reqif/{reqif.TheHeader.Identifier}/specrelations")"></RadzenPanelMenuItem>
-                <RadzenPanelMenuItem Text="Relation Matrix" Icon="grid_view" Path="@($"/reqif/{reqif.TheHeader.Identifier}/relationmatrix")"></RadzenPanelMenuItem>
-                <RadzenPanelMenuItem Text="External Objects" Icon="photo_library" Path="@($"/reqif/{reqif.TheHeader.Identifier}/externalobjects")"></RadzenPanelMenuItem>
-                <RadzenPanelMenuItem Text="Data Types" Icon="grain" Path="@($"/reqif/{reqif.TheHeader.Identifier}/datatypedefinitions")"></RadzenPanelMenuItem>
-                <RadzenPanelMenuItem Text="Spec Object Types" Icon="filter_hdr" Path="@($"/reqif/{reqif.TheHeader.Identifier}/spectypes?type=SpecObjectType")"></RadzenPanelMenuItem>
-                <RadzenPanelMenuItem Text="Specification Types" Icon="panorama_photosphere_select" Path="@($"/reqif/{reqif.TheHeader.Identifier}/spectypes?type=SpecificationType")"></RadzenPanelMenuItem>
-                <RadzenPanelMenuItem Text="Spec Relation Types" Icon="nat" Path="@($"/reqif/{reqif.TheHeader.Identifier}/spectypes?type=SpecRelationType")"></RadzenPanelMenuItem>
-                <RadzenPanelMenuItem Text="Relation Group Types" Icon="mediation" Path="@($"/reqif/{reqif.TheHeader.Identifier}/spectypes?type=RelationGroupType")"></RadzenPanelMenuItem>
-
-            </RadzenPanelMenuItem>
+                    <BbSidebarMenuItem>
+                        <BbCollapsible>
+                            <BbSidebarMenuButton Tooltip="Types">
+                                <LucideIcon Name="shapes" Size="16" />
+                                <span>Types</span>
+                                <BbSidebarMenuChevron>
+                                    <LucideIcon Name="chevron-right" Size="16" />
+                                </BbSidebarMenuChevron>
+                            </BbSidebarMenuButton>
+                            <BbCollapsibleContent>
+                                <BbSidebarMenuSub>
+                                    @foreach (var item in TypeItems)
+                                    {
+                                        <BbSidebarMenuSubItem>
+                                            <BbSidebarMenuSubButton AsChild="SidebarMenuButtonElement.Anchor" Href="@($"{root}/{item.Path}")" Match="NavLinkMatch.All">
+                                                <span>@item.Text</span>
+                                            </BbSidebarMenuSubButton>
+                                        </BbSidebarMenuSubItem>
+                                    }
+                                </BbSidebarMenuSub>
+                            </BbCollapsibleContent>
+                        </BbCollapsible>
+                    </BbSidebarMenuItem>
+                </BbSidebarMenu>
+            </BbSidebarGroup>
         }
-    }
-</RadzenPanelMenu>
+    </BbSidebarContent>
+
+    <BbSidebarFooter>
+        <div class="side-menu-footer">
+            <span>Version @this.version</span>
+            <span>&copy; <a href="https://www.stariongroup.eu/" target="_blank" rel="noopener">Starion Group S.A.</a></span>
+        </div>
+    </BbSidebarFooter>
+</BbSidebar>
 
 @code {
-    
+
     /// <summary>
-    /// a value indicating whether a ReqIF file is loaded or not
+    /// The pages that show the content of a ReqIF document: menu text, Lucide icon and path below /reqif/{identifier}
     /// </summary>
-    private bool reqifLoaded = false;
+    private static readonly (string Text, string Icon, string Path)[] ContentItems =
+    [
+        ("Spec Objects", "file-text", "specobjects"),
+        ("Spec Relations", "link", "specrelations"),
+        ("Relation Matrix", "grid-3x3", "relationmatrix"),
+        ("External Objects", "images", "externalobjects")
+    ];
+
+    /// <summary>
+    /// The pages that show the types of a ReqIF document: menu text and path below /reqif/{identifier}
+    /// </summary>
+    private static readonly (string Text, string Path)[] TypeItems =
+    [
+        ("Data Types", "datatypedefinitions"),
+        ("Spec Object Types", "spectypes?type=SpecObjectType"),
+        ("Specification Types", "spectypes?type=SpecificationType"),
+        ("Spec Relation Types", "spectypes?type=SpecRelationType"),
+        ("Relation Group Types", "spectypes?type=RelationGroupType")
+    ];
+
+    /// <summary>
+    /// The loaded ReqIF documents, empty when no file is loaded
+    /// </summary>
+    private List<ReqIF> loadedReqIfs = [];
+
+    /// <summary>
+    /// The version of the application, without the source revision
+    /// </summary>
+    private string version = string.Empty;
 
     /// <summary>
     /// Invoked when the component is initialized after having received its initial parameters
     /// </summary>
     protected override void OnInitialized()
     {
-        if (this.reqIfLoaderService.ReqIFData == null || !this.reqIfLoaderService.ReqIFData.Any())
-        {
-            this.reqifLoaded = false;
-        }
-        else
-        {
-            this.reqifLoaded = true;
-        }
+        var informationalVersion = Assembly.GetExecutingAssembly().GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion ?? string.Empty;
+        this.version = informationalVersion.Split('+')[0];
 
-        this.reqIfLoaderService.ReqIfChanged += ReqIfLoaderServiceOnReqIfChanged;
+        this.loadedReqIfs = this.ReqIfLoaderService.ReqIFData?.Where(x => x != null).ToList() ?? [];
+        this.ReqIfLoaderService.ReqIfChanged += this.ReqIfLoaderServiceOnReqIfChanged;
     }
-    
+
     /// <summary>
     /// Handler for the <see cref="IReqIFLoaderService.ReqIfChanged"/> event
     /// </summary>
@@ -90,15 +195,15 @@
     /// </param>
     private void ReqIfLoaderServiceOnReqIfChanged(object sender, IEnumerable<ReqIF> reqIfs)
     {
-        if (reqIfs == null || !reqIfs.Any())
-        {
-            this.reqifLoaded = false;
-        }
-        else
-        {
-            this.reqifLoaded = true;
-        }
+        this.loadedReqIfs = reqIfs?.Where(x => x != null).ToList() ?? [];
+        this.InvokeAsync(this.StateHasChanged);
+    }
 
-        this.StateHasChanged();
+    /// <summary>
+    /// Unsubscribes from the <see cref="IReqIFLoaderService.ReqIfChanged"/> event
+    /// </summary>
+    public void Dispose()
+    {
+        this.ReqIfLoaderService.ReqIfChanged -= this.ReqIfLoaderServiceOnReqIfChanged;
     }
 }

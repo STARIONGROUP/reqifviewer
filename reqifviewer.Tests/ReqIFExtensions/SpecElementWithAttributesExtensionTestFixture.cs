@@ -71,5 +71,39 @@ namespace ReqifViewer.Tests.ReqIFExtensions
             specObject = this.reqIf.CoreContent.SpecObjects.Single(x => x.Identifier == "_DqMpsKddEeafNduaIhMwQg");
             Assert.That(specObject.ExtractDisplayName(), Is.EqualTo("REQ-6"));
         }
+
+        [Test]
+        public void Verify_that_ExtractDisplayText_returns_plain_text_in_the_same_order_as_ExtractDisplayName()
+        {
+            // The first attribute value is XHTML: its text is returned without markup
+            var specObject = this.reqIf.CoreContent.SpecObjects.Single(x => x.Identifier == "_o7scQ6dbEeafNduaIhMwQg");
+            Assert.That(specObject.ExtractDisplayText(), Is.EqualTo("Stakeholder Requirements"));
+
+            var specification = this.reqIf.CoreContent.Specifications.Single(x => x.Identifier == "_o7scS6dbEeafNduaIhMwQg");
+            Assert.That(specification.ExtractDisplayText(), Is.EqualTo("Requirements Document"));
+
+            specObject = this.reqIf.CoreContent.SpecObjects.Single(x => x.Identifier == "_DqMpsKddEeafNduaIhMwQg");
+            Assert.That(specObject.ExtractDisplayText(), Is.EqualTo("REQ-6"));
+        }
+
+        [Test]
+        public void Verify_that_ExtractDisplayText_falls_back_to_the_identifier()
+        {
+            var withoutValues = new Specification { Identifier = "spec-1" };
+            Assert.That(withoutValues.ExtractDisplayText(), Is.EqualTo("spec-1"));
+
+            var withEmptyXhtml = new SpecObject { Identifier = "object-1" };
+            withEmptyXhtml.Values.Add(new AttributeValueXHTML { TheValue = "<xhtml:div xmlns:xhtml=\"http://www.w3.org/1999/xhtml\">  </xhtml:div>" });
+            Assert.That(withEmptyXhtml.ExtractDisplayText(), Is.EqualTo("object-1"));
+        }
+
+        [Test]
+        public void Verify_that_ExtractDisplayText_collapses_whitespace()
+        {
+            var specObject = new SpecObject { Identifier = "object-1" };
+            specObject.Values.Add(new AttributeValueXHTML { TheValue = "<xhtml:div xmlns:xhtml=\"http://www.w3.org/1999/xhtml\">\n  First   line\n  <xhtml:b>bold</xhtml:b>\n</xhtml:div>" });
+
+            Assert.That(specObject.ExtractDisplayText(), Is.EqualTo("First line bold"));
+        }
     }
 }

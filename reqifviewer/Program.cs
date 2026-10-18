@@ -1,4 +1,4 @@
-// -------------------------------------------------------------------------------------------------
+﻿// -------------------------------------------------------------------------------------------------
 // <copyright file="Program.cs" company="Starion Group S.A.">
 //
 //   Copyright 2021-2026 Starion Group S.A.
@@ -24,7 +24,7 @@ namespace reqifviewer
 
     using Blazor.Analytics;
 
-    using BlazorStrap;
+    using BlazorBlueprint.Components;
 
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.AspNetCore.Builder;
@@ -56,8 +56,8 @@ namespace reqifviewer
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            builder.Services.AddRazorPages();
-            builder.Services.AddServerSideBlazor();
+            builder.Services.AddRazorComponents()
+                .AddInteractiveServerComponents();
             
             builder.Host.UseSerilog((hostingContext, loggerConfiguration) =>
             {
@@ -67,14 +67,14 @@ namespace reqifviewer
             });
 
             builder.Services.AddSingleton<IResourceLoader, ResourceLoader>();
-            builder.Services.AddScoped<DialogService>();
+            builder.Services.AddScoped<Radzen.DialogService>();
             builder.Services.AddScoped<NotificationService>();
             builder.Services.AddScoped<TooltipService>();
             builder.Services.AddScoped<ContextMenuService>();
             builder.Services.AddScoped<IReqIFDeSerializer, ReqIFDeserializer>();
             builder.Services.AddScoped<IReqIFLoaderService, ReqIFLoaderService>();
             builder.Services.AddGoogleAnalytics("295704041");
-            builder.Services.AddBlazorStrap();
+            builder.Services.AddBlazorBlueprintComponents();
             builder.Services.AddHttpClient();
 
             var app = builder.Build();
@@ -94,10 +94,11 @@ namespace reqifviewer
             logger.LogInformation("################################################################");
 
             app.UseStaticFiles();
-            app.UseRouting();
-            app.MapBlazorHub();
-            app.MapRazorPages();
-            app.MapFallbackToPage("/_Host");
+            app.UseStatusCodePagesWithReExecute("/not-found", createScopeForStatusCodePages: true);
+            app.UseAntiforgery();
+            app.MapStaticAssets();
+            app.MapRazorComponents<App>()
+                .AddInteractiveServerRenderMode();
 
             await app.RunAsync();
         }

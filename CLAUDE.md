@@ -67,8 +67,12 @@ URLs follow `/reqif/{header-identifier}/<entity>/<entity-identifier>`. The `Spec
 
 ### Layout / UI stack
 
-- `App.razor` → `Shared/MainLayout.razor` (Radzen layout + a `BSOffCanvas` from BlazorStrap V5 for the `SideMenu`).
-- UI libraries: **Radzen.Blazor**, **BlazorStrap.V5**, plus **Blazor-Analytics** (Google Analytics ID hard-coded in `Program.cs`).
+- Hosting is the Blazor Web App model: `App.razor` is the host page, `Routes.razor` the router, and the whole app runs with the `InteractiveServer` render mode (`MapRazorComponents<App>().AddInteractiveServerRenderMode()` in `Program.cs`).
+- The UI is moving from **Radzen.Blazor** to **[Blazor Blueprint](https://blazorblueprintui.com)** (`BlazorBlueprint.Components`, Lucide icons). The shell is already Blueprint: `Shared/MainLayout.razor` (`BbSidebarProvider`, header with `BbDarkModeToggle`) and `Shared/SideMenu.razor` (`BbSidebar`). The pages still use Radzen components and the Bootstrap grid.
+- Both libraries define types with the same names (`DialogService`, `ButtonSize`, ...), so Blueprint is imported per folder: `Shared/_Imports.razor`. Add the same usings to a folder when you migrate its pages; move them to the root `_Imports.razor` once Radzen is removed.
+- Theme: `wwwroot/css/theme.css` holds the Blueprint CSS variables for light (`:root`) and dark (`.dark`). The "bridge" section at the end of `wwwroot/css/app.css` maps the Radzen theme variables onto them and undoes Bootstrap's global link and list styles in the sidebar; delete it when Bootstrap and Radzen are gone.
+- There is no Tailwind build: `blazorblueprint.css` only contains `bb:`-prefixed utilities used by the components, so layout CSS for our own markup goes in scoped `.razor.css` files.
+- **Blazor-Analytics** (Google Analytics ID hard-coded in `Program.cs`).
 - Logging: **Serilog** configured from `appsettings.json`; rolling file sink writes to `logs/log-reqifviewer-*.txt`. Use `Log.ForContext<T>()` rather than injecting `ILogger` (this is the established pattern).
 - The Dockerfile runs as a non-root user (`$APP_UID`) on Alpine; anything that needs to write must go under `/app` (e.g. `/app/logs`, which is created in the image).
 
