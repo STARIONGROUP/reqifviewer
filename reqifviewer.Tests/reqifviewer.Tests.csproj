@@ -42,6 +42,9 @@
     <None Update="TestData\test-multiple-reqif.reqifz">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="TestData\xss-attempts.reqif">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

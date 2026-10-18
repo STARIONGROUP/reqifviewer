@@ -37,7 +37,7 @@ else
     <RadzenCard Style="margin-bottom: 20px">
         <ChildContent>
             <div>
-                @this.externalObject?.Owner?.SpecElAt?.QueryTypeDisplayName() <a href="@this.externalObject?.Owner?.SpecElAt?.CreateUrl()">@(new MarkupString(this.externalObject?.Owner?.SpecElAt?.ExtractDisplayName().ToString()))</a>
+                @this.externalObject?.Owner?.SpecElAt?.QueryTypeDisplayName() <a href="@this.externalObject?.Owner?.SpecElAt?.CreateUrl()">@(this.externalObject?.Owner?.SpecElAt?.ExtractDisplayName())</a>
             </div>
         </ChildContent>
     </RadzenCard>

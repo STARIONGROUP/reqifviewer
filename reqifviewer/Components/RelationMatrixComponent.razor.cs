@@ -418,7 +418,7 @@ namespace reqifviewer.Components
         /// <summary>Resolves a <see cref="SpecObject"/>'s display label, falling back to its identifier.</summary>
         private static string ExtractDisplayNameOf(SpecObject specObject)
         {
-            return specObject.ExtractDisplayName()?.ToString() ?? specObject.Identifier;
+            return specObject.ExtractDisplayText();
         }
 
         /// <summary>

@@ -18,6 +18,7 @@
 @using ReqIFSharp;
 @using ReqIFSharp.Extensions.ReqIFExtensions
 @using ReqifViewer.ReqIFExtensions
+@using reqifviewer.Utilities
 @using Serilog
 
 <RadzenFieldset AllowCollapse="true" Style="margin-bottom: 10px;">
@@ -38,7 +39,7 @@
             {
                 <RadzenCard Style="margin-bottom: 20px">
                     <ChildContent>
-                        <b>Selected Value:</b> @(new MarkupString(selectedAttributeValue.ObjectValue.ToString()))
+                        <b>Selected Value:</b> @SafeMarkup.FromXhtml(((AttributeValueXHTML)selectedAttributeValue).TheValue)
                     </ChildContent>
                 </RadzenCard>
             }
@@ -64,7 +65,7 @@
                     <Template Context="attributeValue">
                         @if (attributeValue is AttributeValueXHTML)
                         {
-                            @(new MarkupString(attributeValue?.ObjectValue.ToString()))
+                            @SafeMarkup.FromXhtml(((AttributeValueXHTML)attributeValue).TheValue)
                         }
                         else
                         {

@@ -35,7 +35,7 @@ else
 {
     <RadzenCard Style="margin-bottom: 20px">
         <ChildContent>
-            @(new MarkupString(this.specObject?.ExtractDisplayName().ToString()))
+            @(this.specObject?.ExtractDisplayName())
         </ChildContent>
     </RadzenCard>
 
@@ -72,13 +72,13 @@ else
                                 }
                                 else
                                 {
-                                    <a href="reqif/@ReqIF/specobject/@specRelation.Source?.Identifier"> @(new MarkupString(specRelation.Source.ExtractDisplayName().ToString()))</a>
+                                    <a href="reqif/@ReqIF/specobject/@specRelation.Source?.Identifier"> @(specRelation.Source.ExtractDisplayName())</a>
                                 }
                             </Template>
                         </RadzenDataGridColumn>
                         <RadzenDataGridColumn TItem="SpecRelation" Title="Spec Relation">
                             <Template Context="specRelation">
-                                <a href="reqif/@ReqIF/specrelation/@specRelation.Identifier">@(new MarkupString(specRelation.ExtractDisplayName().ToString()))</a>
+                                <a href="reqif/@ReqIF/specrelation/@specRelation.Identifier">@(specRelation.ExtractDisplayName())</a>
                             </Template>
                         </RadzenDataGridColumn>
                         <RadzenDataGridColumn TItem="SpecRelation" Title="Target">
@@ -89,7 +89,7 @@ else
                                 }
                                 else
                                 {
-                                    <a href="reqif/@ReqIF/specobject/@specRelation.Target?.Identifier">@(new MarkupString(specRelation.Target.ExtractDisplayName().ToString()))</a>
+                                    <a href="reqif/@ReqIF/specobject/@specRelation.Target?.Identifier">@(specRelation.Target.ExtractDisplayName())</a>
                                 }
                             </Template>
                         </RadzenDataGridColumn>
@@ -110,7 +110,7 @@ else
                             <div>
                                 <img src="@payload.Item2" />
                                 <br />
-                                @(new MarkupString (payload.Item1.Owner?.ExtractUnformattedTextFromValue()))
+                                @(payload.Item1.Owner?.ExtractUnformattedTextFromValue())
                             </div>
                         </div>
                     

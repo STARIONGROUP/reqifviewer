@@ -35,6 +35,7 @@
         <PackageReference Include="Blazor-Analytics" Version="4.0.0" />
         <PackageReference Include="BlazorBlueprint.Components" Version="4.1.0" />
         <PackageReference Include="BlazorBlueprint.Icons.Lucide" Version="2.0.2" />
+        <PackageReference Include="HtmlSanitizer" Version="9.2.1039" />
         <PackageReference Include="Microsoft.AspNetCore.WebUtilities" Version="10.0.8" />
         <PackageReference Include="Radzen.Blazor" Version="10.4.7" />
         <PackageReference Include="ReqIFSharp.Extensions" Version="5.2.0" />

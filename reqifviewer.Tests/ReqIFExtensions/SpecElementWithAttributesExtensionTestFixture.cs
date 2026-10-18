@@ -61,15 +61,33 @@ namespace ReqifViewer.Tests.ReqIFExtensions
         [Test]
         public void Verify_that_ExtractSpecificationName_returns_expected_result()
         {
+            // The first attribute value is XHTML: it is sanitized and the namespace prefix is removed
             var specObject = this.reqIf.CoreContent.SpecObjects.Single(x => x.Identifier == "_o7scQ6dbEeafNduaIhMwQg");
-            var markupString = new MarkupString("<xhtml:div xmlns:xhtml=\"http://www.w3.org/1999/xhtml\">Stakeholder Requirements</xhtml:div>");
-            Assert.That(specObject.ExtractDisplayName(), Is.EqualTo(markupString));
+            Assert.That(specObject.ExtractDisplayName(), Is.EqualTo(new MarkupString("<div>Stakeholder Requirements</div>")));
 
             var specification = this.reqIf.CoreContent.Specifications.Single(x => x.Identifier == "_o7scS6dbEeafNduaIhMwQg");
-            Assert.That(specification.ExtractDisplayName(), Is.EqualTo("Requirements Document"));
+            Assert.That(specification.ExtractDisplayName(), Is.EqualTo(new MarkupString("Requirements Document")));
 
             specObject = this.reqIf.CoreContent.SpecObjects.Single(x => x.Identifier == "_DqMpsKddEeafNduaIhMwQg");
-            Assert.That(specObject.ExtractDisplayName(), Is.EqualTo("REQ-6"));
+            Assert.That(specObject.ExtractDisplayName(), Is.EqualTo(new MarkupString("REQ-6")));
+        }
+
+        [Test]
+        public void Verify_that_ExtractDisplayName_encodes_text_and_sanitizes_XHTML()
+        {
+            var withLongName = new SpecObject { Identifier = "object-1", LongName = "<img src=x onerror=alert(1)>" };
+            Assert.That(withLongName.ExtractDisplayName().Value, Is.EqualTo("&lt;img src=x onerror=alert(1)&gt;"));
+
+            var withIdentifierOnly = new SpecObject { Identifier = "<b>id</b>" };
+            Assert.That(withIdentifierOnly.ExtractDisplayName().Value, Is.EqualTo("&lt;b&gt;id&lt;/b&gt;"));
+
+            var withXhtml = new SpecObject { Identifier = "object-2" };
+            withXhtml.Values.Add(new AttributeValueXHTML { TheValue = "<xhtml:div xmlns:xhtml=\"http://www.w3.org/1999/xhtml\">Text<xhtml:img src=\"x\" onerror=\"alert(1)\" /></xhtml:div>" });
+            Assert.That(withXhtml.ExtractDisplayName().Value, Is.EqualTo("<div>Text</div>"));
+
+            var withString = new SpecObject { Identifier = "object-3" };
+            withString.Values.Add(new AttributeValueString { TheValue = "<script>alert(1)</script>" });
+            Assert.That(withString.ExtractDisplayName().Value, Is.EqualTo("&lt;script&gt;alert(1)&lt;/script&gt;"));
         }
 
         [Test]

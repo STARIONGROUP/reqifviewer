@@ -23,7 +23,7 @@ limitations under the License.
         <RadzenDataGridColumn TItem="SpecObject" Title="Name">
             <Template Context="specObject">
                 <a href="reqif/@this.reqifIdentifier/specobject/@specObject?.Identifier">
-                    @(new MarkupString(specObject?.ExtractDisplayName().ToString()))
+                    @(specObject?.ExtractDisplayName())
                 </a>
             </Template>
         </RadzenDataGridColumn>

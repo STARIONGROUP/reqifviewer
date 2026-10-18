@@ -39,7 +39,7 @@ else
             <RadzenDataGridColumn TItem="Specification" Title="Long Name">
                 <Template Context="specification">
                     <a href="/reqif/@Identifier/specification/@specification?.Identifier">
-                        @(new MarkupString(@specification?.ExtractDisplayName().ToString()))
+                        @(specification?.ExtractDisplayName())
                     </a>
                 </Template>
             </RadzenDataGridColumn>

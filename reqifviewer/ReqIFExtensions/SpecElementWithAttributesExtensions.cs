@@ -26,6 +26,8 @@ namespace ReqifViewer.ReqIFExtensions
     using Microsoft.AspNetCore.Components;
 
     using ReqIFSharp;
+
+    using reqifviewer.Utilities;
     
     /// <summary>
     /// The <see cref="SpecElementWithAttributesExtensions"/> class provides a number of extension methods for the <see cref="SpecElementWithAttributes"/> class
@@ -39,39 +41,27 @@ namespace ReqifViewer.ReqIFExtensions
         /// The subject <see cref="SpecElementWithAttributes"/>
         /// </param>
         /// <returns>
-        /// an object that represents the <see cref="specElementWithAttributes"/> name (value to be displayed to the user)
+        /// the name as a <see cref="MarkupString"/> that is safe to render: text is encoded and XHTML is
+        /// sanitized with <see cref="SafeMarkup"/>
         /// </returns>
         /// <remarks>
         /// 1. The <see cref="Identifiable.LongName"/> is returned in case it is not empty or null
         /// 2. The first <see cref="AttributeValue"/> is returned in case it is not null (order matters, results may be unexpected and are determined on order in the original ReqIF document)
         /// 3. The <see cref="Identifiable.Identifier"/> is returned in case the <see cref="Identifiable.LongName"/> is empty or null and no <see cref="AttributeValue"/>s are present
         /// </remarks>
-        public static object ExtractDisplayName(this SpecElementWithAttributes specElementWithAttributes)
+        public static MarkupString ExtractDisplayName(this SpecElementWithAttributes specElementWithAttributes)
         {
-            if (string.IsNullOrEmpty(specElementWithAttributes.LongName))
+            if (!string.IsNullOrEmpty(specElementWithAttributes.LongName))
             {
-                var attributeValue = specElementWithAttributes.Values.FirstOrDefault();
-                if (attributeValue != null)
-                {
-                    if (attributeValue is AttributeValueXHTML attributeValueXhtml)
-                    {
-                        var markupString = new MarkupString(attributeValueXhtml.TheValue);
-                        return markupString;
-                    }
-                    else
-                    {
-                        return attributeValue.ObjectValue.ToString();
-                    }
-                }
-                else
-                {
-                    return specElementWithAttributes.Identifier;
-                }
+                return SafeMarkup.FromText(specElementWithAttributes.LongName);
             }
-            else
+
+            return specElementWithAttributes.Values.FirstOrDefault() switch
             {
-                return specElementWithAttributes.LongName;
-            }
+                null => SafeMarkup.FromText(specElementWithAttributes.Identifier),
+                AttributeValueXHTML attributeValueXhtml => SafeMarkup.FromXhtml(attributeValueXhtml.TheValue),
+                var attributeValue => SafeMarkup.FromText(attributeValue.ObjectValue?.ToString())
+            };
         }
         
         /// <summary>

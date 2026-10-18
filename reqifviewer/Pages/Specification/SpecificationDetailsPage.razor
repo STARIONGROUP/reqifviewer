@@ -34,7 +34,7 @@ else
 {
     <RadzenCard Style="margin-bottom: 20px">
         <ChildContent>
-            @(new MarkupString(this.specification?.ExtractDisplayName().ToString())) 
+            @(this.specification?.ExtractDisplayName()) 
         </ChildContent>
     </RadzenCard>
 
@@ -160,17 +160,7 @@ else
         var specHierarchy = context.Value as SpecHierarchy;
         if (specHierarchy != null)
         {
-            var displayObject = specHierarchy.Object.ExtractDisplayName();
-
-            if (displayObject is MarkupString)
-            {
-                var markupString = (MarkupString)displayObject;
-                builder.AddMarkupContent(2, markupString.Value);
-            }
-            else
-            {
-                builder.AddContent(2, displayObject);
-            }
+            builder.AddMarkupContent(2, specHierarchy.Object.ExtractDisplayName().Value);
         }
         else
         {
