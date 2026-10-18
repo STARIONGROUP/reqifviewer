@@ -36,7 +36,7 @@ else
 {
     <RadzenCard Style="margin-bottom: 20px">
         <ChildContent>
-            @(new MarkupString(this.specRelation?.ExtractDisplayName().ToString()))
+            @(this.specRelation?.ExtractDisplayName())
         </ChildContent>
     </RadzenCard>
 

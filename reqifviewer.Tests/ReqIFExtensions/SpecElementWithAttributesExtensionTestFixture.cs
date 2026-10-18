@@ -61,15 +61,33 @@ namespace ReqifViewer.Tests.ReqIFExtensions
         [Test]
         public void Verify_that_ExtractSpecificationName_returns_expected_result()
         {
+            // The first attribute value is XHTML: it is sanitized and the namespace prefix is removed
             var specObject = this.reqIf.CoreContent.SpecObjects.Single(x => x.Identifier == "_o7scQ6dbEeafNduaIhMwQg");
-            var markupString = new MarkupString("<xhtml:div xmlns:xhtml=\"http://www.w3.org/1999/xhtml\">Stakeholder Requirements</xhtml:div>");
-            Assert.That(specObject.ExtractDisplayName(), Is.EqualTo(markupString));
+            Assert.That(specObject.ExtractDisplayName(), Is.EqualTo(new MarkupString("<div>Stakeholder Requirements</div>")));
 
             var specification = this.reqIf.CoreContent.Specifications.Single(x => x.Identifier == "_o7scS6dbEeafNduaIhMwQg");
-            Assert.That(specification.ExtractDisplayName(), Is.EqualTo("Requirements Document"));
+            Assert.That(specification.ExtractDisplayName(), Is.EqualTo(new MarkupString("Requirements Document")));
 
             specObject = this.reqIf.CoreContent.SpecObjects.Single(x => x.Identifier == "_DqMpsKddEeafNduaIhMwQg");
-            Assert.That(specObject.ExtractDisplayName(), Is.EqualTo("REQ-6"));
+            Assert.That(specObject.ExtractDisplayName(), Is.EqualTo(new MarkupString("REQ-6")));
+        }
+
+        [Test]
+        public void Verify_that_ExtractDisplayName_encodes_text_and_sanitizes_XHTML()
+        {
+            var withLongName = new SpecObject { Identifier = "object-1", LongName = "<img src=x onerror=alert(1)>" };
+            Assert.That(withLongName.ExtractDisplayName().Value, Is.EqualTo("&lt;img src=x onerror=alert(1)&gt;"));
+
+            var withIdentifierOnly = new SpecObject { Identifier = "<b>id</b>" };
+            Assert.That(withIdentifierOnly.ExtractDisplayName().Value, Is.EqualTo("&lt;b&gt;id&lt;/b&gt;"));
+
+            var withXhtml = new SpecObject { Identifier = "object-2" };
+            withXhtml.Values.Add(new AttributeValueXHTML { TheValue = "<xhtml:div xmlns:xhtml=\"http://www.w3.org/1999/xhtml\">Text<xhtml:img src=\"x\" onerror=\"alert(1)\" /></xhtml:div>" });
+            Assert.That(withXhtml.ExtractDisplayName().Value, Is.EqualTo("<div>Text</div>"));
+
+            var withString = new SpecObject { Identifier = "object-3" };
+            withString.Values.Add(new AttributeValueString { TheValue = "<script>alert(1)</script>" });
+            Assert.That(withString.ExtractDisplayName().Value, Is.EqualTo("&lt;script&gt;alert(1)&lt;/script&gt;"));
         }
 
         [Test]
@@ -104,6 +122,44 @@ namespace ReqifViewer.Tests.ReqIFExtensions
             specObject.Values.Add(new AttributeValueXHTML { TheValue = "<xhtml:div xmlns:xhtml=\"http://www.w3.org/1999/xhtml\">\n  First   line\n  <xhtml:b>bold</xhtml:b>\n</xhtml:div>" });
 
             Assert.That(specObject.ExtractDisplayText(), Is.EqualTo("First line bold"));
+        }
+
+        [Test]
+        public void Verify_that_ExtractDisplayText_handles_XHTML_values_that_are_not_well_formed()
+        {
+            // Plain text without a root element: ReqIFSharp's ExtractUnformattedTextFromValue throws on this
+            var textOnly = new SpecObject { Identifier = "object-1" };
+            textOnly.Values.Add(new AttributeValueXHTML { TheValue = "plain text without an element" });
+            Assert.That(textOnly.ExtractDisplayText(), Is.EqualTo("plain text without an element"));
+
+            var twoParagraphs = new SpecObject { Identifier = "object-2" };
+            twoParagraphs.Values.Add(new AttributeValueXHTML { TheValue = "<xhtml:p xmlns:xhtml=\"http://www.w3.org/1999/xhtml\">first</xhtml:p><xhtml:p xmlns:xhtml=\"http://www.w3.org/1999/xhtml\">second</xhtml:p>" });
+            Assert.That(twoParagraphs.ExtractDisplayText(), Is.EqualTo("first second"));
+        }
+
+        [Test]
+        public void Verify_that_ExtractDisplayName_falls_back_to_the_identifier_when_nothing_visible_is_left()
+        {
+            var emptyLongNameAndNullValue = new SpecObject { Identifier = "object-1", LongName = "" };
+            emptyLongNameAndNullValue.Values.Add(new AttributeValueString { TheValue = null });
+            Assert.That(emptyLongNameAndNullValue.ExtractDisplayName().Value, Is.EqualTo("object-1"));
+
+            var onlyScript = new SpecObject { Identifier = "object-2" };
+            onlyScript.Values.Add(new AttributeValueXHTML { TheValue = "<xhtml:div xmlns:xhtml=\"http://www.w3.org/1999/xhtml\"><xhtml:script>alert(1)</xhtml:script></xhtml:div>" });
+            Assert.That(onlyScript.ExtractDisplayName().Value, Is.EqualTo("object-2"));
+
+            var emptyString = new SpecObject { Identifier = "object-3" };
+            emptyString.Values.Add(new AttributeValueString { TheValue = "   " });
+            Assert.That(emptyString.ExtractDisplayName().Value, Is.EqualTo("object-3"));
+        }
+
+        [Test]
+        public void Verify_that_ExtractDisplayName_keeps_safe_formatting_of_a_text_only_XHTML_value()
+        {
+            var textOnly = new SpecObject { Identifier = "object-1" };
+            textOnly.Values.Add(new AttributeValueXHTML { TheValue = "plain & simple" });
+
+            Assert.That(textOnly.ExtractDisplayName().Value, Is.EqualTo("plain &amp; simple"));
         }
     }
 }

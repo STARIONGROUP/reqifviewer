@@ -1,0 +1,227 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<REQ-IF xmlns:xhtml="http://www.w3.org/1999/xhtml" xml:lang="en" xmlns="http://www.omg.org/spec/ReqIF/20110401/reqif.xsd">
+  <THE-HEADER>
+    <REQ-IF-HEADER IDENTIFIER="_xss-header">
+      <CREATION-TIME>2026-10-18T12:00:00Z</CREATION-TIME>
+      <REQ-IF-TOOL-ID>reqifviewer tests</REQ-IF-TOOL-ID>
+      <REQ-IF-VERSION>1.0</REQ-IF-VERSION>
+      <SOURCE-TOOL-ID>reqifviewer tests</SOURCE-TOOL-ID>
+      <TITLE>XSS attempts &lt;img src=x onerror="window.__xss=(window.__xss||0)+1"&gt;</TITLE>
+    </REQ-IF-HEADER>
+  </THE-HEADER>
+  <CORE-CONTENT>
+    <REQ-IF-CONTENT>
+      <DATATYPES>
+        <DATATYPE-DEFINITION-STRING MAX-LENGTH="1000" IDENTIFIER="_dt-string" LAST-CHANGE="2026-10-18T12:00:00Z" LONG-NAME="String" />
+        <DATATYPE-DEFINITION-XHTML IDENTIFIER="_dt-xhtml" LAST-CHANGE="2026-10-18T12:00:00Z" LONG-NAME="XHTML" />
+      </DATATYPES>
+      <SPEC-TYPES>
+        <SPEC-OBJECT-TYPE IDENTIFIER="_sot" LAST-CHANGE="2026-10-18T12:00:00Z" LONG-NAME="Requirement">
+          <SPEC-ATTRIBUTES>
+            <ATTRIBUTE-DEFINITION-STRING IDENTIFIER="_ad-id" LAST-CHANGE="2026-10-18T12:00:00Z" LONG-NAME="ID">
+              <TYPE>
+                <DATATYPE-DEFINITION-STRING-REF>_dt-string</DATATYPE-DEFINITION-STRING-REF>
+              </TYPE>
+            </ATTRIBUTE-DEFINITION-STRING>
+            <ATTRIBUTE-DEFINITION-XHTML IDENTIFIER="_ad-text" LAST-CHANGE="2026-10-18T12:00:00Z" LONG-NAME="Text">
+              <TYPE>
+                <DATATYPE-DEFINITION-XHTML-REF>_dt-xhtml</DATATYPE-DEFINITION-XHTML-REF>
+              </TYPE>
+            </ATTRIBUTE-DEFINITION-XHTML>
+          </SPEC-ATTRIBUTES>
+        </SPEC-OBJECT-TYPE>
+        <SPECIFICATION-TYPE IDENTIFIER="_st" LAST-CHANGE="2026-10-18T12:00:00Z" LONG-NAME="Specification" />
+      </SPEC-TYPES>
+      <SPEC-OBJECTS>
+        <SPEC-OBJECT IDENTIFIER="_so-1" LAST-CHANGE="2026-10-18T12:00:00Z" LONG-NAME="Legitimate formatting">
+          <VALUES>
+            <ATTRIBUTE-VALUE-STRING THE-VALUE="REQ-1">
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-STRING-REF>_ad-id</ATTRIBUTE-DEFINITION-STRING-REF>
+              </DEFINITION>
+            </ATTRIBUTE-VALUE-STRING>
+            <ATTRIBUTE-VALUE-XHTML>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-XHTML-REF>_ad-text</ATTRIBUTE-DEFINITION-XHTML-REF>
+              </DEFINITION>
+              <THE-VALUE><xhtml:div xmlns:xhtml="http://www.w3.org/1999/xhtml"><xhtml:p>The machine shall <xhtml:b>brew</xhtml:b> coffee.</xhtml:p><xhtml:table><xhtml:tr><xhtml:td>a</xhtml:td><xhtml:td>b</xhtml:td></xhtml:tr></xhtml:table><xhtml:a href="https://reqif.academy">a safe link</xhtml:a></xhtml:div></THE-VALUE>
+            </ATTRIBUTE-VALUE-XHTML>
+          </VALUES>
+          <TYPE>
+            <SPEC-OBJECT-TYPE-REF>_sot</SPEC-OBJECT-TYPE-REF>
+          </TYPE>
+        </SPEC-OBJECT>
+        <SPEC-OBJECT IDENTIFIER="_so-2" LAST-CHANGE="2026-10-18T12:00:00Z" LONG-NAME="Script element">
+          <VALUES>
+            <ATTRIBUTE-VALUE-STRING THE-VALUE="REQ-2">
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-STRING-REF>_ad-id</ATTRIBUTE-DEFINITION-STRING-REF>
+              </DEFINITION>
+            </ATTRIBUTE-VALUE-STRING>
+            <ATTRIBUTE-VALUE-XHTML>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-XHTML-REF>_ad-text</ATTRIBUTE-DEFINITION-XHTML-REF>
+              </DEFINITION>
+              <THE-VALUE><xhtml:div xmlns:xhtml="http://www.w3.org/1999/xhtml">Before<xhtml:script>window.__xss=(window.__xss||0)+1</xhtml:script> after</xhtml:div></THE-VALUE>
+            </ATTRIBUTE-VALUE-XHTML>
+          </VALUES>
+          <TYPE>
+            <SPEC-OBJECT-TYPE-REF>_sot</SPEC-OBJECT-TYPE-REF>
+          </TYPE>
+        </SPEC-OBJECT>
+        <SPEC-OBJECT IDENTIFIER="_so-3" LAST-CHANGE="2026-10-18T12:00:00Z" LONG-NAME="Event handler on an image">
+          <VALUES>
+            <ATTRIBUTE-VALUE-STRING THE-VALUE="REQ-3">
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-STRING-REF>_ad-id</ATTRIBUTE-DEFINITION-STRING-REF>
+              </DEFINITION>
+            </ATTRIBUTE-VALUE-STRING>
+            <ATTRIBUTE-VALUE-XHTML>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-XHTML-REF>_ad-text</ATTRIBUTE-DEFINITION-XHTML-REF>
+              </DEFINITION>
+              <THE-VALUE><xhtml:div xmlns:xhtml="http://www.w3.org/1999/xhtml">Image: <xhtml:img src="x" onerror="window.__xss=(window.__xss||0)+1" /></xhtml:div></THE-VALUE>
+            </ATTRIBUTE-VALUE-XHTML>
+          </VALUES>
+          <TYPE>
+            <SPEC-OBJECT-TYPE-REF>_sot</SPEC-OBJECT-TYPE-REF>
+          </TYPE>
+        </SPEC-OBJECT>
+        <SPEC-OBJECT IDENTIFIER="_so-4" LAST-CHANGE="2026-10-18T12:00:00Z" LONG-NAME="javascript: link">
+          <VALUES>
+            <ATTRIBUTE-VALUE-STRING THE-VALUE="REQ-4">
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-STRING-REF>_ad-id</ATTRIBUTE-DEFINITION-STRING-REF>
+              </DEFINITION>
+            </ATTRIBUTE-VALUE-STRING>
+            <ATTRIBUTE-VALUE-XHTML>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-XHTML-REF>_ad-text</ATTRIBUTE-DEFINITION-XHTML-REF>
+              </DEFINITION>
+              <THE-VALUE><xhtml:div xmlns:xhtml="http://www.w3.org/1999/xhtml"><xhtml:a href="javascript:window.__xss=(window.__xss||0)+1">click me</xhtml:a></xhtml:div></THE-VALUE>
+            </ATTRIBUTE-VALUE-XHTML>
+          </VALUES>
+          <TYPE>
+            <SPEC-OBJECT-TYPE-REF>_sot</SPEC-OBJECT-TYPE-REF>
+          </TYPE>
+        </SPEC-OBJECT>
+        <SPEC-OBJECT IDENTIFIER="_so-5" LAST-CHANGE="2026-10-18T12:00:00Z" LONG-NAME="SVG onload">
+          <VALUES>
+            <ATTRIBUTE-VALUE-STRING THE-VALUE="REQ-5">
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-STRING-REF>_ad-id</ATTRIBUTE-DEFINITION-STRING-REF>
+              </DEFINITION>
+            </ATTRIBUTE-VALUE-STRING>
+            <ATTRIBUTE-VALUE-XHTML>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-XHTML-REF>_ad-text</ATTRIBUTE-DEFINITION-XHTML-REF>
+              </DEFINITION>
+              <THE-VALUE><xhtml:div xmlns:xhtml="http://www.w3.org/1999/xhtml"><svg xmlns="http://www.w3.org/2000/svg" onload="window.__xss=(window.__xss||0)+1"><circle r="5" /></svg>SVG</xhtml:div></THE-VALUE>
+            </ATTRIBUTE-VALUE-XHTML>
+          </VALUES>
+          <TYPE>
+            <SPEC-OBJECT-TYPE-REF>_sot</SPEC-OBJECT-TYPE-REF>
+          </TYPE>
+        </SPEC-OBJECT>
+        <SPEC-OBJECT IDENTIFIER="_so-6" LAST-CHANGE="2026-10-18T12:00:00Z" LONG-NAME="Overlay with a fixed position">
+          <VALUES>
+            <ATTRIBUTE-VALUE-STRING THE-VALUE="REQ-6">
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-STRING-REF>_ad-id</ATTRIBUTE-DEFINITION-STRING-REF>
+              </DEFINITION>
+            </ATTRIBUTE-VALUE-STRING>
+            <ATTRIBUTE-VALUE-XHTML>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-XHTML-REF>_ad-text</ATTRIBUTE-DEFINITION-XHTML-REF>
+              </DEFINITION>
+              <THE-VALUE><xhtml:div xmlns:xhtml="http://www.w3.org/1999/xhtml" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 9999; background-color: red">Overlay</xhtml:div></THE-VALUE>
+            </ATTRIBUTE-VALUE-XHTML>
+          </VALUES>
+          <TYPE>
+            <SPEC-OBJECT-TYPE-REF>_sot</SPEC-OBJECT-TYPE-REF>
+          </TYPE>
+        </SPEC-OBJECT>
+        <SPEC-OBJECT IDENTIFIER="_so-7" LAST-CHANGE="2026-10-18T12:00:00Z" LONG-NAME="&lt;img src=x onerror=&quot;window.__xss=(window.__xss||0)+1&quot;&gt; in the long name">
+          <VALUES>
+            <ATTRIBUTE-VALUE-STRING THE-VALUE="&lt;script&gt;window.__xss=(window.__xss||0)+1&lt;/script&gt;">
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-STRING-REF>_ad-id</ATTRIBUTE-DEFINITION-STRING-REF>
+              </DEFINITION>
+            </ATTRIBUTE-VALUE-STRING>
+            <ATTRIBUTE-VALUE-XHTML>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-XHTML-REF>_ad-text</ATTRIBUTE-DEFINITION-XHTML-REF>
+              </DEFINITION>
+              <THE-VALUE><xhtml:div xmlns:xhtml="http://www.w3.org/1999/xhtml">The long name and the ID contain markup</xhtml:div></THE-VALUE>
+            </ATTRIBUTE-VALUE-XHTML>
+          </VALUES>
+          <TYPE>
+            <SPEC-OBJECT-TYPE-REF>_sot</SPEC-OBJECT-TYPE-REF>
+          </TYPE>
+        </SPEC-OBJECT>
+        <SPEC-OBJECT IDENTIFIER="_so-unnamed" LAST-CHANGE="2026-10-18T12:00:00Z">
+          <VALUES>
+            <ATTRIBUTE-VALUE-XHTML>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-XHTML-REF>_ad-text</ATTRIBUTE-DEFINITION-XHTML-REF>
+              </DEFINITION>
+              <THE-VALUE><xhtml:div xmlns:xhtml="http://www.w3.org/1999/xhtml">Unnamed<xhtml:img src="x" onerror="window.__xss=(window.__xss||0)+1" /></xhtml:div></THE-VALUE>
+            </ATTRIBUTE-VALUE-XHTML>
+          </VALUES>
+          <TYPE>
+            <SPEC-OBJECT-TYPE-REF>_sot</SPEC-OBJECT-TYPE-REF>
+          </TYPE>
+        </SPEC-OBJECT>
+      </SPEC-OBJECTS>
+      <SPECIFICATIONS>
+        <SPECIFICATION IDENTIFIER="_spec" LAST-CHANGE="2026-10-18T12:00:00Z" LONG-NAME="XSS attempts">
+          <TYPE>
+            <SPECIFICATION-TYPE-REF>_st</SPECIFICATION-TYPE-REF>
+          </TYPE>
+          <CHILDREN>
+            <SPEC-HIERARCHY IDENTIFIER="_sh-1" LAST-CHANGE="2026-10-18T12:00:00Z">
+              <OBJECT>
+                <SPEC-OBJECT-REF>_so-1</SPEC-OBJECT-REF>
+              </OBJECT>
+            </SPEC-HIERARCHY>
+            <SPEC-HIERARCHY IDENTIFIER="_sh-2" LAST-CHANGE="2026-10-18T12:00:00Z">
+              <OBJECT>
+                <SPEC-OBJECT-REF>_so-2</SPEC-OBJECT-REF>
+              </OBJECT>
+            </SPEC-HIERARCHY>
+            <SPEC-HIERARCHY IDENTIFIER="_sh-3" LAST-CHANGE="2026-10-18T12:00:00Z">
+              <OBJECT>
+                <SPEC-OBJECT-REF>_so-3</SPEC-OBJECT-REF>
+              </OBJECT>
+            </SPEC-HIERARCHY>
+            <SPEC-HIERARCHY IDENTIFIER="_sh-4" LAST-CHANGE="2026-10-18T12:00:00Z">
+              <OBJECT>
+                <SPEC-OBJECT-REF>_so-4</SPEC-OBJECT-REF>
+              </OBJECT>
+            </SPEC-HIERARCHY>
+            <SPEC-HIERARCHY IDENTIFIER="_sh-5" LAST-CHANGE="2026-10-18T12:00:00Z">
+              <OBJECT>
+                <SPEC-OBJECT-REF>_so-5</SPEC-OBJECT-REF>
+              </OBJECT>
+            </SPEC-HIERARCHY>
+            <SPEC-HIERARCHY IDENTIFIER="_sh-6" LAST-CHANGE="2026-10-18T12:00:00Z">
+              <OBJECT>
+                <SPEC-OBJECT-REF>_so-6</SPEC-OBJECT-REF>
+              </OBJECT>
+            </SPEC-HIERARCHY>
+            <SPEC-HIERARCHY IDENTIFIER="_sh-7" LAST-CHANGE="2026-10-18T12:00:00Z">
+              <OBJECT>
+                <SPEC-OBJECT-REF>_so-7</SPEC-OBJECT-REF>
+              </OBJECT>
+            </SPEC-HIERARCHY>
+            <SPEC-HIERARCHY IDENTIFIER="_sh-unnamed" LAST-CHANGE="2026-10-18T12:00:00Z">
+              <OBJECT>
+                <SPEC-OBJECT-REF>_so-unnamed</SPEC-OBJECT-REF>
+              </OBJECT>
+            </SPEC-HIERARCHY>
+          </CHILDREN>
+        </SPECIFICATION>
+      </SPECIFICATIONS>
+    </REQ-IF-CONTENT>
+  </CORE-CONTENT>
+</REQ-IF>

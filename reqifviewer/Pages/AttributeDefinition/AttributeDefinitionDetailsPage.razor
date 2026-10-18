@@ -20,7 +20,8 @@
 @using ReqIFSharp
 @using ReqIFSharp.Extensions.ReqIFExtensions
 @using ReqIFSharp.Extensions.Services
-@using Serilog; 
+@using Serilog;
+@using reqifviewer.Utilities
 
 @inject IReqIFLoaderService ReqIfLoaderService
 
@@ -51,7 +52,7 @@ else
                 <div><b>Default Value:</b></div>
                 @if (this.attributeDefinition is AttributeDefinitionXHTML)
                 {
-                    <div> @(new MarkupString(this.attributeDefinition.QueryDefaultValueAsFormattedString())) </div>
+                    <div>@SafeMarkup.FromXhtml(this.attributeDefinition.QueryDefaultValueAsFormattedString())</div>
                 }
                 else
                 {

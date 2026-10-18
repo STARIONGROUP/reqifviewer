@@ -38,21 +38,21 @@ else
             <RadzenDataGridColumn TItem="SpecRelation" Title="Spec Relation">
                 <Template Context="specRelation">
                     <a href="reqif/@this.Identifier/specrelation/@specRelation?.Identifier">
-                        @(new MarkupString(specRelation?.ExtractDisplayName().ToString()))
+                        @(specRelation?.ExtractDisplayName())
                     </a>
                 </Template>
             </RadzenDataGridColumn>
             <RadzenDataGridColumn TItem="SpecRelation" Title="Source">
                 <Template Context="specRelation">
                     <a href="reqif/@this.Identifier/specobject/@specRelation?.Source?.Identifier">
-                        @(new MarkupString(specRelation?.Source?.ExtractDisplayName().ToString()))
+                        @(specRelation?.Source?.ExtractDisplayName())
                     </a>
                 </Template>
             </RadzenDataGridColumn>
             <RadzenDataGridColumn TItem="SpecRelation" Title="Target">
                 <Template Context="specRelation">
-                    <a href="reqif/@this.Identifier/specobject/@specRelation?.Source?.Identifier">
-                        @(new MarkupString(specRelation?.Target?.ExtractDisplayName().ToString()))
+                    <a href="reqif/@this.Identifier/specobject/@specRelation?.Target?.Identifier">
+                        @(specRelation?.Target?.ExtractDisplayName())
                     </a>
                 </Template>
             </RadzenDataGridColumn>

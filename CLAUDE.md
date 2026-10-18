@@ -63,7 +63,17 @@ URLs follow `/reqif/{header-identifier}/<entity>/<entity-identifier>`. The `Spec
 
 ### Display-name fallback
 
-`SpecElementWithAttributesExtensions.ExtractDisplayName` defines the precedence used everywhere a spec element is shown: `LongName` → first `AttributeValue` (XHTML rendered as `MarkupString`) → `Identifier`. Do not reinvent this in individual components.
+`SpecElementWithAttributesExtensions.ExtractDisplayName` defines the precedence used everywhere a spec element is shown: `LongName` → first `AttributeValue` → `Identifier`. It returns a safe `MarkupString`: text is encoded, XHTML is sanitized, and it falls back to the identifier when nothing visible is left. `ExtractDisplayText` follows the same order as plain text, for labels and menus. Do not reinvent this in individual components.
+
+### Rendering content from a ReqIF file
+
+Everything in an uploaded file is untrusted. Never wrap file content in `new MarkupString(...)` or pass it to `AddMarkupContent` directly:
+
+- XHTML (for example `AttributeValueXHTML.TheValue`): `SafeMarkup.FromXhtml` (`Utilities/SafeMarkup.cs`), which removes namespace prefixes and sanitizes against an allow-list of the XHTML modules ReqIF uses.
+- Plain text: render it as a string (`@text`), which Razor encodes, or use `SafeMarkup.FromText`.
+- Text for labels: `SafeMarkup.ToPlainText`, or `ExtractDisplayText`. Do not use ReqIFSharp's `ExtractUnformattedTextFromValue` for display: it throws on values that are not well-formed XML.
+
+`TestData/xss-attempts.reqif` holds script injection attempts; render new views of file content against it (see `XssAttemptsTestFixture`).
 
 ### Layout / UI stack
 
