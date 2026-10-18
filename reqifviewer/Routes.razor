@@ -14,14 +14,11 @@
   limitations under the License.
 ------------------------------------------------------------------------------->
 
-<Router AppAssembly="@typeof(Routes).Assembly">
+@using reqifviewer.Pages.NotFound
+
+<Router AppAssembly="@typeof(Routes).Assembly" NotFoundPage="typeof(NotFoundPage)">
     <Found Context="routeData">
         <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
     </Found>
-    <NotFound>
-        <LayoutView Layout="@typeof(MainLayout)">
-            <p>Sorry, there's nothing at this address.</p>
-        </LayoutView>
-    </NotFound>
 </Router>
 <NavigationTracker />

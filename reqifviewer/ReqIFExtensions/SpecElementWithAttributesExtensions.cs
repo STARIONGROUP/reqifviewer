@@ -75,6 +75,41 @@ namespace ReqifViewer.ReqIFExtensions
         }
         
         /// <summary>
+        /// Extracts the name of the <see cref="SpecElementWithAttributes"/> as plain text, for places that cannot show
+        /// formatted text, such as menus and page titles
+        /// </summary>
+        /// <param name="specElementWithAttributes">
+        /// The subject <see cref="SpecElementWithAttributes"/>
+        /// </param>
+        /// <returns>
+        /// the name of the <see cref="SpecElementWithAttributes"/> as plain text
+        /// </returns>
+        /// <remarks>
+        /// Follows the same order as <see cref="ExtractDisplayName"/>; the text of an <see cref="AttributeValueXHTML"/> is
+        /// returned without its formatting and with its whitespace collapsed
+        /// </remarks>
+        public static string ExtractDisplayText(this SpecElementWithAttributes specElementWithAttributes)
+        {
+            if (!string.IsNullOrEmpty(specElementWithAttributes.LongName))
+            {
+                return specElementWithAttributes.LongName;
+            }
+
+            var attributeValue = specElementWithAttributes.Values.FirstOrDefault();
+
+            var text = attributeValue switch
+            {
+                null => null,
+                AttributeValueXHTML attributeValueXhtml => attributeValueXhtml.ExtractUnformattedTextFromValue(),
+                _ => attributeValue.ObjectValue?.ToString()
+            };
+
+            text = string.Join(" ", (text ?? string.Empty).Split((char[])null, System.StringSplitOptions.RemoveEmptyEntries));
+
+            return string.IsNullOrEmpty(text) ? specElementWithAttributes.Identifier : text;
+        }
+
+        /// <summary>
         /// Creates the url of a <see cref="SpecElementWithAttributes"/>
         /// </summary>
         /// <param name="specElementWithAttributes">

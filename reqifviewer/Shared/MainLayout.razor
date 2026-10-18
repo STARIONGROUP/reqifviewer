@@ -18,7 +18,10 @@
 
 @inherits LayoutComponentBase
 
+@implements IDisposable
+
 @inject Radzen.DialogService RadzenDialogService
+@inject NavigationManager NavigationManager
 
 <PageTitle>ReqIF Viewer</PageTitle>
 
@@ -28,7 +31,7 @@
 <RadzenTooltip />
 <RadzenContextMenu />
 
-<BbSidebarProvider DefaultOpen="true">
+<BbSidebarProvider DefaultOpen="true" OpenMobile="this.isMobileSidebarOpen" OpenMobileChanged="this.OnMobileSidebarOpenChanged">
     <SideMenu />
 
     <BbSidebarInset>
@@ -41,7 +44,7 @@
                     <LucideIcon Name="info" Size="16" />
                     <span>About</span>
                 </BbButton>
-                <BbButton Variant="ButtonVariant.Ghost" Size="ButtonSize.Icon" Href="https://github.com/STARIONGROUP/reqifviewer" Target="_blank" AriaLabel="ReqIF Viewer on GitHub" rel="noopener">
+                <BbButton Variant="ButtonVariant.Ghost" Size="ButtonSize.Icon" Href="https://github.com/STARIONGROUP/reqifviewer" Target="_blank" AriaLabel="ReqIF Viewer on GitHub">
                     <LucideIcon Name="github" Size="18" />
                 </BbButton>
                 <BbDarkModeToggle Variant="ButtonVariant.Ghost" />
@@ -59,6 +62,50 @@
 <BbPortalHost />
 
 @code {
+
+    /// <summary>
+    /// A value indicating whether the sidebar drawer is open on small screens
+    /// </summary>
+    private bool? isMobileSidebarOpen = false;
+
+    /// <summary>
+    /// Subscribes to navigation, so the sidebar drawer closes when a link in it is followed on a small screen
+    /// </summary>
+    protected override void OnInitialized()
+    {
+        this.NavigationManager.LocationChanged += this.OnLocationChanged;
+    }
+
+    /// <summary>
+    /// Keeps track of the sidebar drawer being opened or closed on small screens
+    /// </summary>
+    /// <param name="open">a value indicating whether the drawer is open</param>
+    private void OnMobileSidebarOpenChanged(bool open)
+    {
+        this.isMobileSidebarOpen = open;
+    }
+
+    /// <summary>
+    /// Closes the sidebar drawer on small screens after navigating
+    /// </summary>
+    /// <param name="sender">the <see cref="NavigationManager"/></param>
+    /// <param name="e">the <see cref="LocationChangedEventArgs"/></param>
+    private void OnLocationChanged(object sender, LocationChangedEventArgs e)
+    {
+        if (this.isMobileSidebarOpen == true)
+        {
+            this.isMobileSidebarOpen = false;
+            this.InvokeAsync(this.StateHasChanged);
+        }
+    }
+
+    /// <summary>
+    /// Unsubscribes from navigation
+    /// </summary>
+    public void Dispose()
+    {
+        this.NavigationManager.LocationChanged -= this.OnLocationChanged;
+    }
 
     /// <summary>
     /// Show the About dialog

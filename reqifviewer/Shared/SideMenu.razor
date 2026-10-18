@@ -20,6 +20,8 @@
 @using ReqIFSharp
 @using ReqIFSharp.Extensions.Services
 
+@using ReqifViewer.ReqIFExtensions
+
 @implements IDisposable
 
 @inject IReqIFLoaderService ReqIfLoaderService
@@ -28,7 +30,8 @@
     <BbSidebarHeader>
         <BbSidebarMenu>
             <BbSidebarMenuItem>
-                <BbSidebarMenuButton AsChild="SidebarMenuButtonElement.Anchor" Href="" Match="NavLinkMatch.All" Size="SidebarMenuButtonSize.Large" Tooltip="ReqIF Viewer">
+                @* IsActive is false so only "Open a file" is highlighted on the home page. *@
+                <BbSidebarMenuButton AsChild="SidebarMenuButtonElement.Anchor" Href="/" IsActive="false" Size="SidebarMenuButtonSize.Large" Tooltip="ReqIF Viewer">
                     <img src="images/reqifsharp-logo-small.png" alt="" class="side-menu-logo" />
                     <div class="side-menu-brand">
                         <span class="side-menu-brand-title">ReqIF Viewer</span>
@@ -43,7 +46,8 @@
         <BbSidebarGroup>
             <BbSidebarMenu>
                 <BbSidebarMenuItem>
-                    <BbSidebarMenuButton AsChild="SidebarMenuButtonElement.Anchor" Href="" Match="NavLinkMatch.All" Tooltip="Open a ReqIF file">
+                    @* An empty Href never counts as active, so the home page is "/". *@
+                    <BbSidebarMenuButton AsChild="SidebarMenuButtonElement.Anchor" Href="/" Match="NavLinkMatch.All" Tooltip="Open a ReqIF file">
                         <LucideIcon Name="upload" Size="16" />
                         <span>Open a file</span>
                     </BbSidebarMenuButton>
@@ -79,8 +83,8 @@
                                     @foreach (var specification in reqif.CoreContent.Specifications)
                                     {
                                         <BbSidebarMenuSubItem>
-                                            <BbSidebarMenuSubButton AsChild="SidebarMenuButtonElement.Anchor" Href="@($"{root}/specification/{specification.Identifier}")">
-                                                <span>@(string.IsNullOrWhiteSpace(specification.LongName) ? specification.Identifier : specification.LongName)</span>
+                                            <BbSidebarMenuSubButton AsChild="SidebarMenuButtonElement.Anchor" Href="@specification.CreateUrl()">
+                                                <span>@specification.ExtractDisplayText()</span>
                                             </BbSidebarMenuSubButton>
                                         </BbSidebarMenuSubItem>
                                     }
