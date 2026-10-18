@@ -14,14 +14,49 @@
   limitations under the License.
 ------------------------------------------------------------------------------->
 
-<Router AppAssembly="@typeof(App).Assembly" PreferExactMatches="@true">
-    <Found Context="routeData">
-        <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
-    </Found>
-    <NotFound>
-        <LayoutView Layout="@typeof(MainLayout)">
-            <p>Sorry, there's nothing at this address.</p>
-        </LayoutView>
-    </NotFound>
-</Router>
-<NavigationTracker />
+@using static Microsoft.AspNetCore.Components.Web.RenderMode
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta property="og:url" content="https://www.reqifsharp.org" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="ReqIF Viewer" />
+    <meta property="og:description" content="View and Inspect the content of a ReqIF file" />
+    <meta property="og:image" content="https://www.reqifsharp.org/assets/images/reqifsharp-logo.png" />
+    <base href="/" />
+
+    @* Bootstrap and Radzen stay until the pages are migrated to Blazor Blueprint. *@
+    <link rel="stylesheet" href="css/bootstrap/bootstrap.min.css" />
+    <link rel="stylesheet" href="_content/Radzen.Blazor/css/default-base.css" />
+    <link rel="stylesheet" href="_content/Radzen.Blazor/css/default.css" />
+
+    @* The theme must load before blazorblueprint.css. *@
+    <link rel="stylesheet" href="@Assets["css/theme.css"]" />
+    <link rel="stylesheet" href="_content/BlazorBlueprint.Components/blazorblueprint.css" />
+    <link rel="stylesheet" href="@Assets["css/app.css"]" />
+    <link rel="stylesheet" href="@Assets["reqifviewer.styles.css"]" />
+    <link rel="icon" href="favicon.ico" />
+
+    @* Applies the saved light or dark theme before the first paint. Must stay a classic blocking script. *@
+    <script src="_content/BlazorBlueprint.Components/js/theme-init.js"></script>
+
+    <HeadOutlet @rendermode="InteractiveServer" />
+</head>
+<body>
+    <Routes @rendermode="InteractiveServer" />
+
+    <div id="blazor-error-ui">
+        An unhandled error has occurred.
+        <a href="" class="reload">Reload</a>
+        <a class="dismiss">🗙</a>
+    </div>
+
+    <script src="_framework/blazor.web.js"></script>
+    <script src="_content/Radzen.Blazor/Radzen.Blazor.js"></script>
+    <script src="_content/Blazor-Analytics/blazor-analytics.js"></script>
+    <script src="@Assets["js/matrix-scroll.js"]"></script>
+</body>
+</html>

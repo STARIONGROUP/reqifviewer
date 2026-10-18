@@ -1,0 +1,50 @@
+.side-menu-logo {
+    width: 2rem;
+    height: 2rem;
+    flex-shrink: 0;
+    border-radius: 0.5rem;
+}
+
+.side-menu-brand {
+    display: grid;
+    flex: 1;
+    min-width: 0;
+    line-height: 1.2;
+}
+
+.side-menu-brand-title {
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.side-menu-brand-subtitle {
+    font-size: 0.75rem;
+    color: var(--muted-foreground);
+}
+
+.side-menu-footer {
+    display: flex;
+    flex-direction: column;
+    gap: 0.125rem;
+    padding: 0.5rem;
+    font-size: 0.75rem;
+    color: var(--muted-foreground);
+}
+
+.side-menu-footer a {
+    color: inherit;
+    text-decoration: underline;
+}
+
+/* Collapsed to the icon rail: keep only the logo, at icon size, and hide the text. */
+[data-state="collapsed"] .side-menu-logo {
+    width: 1.5rem;
+    height: 1.5rem;
+}
+
+[data-state="collapsed"] .side-menu-brand,
+[data-state="collapsed"] .side-menu-footer {
+    display: none;
+}
